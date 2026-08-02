@@ -6,7 +6,7 @@ st.set_page_config(page_title="AI Sales Agent", page_icon="🤖")
 st.title("🤖 AI Business Employee")
 st.write("Aapki service mein haazir!")
 
-client = Groq(api_key="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")
+client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 system_prompt = """Aap ek bohot hi professional aur polite Sales Executive hain ek IT & Tech Agency ke.
 Aapka kaam customer se unki requirement samajhna aur leads collect karna hai.
 
