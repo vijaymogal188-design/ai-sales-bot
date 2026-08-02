@@ -69,13 +69,12 @@ if prompt := st.chat_input("Type your message here..."):
         try:
             chat_completion = client.chat.completions.create(
                 messages=st.session_state.messages,
-                model="llama3-8b-8192",
+                model="llama-3.1-8b-instant",
                 temperature=0.5
             )
             
             response_text = chat_completion.choices[0].message.content
             
-            # 🚨 MAGIC HAPPENS HERE: Check if AI sent the secret completion code
             if "COMPLETE:" in response_text:
                 data_part = response_text.split("COMPLETE:")[1].strip()
                 lead_data = data_part.split("|")
