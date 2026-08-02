@@ -1,118 +1,97 @@
 import streamlit as st
+import pandas as pd
+import os
 from groq import Groq
+from datetime import datetime
 
-# 1. Website ki setting
-st.set_page_config(page_title="AI Sales Agent", page_icon="🤖")
+# Page configuration
+st.set_page_config(page_title="AI Business Employee", page_icon="🤖", layout="centered")
+
 st.title("🤖 AI Business Employee")
 st.write("Aapki service mein haazir!")
 
+# Initialize Groq Client securely
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
-system_prompt = """Aap ek bohot hi professional aur polite Sales Executive hain ek IT & Tech Agency ke.
-Aapka kaam customer se unki requirement samajhna aur leads collect karna hai.
 
-Neeche diye gaye steps ko STRICTLY follow karein. 
-RULE #1: Ek baar mein sirf EK HI sawaal poochein. Saare sawaal ek sath kabhi na poochein.
-RULE #2: Customer ke pichle jawab ko acknowledge karein aur fir agla sawaal poochein.
-RULE #3: Hamesha Hinglish/Hindi mein baat karein aur polite rahein.
+# System Prompt - The Brain of the Salesman
+SYSTEM_PROMPT = """You are an expert AI Sales Agent. Your goal is to naturally converse with the user and collect exactly these 6 details:
+1. Name
+2. Business Name
+3. Service Required
+4. Budget
+5. Phone Number
+6. Email Address
 
-STEPS TO FOLLOW ONE-BY-ONE:
-1. Customer ka swagat karein aur unka Naam poochein.
-2. Unka Business ya industry kya hai, yeh poochein.
-3. Unhe kaunsi Service chahiye (jaise Website, Logo, AI Chatbot, App), yeh poochein.
-4. (CRITICAL) Customer jo service chune, uske hisaab se sirf ek specific follow-up sawaal poochein.
-5. Unka Budget poochein. (Agar customer sirf "haan" ya ajeeb jawab de, toh unse exact amount ya budget range poochein. Jab tak budget amount ya figure na mile, agle step par na jayein.)
-6. Unka Phone Number poochein.
-7. Unka Email ID poochein.
-8. Aakhir mein unhe dhanyavad kahein aur batayein ki hamari team jald hi unse contact karegi.
+RULES:
+- Ask for these details conversationally, one or two at a time. Be polite and professional.
+- Do not ask for all details at once. Do not show them a list.
+- Once you have successfully collected ALL 6 details, you MUST stop the conversation and output EXACTLY this format and absolutely nothing else:
+COMPLETE: Name | Business | Service | Budget | Phone | Email
+Example: COMPLETE: Rahul | Tech Solutions | Web Design | 50000 | 9876543210 | rahul@email.com
 """
 
-# 4. Streamlit ki memory (Session State) set karna
+# Initialize chat history
 if "messages" not in st.session_state:
-    st.session_state.messages = [{"role": "system", "content": system_prompt}]
+    st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+    st.session_state.messages.append({"role": "assistant", "content": "Hello! Welcome to our service. To get started, could you please tell me your name?"})
 
-# 5. Purane messages ko screen par dikhana (System prompt ko chhod kar)
+# Function to automatically save lead to CSV
+def save_lead_to_csv(data_list):
+    file_name = "leads.csv"
+    new_lead = {
+        "Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "Name": data_list[0].strip(),
+        "Business": data_list[1].strip(),
+        "Service": data_list[2].strip(),
+        "Budget": data_list[3].strip(),
+        "Phone": data_list[4].strip(),
+        "Email": data_list[5].strip()
+    }
+    df = pd.DataFrame([new_lead])
+    
+    if not os.path.exists(file_name):
+        df.to_csv(file_name, index=False)
+    else:
+        df.to_csv(file_name, mode='a', header=False, index=False)
+
+# Display chat messages from history
 for message in st.session_state.messages:
     if message["role"] != "system":
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-# 6. Naya message lene ka box
-prompt = st.chat_input("Apna message yahan likhein...")
-
-if prompt:
-    # Customer ka message screen par dikhao
-    with st.chat_message("user"):
-        st.markdown(prompt)
-    
-    # Message ko memory mein save karo
+# React to user input
+if prompt := st.chat_input("Type your message here..."):
+    st.chat_message("user").markdown(prompt)
     st.session_state.messages.append({"role": "user", "content": prompt})
-    
-    # AI se jawab maango
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=st.session_state.messages
-    )
-    
-    ai_reply = response.choices[0].message.content
-    
-    # AI ka jawab screen par dikhao
-    with st.chat_message("assistant"):
-        st.markdown(ai_reply)
-        
-    # AI ke jawab ko memory mein save karo
-    st.session_state.messages.append({"role": "assistant", "content": ai_reply})
-import json
-import csv
-import os
 
-# --- LEAD SAVE KARNE KA CODE ---
-st.write("---")
-if st.button("🚀 Save Lead (Admin Only)"):
-    with st.spinner("AI lead ki details nikal raha hai..."):
-        # Chat history ko ek jagah jama karna
-        chat_text = "\n".join([f"{msg['role']}: {msg['content']}" for msg in st.session_state.messages])
-        
-        # AI ko JSON mein data nikalne ka prompt dena
-        prompt = f"""
-        Is chat history ko dhyan se padho aur customer ki details nikal kar sirf ek JSON dictionary do.
-        Keys exact ye honi chahiye: "Name", "Business", "Service", "Budget", "Phone", "Email".
-        Agar koi detail chat mein nahi hai, toh wahan "Not Provided" likhna. Sirf valid JSON format dena, aur koi extra text nahi.
-        
-        Chat History:
-        {chat_text}
-        """
-        
+    with st.chat_message("assistant"):
         try:
-            # Groq API ko call karna
-            response = client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
-                messages=[{"role": "user", "content": prompt}],
-                response_format={"type": "json_object"}
+            chat_completion = client.chat.completions.create(
+                messages=st.session_state.messages,
+                model="llama3-8b-8192",
+                temperature=0.5
             )
             
-            # AI ke jawab ko samajhna
-            lead_data = json.loads(response.choices[0].message.content)
+            response_text = chat_completion.choices[0].message.content
             
-            # Data ko leads.csv file mein save karna
-            file_exists = os.path.isfile("leads.csv")
-            with open("leads.csv", "a", newline="", encoding="utf-8") as f:
-                writer = csv.writer(f)
-                # Agar nayi file hai toh pehle headings likho
-                if not file_exists:
-                    writer.writerow(["Name", "Business", "Service", "Budget", "Phone", "Email"])
+            # 🚨 MAGIC HAPPENS HERE: Check if AI sent the secret completion code
+            if "COMPLETE:" in response_text:
+                data_part = response_text.split("COMPLETE:")[1].strip()
+                lead_data = data_part.split("|")
                 
-                # Customer ka data likho
-                writer.writerow([
-                    lead_data.get("Name", "Not Provided"),
-                    lead_data.get("Business", "Not Provided"),
-                    lead_data.get("Service", "Not Provided"),
-                    lead_data.get("Budget", "Not Provided"),
-                    lead_data.get("Phone", "Not Provided"),
-                    lead_data.get("Email", "Not Provided")
-                ])
-            
-            st.success("Lead successfully leads.csv file mein save ho gayi! 🎉")
-            st.json(lead_data) # Screen par bhi dikhayega ki kya save hua hai
-            
+                if len(lead_data) == 6:
+                    save_lead_to_csv(lead_data)
+                    final_msg = "Thank you! Your details have been received. Our team will contact you soon."
+                    st.markdown(final_msg)
+                    st.session_state.messages.append({"role": "assistant", "content": final_msg})
+                else:
+                    fallback_msg = "Thank you! Your details have been received. Our team will contact you soon."
+                    st.markdown(fallback_msg)
+                    st.session_state.messages.append({"role": "assistant", "content": fallback_msg})
+            else:
+                st.markdown(response_text)
+                st.session_state.messages.append({"role": "assistant", "content": response_text})
+
         except Exception as e:
-            st.error(f"Save karne mein error aaya: {e}")
+            st.error(f"Thoda error aa gaya bhai: {e}")
