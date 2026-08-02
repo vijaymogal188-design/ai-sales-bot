@@ -13,8 +13,7 @@ st.write("Aapki service mein haazir!")
 # Initialize Groq Client securely
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
-# System Prompt - The Brain of the Salesman
-SYSTEM_PROMPT = """You are an expert AI Sales Agent. Your goal is to naturally converse with the user and collect exactly these 6 details:
+SYSTEM_PROMPT = """You are an expert AI Sales Agent. You can converse in both English and Hindi (or Hinglish) depending on what language the user prefers. Your goal is to naturally converse with the user and collect exactly these 6 details:
 1. Name
 2. Business Name
 3. Service Required
@@ -23,13 +22,12 @@ SYSTEM_PROMPT = """You are an expert AI Sales Agent. Your goal is to naturally c
 6. Email Address
 
 RULES:
+- Match the language of the user. If they speak Hindi, reply in Hindi. If English, reply in English.
 - Ask for these details conversationally, one or two at a time. Be polite and professional.
 - Do not ask for all details at once. Do not show them a list.
 - Once you have successfully collected ALL 6 details, you MUST stop the conversation and output EXACTLY this format and absolutely nothing else:
 COMPLETE: Name | Business | Service | Budget | Phone | Email
-Example: COMPLETE: Rahul | Tech Solutions | Web Design | 50000 | 9876543210 | rahul@email.com
 """
-
 # Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
