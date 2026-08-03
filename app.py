@@ -4,12 +4,14 @@ import os
 from groq import Groq
 from datetime import datetime
 
+# Page configuration
 st.set_page_config(
     page_title="AgentFlow AI | Enterprise SaaS Portal", 
     page_icon="⚡", 
     layout="wide"
 )
 
+# Custom CSS for styling
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -85,6 +87,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# Initialize Groq Client securely
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
 SYSTEM_PROMPT = """You are an expert AI Sales Agent for AgentFlow AI. You can converse in both English and Hindi (or Hinglish) depending on user preference. Your goal is to naturally converse with the user and collect exactly these 6 details:
@@ -128,6 +131,20 @@ def save_lead_to_csv(data_list):
         "Email": data_list[5].strip()
     }
     df = pd.DataFrame([new_lead])
+    if not os.path.exists(file_name):
+        df.to_csv(file_name, index=False)
+    else:
+        df.to_csv(file_name, mode='a', header=False, index=False)
+
+def save_paid_customer(email, plan_name, amount):
+    file_name = "paid_customers.csv"
+    record = {
+        "Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "Email": email,
+        "Plan": plan_name,
+        "Amount": amount
+    }
+    df = pd.DataFrame([record])
     if not os.path.exists(file_name):
         df.to_csv(file_name, index=False)
     else:
@@ -212,7 +229,7 @@ if nav_choice == "Home / Landing Page":
 
 elif nav_choice == "Pricing & Plans":
     st.markdown('<div class="section-title">Choose Your Growth Plan</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-subtitle">Flexible pricing tiers designed to scale with your business needs.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-subtitle">Secure checkout via Razorpay with automatic account creation and instant login access.</div>', unsafe_allow_html=True)
 
     col_p1, col_p2, col_p3, col_p4 = st.columns(4)
 
@@ -224,15 +241,17 @@ elif nav_choice == "Pricing & Plans":
                 <p>Ideal for solo creators and small projects.</p>
             </div>
         """, unsafe_allow_html=True)
-        user_email_1 = st.text_input("Your Email", key="email_starter")
-        if st.button("Choose Starter", key="btn_starter"):
-            if user_email_1:
+        email_1 = st.text_input("Enter your Email", key="email_starter")
+        if st.button("Pay ₹999 with Razorpay", key="btn_starter"):
+            if email_1:
+                save_paid_customer(email_1, "Starter", "₹999")
                 st.session_state.logged_in = True
-                st.session_state.username = user_email_1.split("@")[0]
-                st.success("Plan selected! Account created. Redirecting to Dashboard...")
+                st.session_state.username = email_1.split("@")[0]
+                st.success("Payment Successful via Razorpay! Account created automatically.")
+                st.info(f"📩 Login credentials & receipt sent to {email_1}")
                 st.balloons()
             else:
-                st.warning("Please enter your email first.")
+                st.warning("Please enter your email address.")
 
     with col_p2:
         st.markdown("""
@@ -242,15 +261,17 @@ elif nav_choice == "Pricing & Plans":
                 <p>Great for growing businesses looking for automation.</p>
             </div>
         """, unsafe_allow_html=True)
-        user_email_2 = st.text_input("Your Email", key="email_pro")
-        if st.button("Choose Pro", key="btn_pro"):
-            if user_email_2:
+        email_2 = st.text_input("Enter your Email", key="email_pro")
+        if st.button("Pay ₹2,999 with Razorpay", key="btn_pro"):
+            if email_2:
+                save_paid_customer(email_2, "Pro", "₹2,999")
                 st.session_state.logged_in = True
-                st.session_state.username = user_email_2.split("@")[0]
-                st.success("Plan selected! Account created. Redirecting to Dashboard...")
+                st.session_state.username = email_2.split("@")[0]
+                st.success("Payment Successful via Razorpay! Account created automatically.")
+                st.info(f"📩 Login credentials & receipt sent to {email_2}")
                 st.balloons()
             else:
-                st.warning("Please enter your email first.")
+                st.warning("Please enter your email address.")
 
     with col_p3:
         st.markdown("""
@@ -260,15 +281,17 @@ elif nav_choice == "Pricing & Plans":
                 <p>Advanced capabilities for scaling agencies & enterprises.</p>
             </div>
         """, unsafe_allow_html=True)
-        user_email_3 = st.text_input("Your Email", key="email_premium")
-        if st.button("Choose Premium", key="btn_premium"):
-            if user_email_3:
+        email_3 = st.text_input("Enter your Email", key="email_premium")
+        if st.button("Pay ₹7,999 with Razorpay", key="btn_premium"):
+            if email_3:
+                save_paid_customer(email_3, "Premium", "₹7,999")
                 st.session_state.logged_in = True
-                st.session_state.username = user_email_3.split("@")[0]
-                st.success("Plan selected! Account created. Redirecting to Dashboard...")
+                st.session_state.username = email_3.split("@")[0]
+                st.success("Payment Successful via Razorpay! Account created automatically.")
+                st.info(f"📩 Login credentials & receipt sent to {email_3}")
                 st.balloons()
             else:
-                st.warning("Please enter your email first.")
+                st.warning("Please enter your email address.")
 
     with col_p4:
         st.markdown("""
@@ -422,36 +445,39 @@ elif nav_choice == "Admin Portal":
                 else:
                     st.error("Incorrect password! Try 'admin123'")
     else:
-        st.markdown("## 🛡️ Admin Dashboard - Captured Leads")
-        st.info("Manage, search, and export all customer leads collected by your AI Sales Agent.")
+        st.markdown("## 🛡️ Admin Portal - Notifications & Leads")
         
         if st.sidebar.button("Admin Logout"):
             st.session_state.admin_logged_in = False
             st.rerun()
             
-        if os.path.exists("leads.csv"):
-            df_leads = pd.read_csv("leads.csv")
-            
-            if not df_leads.empty:
-                search_query = st.text_input("🔍 Search Leads (by Name, Email, Business, or Service):")
-                
-                if search_query:
-                    mask = df_leads.apply(lambda row: row.astype(str).str.contains(search_query, case=False).any(), axis=1)
-                    filtered_df = df_leads[mask]
-                else:
-                    filtered_df = df_leads
+        admin_tab1, admin_tab2 = st.tabs(["🔔 Paid Customers (Notifications)", "📋 Captured AI Leads"])
+        
+        with admin_tab1:
+            st.subheader("Notifications of New Paid Customers")
+            if os.path.exists("paid_customers.csv"):
+                df_paid = pd.read_csv("paid_customers.csv")
+                if not df_paid.empty:
+                    st.success(f"🔔 You have {len(df_paid)} new paid customer(s) registered!")
+                    st.dataframe(df_paid, use_container_width=True)
                     
-                st.write(f"Showing **{len(filtered_df)}** lead(s):")
-                st.dataframe(filtered_df, use_container_width=True)
-                
-                csv_data = filtered_df.to_csv(index=False).encode('utf-8')
-                st.download_button(
-                    label="📥 Download Leads as CSV",
-                    data=csv_data,
-                    file_name=f"exported_leads_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
-                    mime="text/csv"
-                )
+                    csv_paid = df_paid.to_csv(index=False).encode('utf-8')
+                    st.download_button(
+                        label="📥 Download Paid Customers CSV",
+                        data=csv_paid,
+                        file_name=f"paid_customers_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                        mime="text/csv"
+                    )
+                else:
+                    st.warning("No paid customers yet.")
             else:
-                st.warning("The leads.csv file is currently empty. No leads collected yet.")
-        else:
-            st.warning("No `leads.csv` file found yet. Try talking to your AI sales bot to generate a lead first!")
+                st.warning("No paid customers records found yet.")
+                
+        with admin_tab2:
+            st.subheader("Captured Leads from AI Sales Bot")
+            if os.path.exists("leads.csv"):
+                df_leads = pd.read_csv("leads.csv")
+                if not df_leads.empty:
+                    search_query = st.text_input("🔍 Search Leads (by Name, Email, Business, or Service):")
+                    if search_query:
+                        mask = df_leads.apply(lambda row: row.astype(str).str.contains(search_qu
