@@ -240,15 +240,15 @@ if nav_choice == "Home / Landing Page":
     
     col_s1, col_s2, col_s3, col_s4, col_s5 = st.columns(5)
     with col_s1:
-        st.markdown('<div class="feature-card"><h3>🌐 Website Dev</h3><p>High-performing modern responsive websites.</p></div>', unsafe_allow_html=True)
+        st.markdown("""<div class="feature-card"><h3>🌐 Website Dev</h3><p>High-performing modern responsive websites.</p></div>""", unsafe_allow_html=True)
     with col_s2:
-        st.markdown('<div class="feature-card"><h3>🤖 AI Chatbots</h3><p>24/7 intelligent sales conversational bots.</p></div>', unsafe_allow_html=True)
+        st.markdown("""<div class="feature-card"><h3>🤖 AI Chatbots</h3><p>24/7 intelligent sales conversational bots.</p></div>""", unsafe_allow_html=True)
     with col_s3:
-        st.markdown('<div class="feature-card"><h3>📱 App Dev</h3><p>Scalable mobile apps for iOS & Android.</p></div>', unsafe_allow_html=True)
+        st.markdown("""<div class="feature-card"><h3>📱 App Dev</h3><p>Scalable mobile apps for iOS & Android.</p></div>""", unsafe_allow_html=True)
     with col_s4:
-        st.markdown('<div class="feature-card"><h3>🎨 Logo Design</h3><p>Memorable brand identities & graphics.</p></div>', unsafe_allow_html=True)
+        st.markdown("""<div class="feature-card"><h3>🎨 Logo Design</h3><p>Memorable brand identities & graphics.</p></div>""", unsafe_allow_html=True)
     with col_s5:
-        st.markdown('<div class="feature-card"><h3>📈 Marketing</h3><p>Data-driven customer growth campaigns.</p></div>', unsafe_allow_html=True)
+        st.markdown("""<div class="feature-card"><h3>📈 Marketing</h3><p>Data-driven customer growth campaigns.</p></div>""", unsafe_allow_html=True)
 
     st.markdown("---")
 
@@ -257,11 +257,11 @@ if nav_choice == "Home / Landing Page":
     
     t1, t2, t3 = st.columns(3)
     with t1:
-        st.markdown('<div class="testimonial-card">"AgentFlow AI automated our entire lead pipeline. Our conversion rate jumped by 300% in just two weeks!"<br><br><b>— Rajesh Sharma</b><br><span style="color: #64748b; font-size: 13px;">CEO, TechCorp India</span></div>', unsafe_allow_html=True)
+        st.markdown("""<div class="testimonial-card">"AgentFlow AI automated our entire lead pipeline. Our conversion rate jumped by 300% in just two weeks!"<br><br><b>— Rajesh Sharma</b><br><span style="color: #64748b; font-size: 13px;">CEO, TechCorp India</span></div>""", unsafe_allow_html=True)
     with t2:
-        st.markdown('<div class="testimonial-card">"The custom AI chatbot built for our e-commerce store handles customer queries flawlessly 24/7. Exceptional work!"<br><br><b>— Priya Patel</b><br><span style="color: #64748b; font-size: 13px;">Founder, StyleHub</span></div>', unsafe_allow_html=True)
+        st.markdown("""<div class="testimonial-card">"The custom AI chatbot built for our e-commerce store handles customer queries flawlessly 24/7. Exceptional work!"<br><br><b>— Priya Patel</b><br><span style="color: #64748b; font-size: 13px;">Founder, StyleHub</span></div>""", unsafe_allow_html=True)
     with t3:
-        st.markdown('<div class="testimonial-card">"Incredible platform and seamless payment onboarding. The dashboard gives us absolute clarity on our projects."<br><br><b>— Amit Verma</b><br><span style="color: #64748b; font-size: 13px;">Director, LogiTech Solutions</span></div>', unsafe_allow_html=True)
+        st.markdown("""<div class="testimonial-card">"Incredible platform and seamless payment onboarding. The dashboard gives us absolute clarity on our projects."<br><br><b>— Amit Verma</b><br><span style="color: #64748b; font-size: 13px;">Director, LogiTech Solutions</span></div>""", unsafe_allow_html=True)
 
     st.markdown("---")
 
@@ -449,6 +449,6 @@ elif nav_choice == "Portfolio / Projects":
     
     p1, p2, p3 = st.columns(3)
     with p1:
-        st.markdown('<div class="portfolio-card"><h3>🛒 AI E-Commerce Suite</h3><p>Built an automated conversational sales bot and inventory tracker for a major retail brand, boosting sales by 45%.</p><br><b>Tech:</b> Python, Groq AI, Streamlit</div>', unsafe_allow_html=True)
+        st.markdown("""<div class="portfolio-card"><h3>🛒 AI E-Commerce Suite</h3><p>Built an automated conversational sales bot and inventory tracker for a major retail brand, boosting sales by 45%.</p><br><b>Tech:</b> Python, Groq AI, Streamlit</div>""", unsafe_allow_html=True)
     with p2:
-        st.markdown('<div class="portfolio-card"><h3>🏥 HealthTech SaaS Portal</h3><p>Developed a secure patient management dashboard with automated appointment scheduling and billi
+        st.markdown("""<div class="portfolio-card"><h3>🏥 HealthTech SaaS Portal</h3><p>Developed a secure patient management dashboard with auto
