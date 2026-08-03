@@ -4,14 +4,12 @@ import os
 from groq import Groq
 from datetime import datetime
 
-# Page configuration
 st.set_page_config(
     page_title="AgentFlow AI | Enterprise SaaS Portal", 
     page_icon="⚡", 
     layout="wide"
 )
 
-# Custom CSS for styling
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -87,7 +85,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Initialize Groq Client securely
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
 SYSTEM_PROMPT = """You are an expert AI Sales Agent for AgentFlow AI. You can converse in both English and Hindi (or Hinglish) depending on user preference. Your goal is to naturally converse with the user and collect exactly these 6 details:
@@ -478,6 +475,8 @@ elif nav_choice == "Admin Portal":
             if os.path.exists("leads.csv"):
                 df_leads = pd.read_csv("leads.csv")
                 if not df_leads.empty:
-                    search_query = st.text_input("🔍 Search Leads (by Name, Email, Business, or Service):")
+                    search_query = st.text_input("🔍 Search Leads:")
                     if search_query:
-                        mask = df_leads.apply(lambda row: row.astype(str).str.contains(search_qu
+                        filtered_df = df_leads[df_leads.astype(str).apply(lambda x: x.str.contains(search_query, case=False)).any(axis=1)]
+                    else:
+                        filtered_df = df_leads
