@@ -4,7 +4,6 @@ import os
 from groq import Groq
 from datetime import datetime
 
-# Page configuration with SEO Meta Tags and Custom Theme config
 st.set_page_config(
     page_title="AgentFlow AI | Enterprise SaaS & Business Automation Portal", 
     page_icon="⚡", 
@@ -12,7 +11,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for Enterprise UI/UX, Dark/Light mode support, Sticky Nav & Animations
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -21,7 +19,6 @@ st.markdown("""
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
     
-    /* Smooth Fade-in Animation */
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
@@ -134,7 +131,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Initialize Groq Client securely
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
 SYSTEM_PROMPT = """You are an expert AI Sales Agent for AgentFlow AI. You can converse in both English and Hindi (or Hinglish) depending on user preference. Your goal is to naturally converse with the user and collect exactly these 6 details:
@@ -152,7 +148,6 @@ RULES:
 COMPLETE: Name | Business | Service | Budget | Phone | Email
 """
 
-# Session States Initialization
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
     st.session_state.messages.append({
@@ -202,10 +197,7 @@ def save_paid_customer(email, plan_name, amount):
     else:
         df.to_csv(file_name, mode='a', header=False, index=False)
 
-# --- STICKY SIDEBAR NAVIGATION ---
 st.sidebar.markdown("### ⚡ AgentFlow Portal")
-
-# Live Visitor Counter Placeholder in Sidebar
 st.sidebar.markdown("🟢 **Live Visitors Online:** `142 active`")
 st.sidebar.markdown("---")
 
@@ -225,11 +217,7 @@ st.sidebar.markdown("---")
 st.sidebar.markdown("🛡️ **Enterprise Security**")
 st.sidebar.caption("SSL Secured | 24/7 Support | Verified Gateway")
 
-
-# ==================== 1. LANDING PAGE VIEW ====================
 if nav_choice == "Home / Landing Page":
-    
-    # Loading animation simulation / header
     st.markdown("""
         <div class="hero-container">
             <div class="hero-badge">⚡ Next-Gen Business Automation & AI</div>
@@ -238,7 +226,6 @@ if nav_choice == "Home / Landing Page":
         </div>
     """, unsafe_allow_html=True)
 
-    # Trust Badges Section
     st.markdown("""
         <div class="trust-badge-container">
             <div class="trust-badge">🔒 100% Secure Payment</div>
@@ -248,9 +235,8 @@ if nav_choice == "Home / Landing Page":
         </div>
     """, unsafe_allow_html=True)
 
-    # Services Section
-    st.markdown('<div class="section-title">Our Professional Services</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-subtitle">Comprehensive solutions tailored to scale your digital presence.</div>', unsafe_allow_html=True)
+    st.markdown("""<div class="section-title">Our Professional Services</div>""", unsafe_allow_html=True)
+    st.markdown("""<div class="section-subtitle">Comprehensive solutions tailored to scale your digital presence.</div>""", unsafe_allow_html=True)
     
     col_s1, col_s2, col_s3, col_s4, col_s5 = st.columns(5)
     with col_s1:
@@ -266,9 +252,8 @@ if nav_choice == "Home / Landing Page":
 
     st.markdown("---")
 
-    # Testimonials Section on Landing Page
-    st.markdown('<div class="section-title">⭐ What Our Clients Say</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-subtitle">Trusted by hundreds of forward-thinking founders and enterprises.</div>', unsafe_allow_html=True)
+    st.markdown("""<div class="section-title">⭐ What Our Clients Say</div>""", unsafe_allow_html=True)
+    st.markdown("""<div class="section-subtitle">Trusted by hundreds of forward-thinking founders and enterprises.</div>""", unsafe_allow_html=True)
     
     t1, t2, t3 = st.columns(3)
     with t1:
@@ -280,9 +265,8 @@ if nav_choice == "Home / Landing Page":
 
     st.markdown("---")
 
-    # AI Chatbot Section
-    st.markdown('<div class="section-title">💬 Interactive AI Sales Assistant</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-subtitle">Chat with our assistant below to share your custom requirements.</div>', unsafe_allow_html=True)
+    st.markdown("""<div class="section-title">💬 Interactive AI Sales Assistant</div>""", unsafe_allow_html=True)
+    st.markdown("""<div class="section-subtitle">Chat with our assistant below to share your custom requirements.</div>""", unsafe_allow_html=True)
 
     col_c1, col_chat, col_c3 = st.columns([1, 2.5, 1])
     with col_chat:
@@ -318,7 +302,6 @@ if nav_choice == "Home / Landing Page":
                 except Exception as e:
                     st.error(f"An error occurred: {e}")
 
-    # Professional Footer
     st.markdown("""
         <div class="footer">
             <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 30px; max-width: 1200px; margin: 0 auto;">
@@ -346,13 +329,10 @@ if nav_choice == "Home / Landing Page":
         </div>
     """, unsafe_allow_html=True)
 
-
-# ==================== 2. PRICING & PLANS ====================
 elif nav_choice == "Pricing & Plans":
-    
     if not st.session_state.checkout_active:
-        st.markdown('<div class="section-title">Choose Your Growth Plan</div>', unsafe_allow_html=True)
-        st.markdown('<div class="section-subtitle">Select a plan to proceed with secure Razorpay checkout supporting UPI, Cards, Net Banking & Wallets.</div>', unsafe_allow_html=True)
+        st.markdown("""<div class="section-title">Choose Your Growth Plan</div>""", unsafe_allow_html=True)
+        st.markdown("""<div class="section-subtitle">Select a plan to proceed with secure Razorpay checkout supporting UPI, Cards, Net Banking & Wallets.</div>""", unsafe_allow_html=True)
 
         col_p1, col_p2, col_p3, col_p4 = st.columns(4)
 
@@ -445,11 +425,9 @@ elif nav_choice == "Pricing & Plans":
                 
             st.markdown("</div>", unsafe_allow_html=True)
 
-
-# ==================== 3. ABOUT US PAGE ====================
 elif nav_choice == "About Us":
-    st.markdown('<div class="section-title">About AgentFlow AI</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-subtitle">Empowering businesses through cutting-edge artificial intelligence and workflow automation.</div>', unsafe_allow_html=True)
+    st.markdown("""<div class="section-title">About AgentFlow AI</div>""", unsafe_allow_html=True)
+    st.markdown("""<div class="section-subtitle">Empowering businesses through cutting-edge artificial intelligence and workflow automation.</div>""", unsafe_allow_html=True)
     
     col_a1, col_a2 = st.columns(2)
     with col_a1:
@@ -465,7 +443,12 @@ elif nav_choice == "About Us":
         st.metric(label="Automated Leads Processed", value="450,000+", delta="99.4% Success Rate")
         st.metric(label="Global Team Members", value="45+", delta="Expert Engineers & AI Researchers")
 
-
-# ==================== 4. PORTFOLIO / PROJECTS ====================
 elif nav_choice == "Portfolio / Projects":
-    st.markdown('<div class="section-title"
+    st.markdown("""<div class="section-title">Our Portfolio & Previous Projects</div>""", unsafe_allow_html=True)
+    st.markdown("""<div class="section-subtitle">A showcase of successful digital transformations and enterprise deployments.</div>""", unsafe_allow_html=True)
+    
+    p1, p2, p3 = st.columns(3)
+    with p1:
+        st.markdown('<div class="portfolio-card"><h3>🛒 AI E-Commerce Suite</h3><p>Built an automated conversational sales bot and inventory tracker for a major retail brand, boosting sales by 45%.</p><br><b>Tech:</b> Python, Groq AI, Streamlit</div>', unsafe_allow_html=True)
+    with p2:
+        st.markdown('<div class="portfolio-card"><h3>🏥 HealthTech SaaS Portal</h3><p>Developed a secure patient management dashboard with automated appointment scheduling and billi
