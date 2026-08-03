@@ -90,7 +90,6 @@ st.markdown("""
 # Initialize Groq Client securely
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
-# System Prompt for AI Sales Agent
 SYSTEM_PROMPT = """You are an expert AI Sales Agent for AgentFlow AI. You can converse in both English and Hindi (or Hinglish) depending on user preference. Your goal is to naturally converse with the user and collect exactly these 6 details:
 1. Name
 2. Business Name
@@ -106,7 +105,6 @@ RULES:
 COMPLETE: Name | Business | Service | Budget | Phone | Email
 """
 
-# Initialize Session States
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
     st.session_state.messages.append({
@@ -121,7 +119,6 @@ if "username" not in st.session_state:
 if "admin_logged_in" not in st.session_state:
     st.session_state.admin_logged_in = False
 
-# Save Leads Function
 def save_lead_to_csv(data_list):
     file_name = "leads.csv"
     new_lead = {
@@ -139,14 +136,10 @@ def save_lead_to_csv(data_list):
     else:
         df.to_csv(file_name, mode='a', header=False, index=False)
 
-
-# --- SIDEBAR NAVIGATION ---
 st.sidebar.markdown("### ⚡ AgentFlow Portal")
 nav_choice = st.sidebar.radio("Navigation", ["Home / Landing Page", "Pricing & Plans", "Customer Login / Signup", "Admin Portal"])
 
-# ==================== 1. LANDING PAGE VIEW ====================
 if nav_choice == "Home / Landing Page":
-    
     st.markdown("""
         <div class="hero-container">
             <div class="hero-badge">⚡ Next-Gen Business Automation</div>
@@ -155,7 +148,6 @@ if nav_choice == "Home / Landing Page":
         </div>
     """, unsafe_allow_html=True)
 
-    # Services Section
     st.markdown('<div class="section-title">Our Professional Services</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-subtitle">Comprehensive solutions tailored to scale your digital presence.</div>', unsafe_allow_html=True)
     
@@ -178,7 +170,6 @@ if nav_choice == "Home / Landing Page":
 
     st.markdown("---")
 
-    # AI Chatbot Section
     st.markdown('<div class="section-title">💬 Interactive AI Sales Assistant</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-subtitle">Chat with our assistant below to share your custom requirements.</div>', unsafe_allow_html=True)
 
@@ -221,16 +212,12 @@ if nav_choice == "Home / Landing Page":
             <p>© 2026 <span>AgentFlow AI</span>. All rights reserved.</p>
         </div>
     """, unsafe_allow_html=True)
-
-
-# ==================== 2. UPDATED PRICING PAGE ====================
-elif nav_choice == "Pricing & Plans":
+    elif nav_choice == "Pricing & Plans":
     st.markdown('<div class="section-title">Choose Your Growth Plan</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-subtitle">Flexible pricing tiers designed to scale with your business needs.</div>', unsafe_allow_html=True)
 
     col_p1, col_p2, col_p3, col_p4 = st.columns(4)
 
-    # Starter
     with col_p1:
         st.markdown("""
             <div class="pricing-card">
@@ -249,7 +236,6 @@ elif nav_choice == "Pricing & Plans":
             else:
                 st.warning("Please enter your email first.")
 
-    # Pro
     with col_p2:
         st.markdown("""
             <div class="pricing-card" style="border: 2px solid #7c3aed;">
@@ -268,7 +254,6 @@ elif nav_choice == "Pricing & Plans":
             else:
                 st.warning("Please enter your email first.")
 
-    # Premium
     with col_p3:
         st.markdown("""
             <div class="pricing-card">
@@ -287,7 +272,6 @@ elif nav_choice == "Pricing & Plans":
             else:
                 st.warning("Please enter your email first.")
 
-    # Enterprise
     with col_p4:
         st.markdown("""
             <div class="pricing-card">
@@ -301,10 +285,7 @@ elif nav_choice == "Pricing & Plans":
         if st.button("Contact Sales"):
             st.info("Please reach out via our support desk for custom enterprise integrations.")
 
-
-# ==================== 3. CUSTOMER LOGIN / SIGNUP & DASHBOARD ====================
 elif nav_choice == "Customer Login / Signup":
-    
     if not st.session_state.logged_in:
         st.markdown("<h2 style='text-align: center;'>🔐 Customer Portal Authentication</h2>", unsafe_allow_html=True)
         
@@ -428,10 +409,7 @@ elif nav_choice == "Customer Login / Signup":
                 with st.chat_message("assistant"):
                     st.markdown(reply)
 
-
-# ==================== 4. ADMIN PORTAL VIEW ====================
 elif nav_choice == "Admin Portal":
-    
     if not st.session_state.admin_logged_in:
         st.markdown("<h2 style='text-align: center;'>🔒 Admin Authentication</h2>", unsafe_allow_html=True)
         
