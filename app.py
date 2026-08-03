@@ -212,7 +212,8 @@ if nav_choice == "Home / Landing Page":
             <p>© 2026 <span>AgentFlow AI</span>. All rights reserved.</p>
         </div>
     """, unsafe_allow_html=True)
-    elif nav_choice == "Pricing & Plans":
+
+elif nav_choice == "Pricing & Plans":
     st.markdown('<div class="section-title">Choose Your Growth Plan</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-subtitle">Flexible pricing tiers designed to scale with your business needs.</div>', unsafe_allow_html=True)
 
