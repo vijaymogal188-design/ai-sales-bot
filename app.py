@@ -4,14 +4,14 @@ import os
 from groq import Groq
 from datetime import datetime
 
-# Page configuration
+# Page configuration (Wide layout for professional SaaS look)
 st.set_page_config(
-    page_title="AgentFlow AI | Enterprise Sales Agent", 
+    page_title="AgentFlow AI | Enterprise SaaS Portal", 
     page_icon="⚡", 
     layout="wide"
 )
 
-# Custom CSS for Premium SaaS Landing Page UI
+# Custom CSS for styling the Landing Page & Dashboard UI
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -20,10 +20,9 @@ st.markdown("""
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
     
-    /* Hero Section */
     .hero-container {
         text-align: center;
-        padding: 50px 20px 30px 20px;
+        padding: 40px 20px 20px 20px;
         max-width: 900px;
         margin: 0 auto;
     }
@@ -36,10 +35,9 @@ st.markdown("""
         padding: 6px 16px;
         border-radius: 50px;
         margin-bottom: 16px;
-        letter-spacing: 0.5px;
     }
     .hero-title {
-        font-size: 48px;
+        font-size: 42px;
         font-weight: 800;
         color: #0f172a;
         line-height: 1.2;
@@ -51,41 +49,33 @@ st.markdown("""
         -webkit-text-fill-color: transparent;
     }
     .hero-subtitle {
-        font-size: 18px;
+        font-size: 16px;
         color: #64748b;
         line-height: 1.6;
-        margin-bottom: 30px;
+        margin-bottom: 25px;
     }
-
-    /* Section Headings */
     .section-title {
         text-align: center;
-        font-size: 32px;
+        font-size: 28px;
         font-weight: 800;
         color: #0f172a;
-        margin-top: 50px;
+        margin-top: 40px;
         margin-bottom: 10px;
     }
     .section-subtitle {
         text-align: center;
-        font-size: 16px;
+        font-size: 15px;
         color: #64748b;
-        margin-bottom: 40px;
+        margin-bottom: 30px;
     }
-
-    /* Footer */
     .footer {
         text-align: center;
-        padding: 40px 20px;
+        padding: 30px;
         color: #94a3b8;
         font-size: 14px;
         border-top: 1px solid #e2e8f0;
-        margin-top: 60px;
+        margin-top: 50px;
         background: #ffffff;
-    }
-    .footer span {
-        color: #7c3aed;
-        font-weight: 600;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -93,8 +83,8 @@ st.markdown("""
 # Initialize Groq Client securely
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
-# System Prompt
-SYSTEM_PROMPT = """You are an expert AI Sales Agent for AgentFlow AI. You can converse in both English and Hindi (or Hinglish) depending on what language the user prefers. Your goal is to naturally converse with the user and collect exactly these 6 details:
+# System Prompt for AI Sales Agent
+SYSTEM_PROMPT = """You are an expert AI Sales Agent for AgentFlow AI. You can converse in both English and Hindi (or Hinglish) depending on user preference. Your goal is to naturally converse with the user and collect exactly these 6 details:
 1. Name
 2. Business Name
 3. Service Required
@@ -103,22 +93,29 @@ SYSTEM_PROMPT = """You are an expert AI Sales Agent for AgentFlow AI. You can co
 6. Email Address
 
 RULES:
-- Match the language of the user. If they speak Hindi, reply in Hindi. If English, reply in English.
-- Ask for these details conversationally, one or two at a time. Be polite, engaging, and professional.
-- Do not ask for all details at once. Do not show them a list.
-- Once you have successfully collected ALL 6 details, you MUST stop the conversation and output EXACTLY this format and absolutely nothing else:
+- Match user's language (English/Hindi).
+- Ask conversationally, one or two details at a time.
+- Once ALL 6 details are collected, output EXACTLY this format and nothing else:
 COMPLETE: Name | Business | Service | Budget | Phone | Email
 """
 
-# Initialize chat history
+# Initialize Session States for Auth and Chat
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
     st.session_state.messages.append({
         "role": "assistant", 
-        "content": "👋 Hello! Welcome to AgentFlow AI. I'm your virtual assistant. To get started, could you please tell me your name?"
+        "content": "👋 Hello! Welcome to AgentFlow AI. To get started, could you please tell me your name?"
     })
 
-# Function to automatically save lead to CSV
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+if "username" not in st.session_state:
+    st.session_state.username = ""
+
+if "admin_logged_in" not in st.session_state:
+    st.session_state.admin_logged_in = False
+
+# Function to save leads automatically to CSV
 def save_lead_to_csv(data_list):
     file_name = "leads.csv"
     new_lead = {
@@ -131,166 +128,276 @@ def save_lead_to_csv(data_list):
         "Email": data_list[5].strip()
     }
     df = pd.DataFrame([new_lead])
-    
     if not os.path.exists(file_name):
         df.to_csv(file_name, index=False)
     else:
         df.to_csv(file_name, mode='a', header=False, index=False)
 
-# --- 1. HERO SECTION ---
-st.markdown("""
-    <div class="hero-container">
-        <div class="hero-badge">⚡ Next-Gen Business Automation</div>
-        <div class="hero-title">Scale Your Growth with <span>AgentFlow AI</span></div>
-        <div class="hero-subtitle">Experience lightning-fast client acquisition, intelligent workflow automations, and bespoke digital solutions designed to elevate your brand to market leadership.</div>
-    </div>
-""", unsafe_allow_html=True)
 
-# --- 2. SERVICES SECTION (5 Service Cards) ---
-st.markdown('<div class="section-title">Our Professional Services</div>', unsafe_allow_html=True)
-st.markdown('<div class="section-subtitle">Comprehensive solutions tailored to scale your digital presence.</div>', unsafe_allow_html=True)
+# --- SIDEBAR NAVIGATION ---
+st.sidebar.markdown("### ⚡ AgentFlow Portal")
+nav_choice = st.sidebar.radio("Navigation", ["Home / Landing Page", "Customer Login / Signup", "Admin Portal"])
 
-col_s1, col_s2, col_s3, col_s4, col_s5 = st.columns(5)
+# ==================== 1. LANDING PAGE VIEW ====================
+if nav_choice == "Home / Landing Page":
+    
+    # Hero Section
+    st.markdown("""
+        <div class="hero-container">
+            <div class="hero-badge">⚡ Next-Gen Business Automation</div>
+            <div class="hero-title">Scale Your Growth with <span>AgentFlow AI</span></div>
+            <div class="hero-subtitle">Experience lightning-fast client acquisition, intelligent workflow automations, and bespoke digital solutions designed to elevate your brand.</div>
+        </div>
+    """, unsafe_allow_html=True)
 
-with col_s1:
-    st.markdown("### 🌐 Website Dev")
-    st.write("High-performing, responsive, and conversion-focused modern websites.")
+    # Services Section
+    st.markdown('<div class="section-title">Our Professional Services</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-subtitle">Comprehensive solutions tailored to scale your digital presence.</div>', unsafe_allow_html=True)
+    
+    col_s1, col_s2, col_s3, col_s4, col_s5 = st.columns(5)
+    with col_s1:
+        st.markdown("### 🌐 Website Dev")
+        st.write("High-performing modern responsive websites.")
+    with col_s2:
+        st.markdown("### 🤖 AI Chatbots")
+        st.write("24/7 intelligent sales conversational bots.")
+    with col_s3:
+        st.markdown("### 📱 App Dev")
+        st.write("Scalable mobile apps for iOS & Android.")
+    with col_s4:
+        st.markdown("### 🎨 Logo Design")
+        st.write("Memorable brand identities & graphics.")
+    with col_s5:
+        st.markdown("### 📈 Marketing")
+        st.write("Data-driven customer growth campaigns.")
 
-with col_s2:
-    st.markdown("### 🤖 AI Chatbots")
-    st.write("Custom intelligent conversational bots that handle sales 24/7.")
+    st.markdown("---")
 
-with col_s3:
-    st.markdown("### 📱 App Dev")
-    st.write("Scalable and robust mobile applications built for iOS & Android.")
+    # AI Chatbot Section (Center Aligned)
+    st.markdown('<div class="section-title">💬 Interactive AI Sales Assistant</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-subtitle">Chat with our assistant below to share your custom requirements.</div>', unsafe_allow_html=True)
 
-with col_s4:
-    st.markdown("### 🎨 Logo Design")
-    st.write("Memorable brand identities and creative graphics that stand out.")
+    col_c1, col_chat, col_c3 = st.columns([1, 2.5, 1])
+    with col_chat:
+        for message in st.session_state.messages:
+            if message["role"] != "system":
+                with st.chat_message(message["role"]):
+                    st.markdown(message["content"])
 
-with col_s5:
-    st.markdown("### 📈 Marketing")
-    st.write("Data-driven growth campaigns to maximize your customer reach.")
+        if prompt := st.chat_input("Type your message here..."):
+            st.chat_message("user").markdown(prompt)
+            st.session_state.messages.append({"role": "user", "content": prompt})
 
-st.markdown("---")
-
-# --- 3. PRICING SECTION ---
-st.markdown('<div class="section-title">Transparent Pricing Plans</div>', unsafe_allow_html=True)
-st.markdown('<div class="section-subtitle">Choose the perfect tier that fits your company size and goals.</div>', unsafe_allow_html=True)
-
-col_p1, col_p2, col_p3, col_p4 = st.columns(4)
-
-with col_p1:
-    st.markdown("### 🚀 Starter")
-    st.markdown("#### **$49 /mo**")
-    st.write("• Basic AI Chatbot Setup\n• Up to 500 Leads/mo\n• Standard Support\n• CSV Lead Export")
-
-with col_p2:
-    st.markdown("### 💼 Business")
-    st.markdown("#### **$149 /mo**")
-    st.write("• Advanced AI Sales Agent\n• Unlimited Leads\n• Priority Support\n• Bilingual Language Support")
-
-with col_p3:
-    st.markdown("### 🏢 Enterprise")
-    st.markdown("#### **$399 /mo**")
-    st.write("• Custom Workflow Integrations\n• Dedicated Account Manager\n• Custom CRM Sync\n• 24/7 Phone Support")
-
-with col_p4:
-    st.markdown("### ⚙️ Custom Quote")
-    st.markdown("#### **Let's Talk**")
-    st.write("• Tailored Multi-agent Setup\n• Custom API Architecture\n• On-premise Deployment\n• Enterprise Security")
-
-st.markdown("---")
-
-# --- 4. WHY CHOOSE US SECTION ---
-st.markdown('<div class="section-title">Why Choose AgentFlow AI?</div>', unsafe_allow_html=True)
-st.markdown('<div class="section-subtitle">Engineered to give your business an unfair advantage.</div>', unsafe_allow_html=True)
-
-col_w1, col_w2, col_w3 = st.columns(3)
-
-with col_w1:
-    st.markdown("### ⚡ 24/7 Automation")
-    st.write("Never miss a potential customer. Our AI agents qualify leads around the clock instantly.")
-
-with col_w2:
-    st.markdown("### 🔒 Enterprise Security")
-    st.write("Your business data and customer logs are securely processed with strict privacy standards.")
-
-with col_w3:
-    st.markdown("### 🌍 Bilingual Support")
-    st.write("Seamlessly switch between English and Hindi to engage a wider regional audience.")
-
-st.markdown("---")
-
-# --- 5. AI CHAT INTERFACE (Center Aligned) ---
-st.markdown('<div class="section-title">💬 Interactive AI Sales Assistant</div>', unsafe_allow_html=True)
-st.markdown('<div class="section-subtitle">Chat with our intelligent assistant below to share your requirements.</div>', unsafe_allow_html=True)
-
-col_c1, col_chat, col_c3 = st.columns([1, 2.5, 1])
-
-with col_chat:
-    # Display chat messages from history
-    for message in st.session_state.messages:
-        if message["role"] != "system":
-            with st.chat_message(message["role"]):
-                st.markdown(message["content"])
-
-    # React to user input
-    if prompt := st.chat_input("Type your message here..."):
-        st.chat_message("user").markdown(prompt)
-        st.session_state.messages.append({"role": "user", "content": prompt})
-
-        with st.chat_message("assistant"):
-            try:
-                chat_completion = client.chat.completions.create(
-                    messages=st.session_state.messages,
-                    model="llama-3.1-8b-instant",
-                    temperature=0.5
-                )
-                
-                response_text = chat_completion.choices[0].message.content
-                
-                if "COMPLETE:" in response_text:
-                    data_part = response_text.split("COMPLETE:")[1].strip()
-                    lead_data = data_part.split("|")
+            with st.chat_message("assistant"):
+                try:
+                    chat_completion = client.chat.completions.create(
+                        messages=st.session_state.messages,
+                        model="llama-3.1-8b-instant",
+                        temperature=0.5
+                    )
+                    response_text = chat_completion.choices[0].message.content
                     
-                    if len(lead_data) == 6:
-                        save_lead_to_csv(lead_data)
+                    if "COMPLETE:" in response_text:
+                        data_part = response_text.split("COMPLETE:")[1].strip()
+                        lead_data = data_part.split("|")
+                        if len(lead_data) == 6:
+                            save_lead_to_csv(lead_data)
                         final_msg = "Thank you! Your details have been received. Our team will contact you soon."
                         st.markdown(final_msg)
                         st.session_state.messages.append({"role": "assistant", "content": final_msg})
                     else:
-                        fallback_msg = "Thank you! Your details have been received. Our team will contact you soon."
-                        st.markdown(fallback_msg)
-                        st.session_state.messages.append({"role": "assistant", "content": fallback_msg})
+                        st.markdown(response_text)
+                        st.session_state.messages.append({"role": "assistant", "content": response_text})
+                except Exception as e:
+                    st.error(f"An error occurred: {e}")
+
+    # Footer
+    st.markdown("""
+        <div class="footer">
+            <p>© 2026 <span>AgentFlow AI</span>. All rights reserved.</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+
+# ==================== 2. CUSTOMER LOGIN / SIGNUP & DASHBOARD ====================
+elif nav_choice == "Customer Login / Signup":
+    
+    if not st.session_state.logged_in:
+        st.markdown("<h2 style='text-align: center;'>🔐 Customer Portal Authentication</h2>", unsafe_allow_html=True)
+        
+        auth_tab1, auth_tab2 = st.tabs(["🔑 Login", "📝 Signup"])
+        
+        with auth_tab1:
+            st.subheader("Login to your Dashboard")
+            login_user = st.text_input("Username or Email", key="login_email")
+            login_pass = st.text_input("Password", type="password", key="login_pass")
+            
+            if st.button("Login"):
+                if login_user and login_pass:
+                    st.session_state.logged_in = True
+                    st.session_state.username = login_user
+                    st.success("Login successful! Redirecting to Dashboard...")
+                    st.rerun()
                 else:
-                    st.markdown(response_text)
-                    st.session_state.messages.append({"role": "assistant", "content": response_text})
+                    st.warning("Please fill in both fields.")
+                    
+        with auth_tab2:
+            st.subheader("Create a New Account")
+            new_user = st.text_input("Choose a Username", key="signup_user")
+            new_email = st.text_input("Email Address", key="signup_email")
+            new_pass = st.text_input("Create Password", type="password", key="signup_pass")
+            
+            if st.button("Sign Up"):
+                if new_user and new_email and new_pass:
+                    st.session_state.logged_in = True
+                    st.session_state.username = new_user
+                    st.success("Account created successfully! Welcome.")
+                    st.rerun()
+                else:
+                    st.warning("Please fill in all details.")
 
-            except Exception as e:
-                st.error(f"An error occurred: {e}")
+    else:
+        st.markdown(f"## 👋 Welcome back, {st.session_state.username}!")
+        st.info("Here is your centralized project control room and client workspace.")
+        
+        if st.sidebar.button("Logout"):
+            st.session_state.logged_in = False
+            st.session_state.username = ""
+            st.rerun()
 
-st.markdown("---")
+        dash_tab1, dash_tab2, dash_tab3, dash_tab4 = st.tabs([
+            "📊 Project Status", 
+            "📁 My Projects & Files", 
+            "💳 Invoices", 
+            "💬 Chat with Support"
+        ])
+        
+        with dash_tab1:
+            st.subheader("Active Project Tracking")
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric(label="Current Project", value="AI Sales Agent MVP", delta="Phase 2")
+            with col2:
+                st.metric(label="Status", value="In Progress 🔄", delta="On Track")
+            with col3:
+                st.metric(label="Estimated Delivery", value="5 Days Left")
+            
+            st.write("---")
+            st.write("### Milestone Timeline")
+            st.progress(70, text="70% Project Completion Completed")
+            st.markdown("- ✅ **Milestone 1:** Architecture & Requirements Setup")
+            st.markdown("- ✅ **Milestone 2:** Groq AI Model Integration & Prompt Design")
+            st.markdown("- 🔄 **Milestone 3:** SaaS Landing Page & UI Polish (In Progress)")
+            st.markdown("- ⏳ **Milestone 4:** Final QA Testing & Live Deployment")
 
-# --- 6. CONTACT SECTION ---
-st.markdown('<div class="section-title">Get in Touch</div>', unsafe_allow_html=True)
-st.markdown('<div class="section-subtitle">Have custom questions? Reach out to our founding team directly.</div>', unsafe_allow_html=True)
+        with dash_tab2:
+            st.subheader("📦 My Projects & Deliverables")
+            st.write("Download your project source codes, reports, and assets below:")
+            
+            st.download_button(
+                label="📥 Download Project Source Code (.zip)",
+                data="Dummy project source code bytes data",
+                file_name="agentflow_project_files.zip",
+                mime="application/zip"
+            )
+            
+            st.markdown("---")
+            st.subheader("Project History")
+            project_data = {
+                "Project ID": ["#PRJ-101", "#PRJ-102"],
+                "Service Name": ["AI Chatbot Implementation", "Website Development"],
+                "Status": ["Completed ✅", "In Progress 🔄"],
+                "Date Started": ["2026-01-15", "2026-02-01"]
+            }
+            st.table(pd.DataFrame(project_data))
 
-col_con1, col_con2 = st.columns(2)
+        with dash_tab3:
+            st.subheader("💳 Billing & Invoices")
+            invoice_data = {
+                "Invoice ID": ["#INV-2026-01", "#INV-2026-02"],
+                "Description": ["Starter Tier Setup", "Monthly Maintenance"],
+                "Amount": ["$49.00", "$149.00"],
+                "Status": ["Paid 🟢", "Pending 🟡"]
+            }
+            st.table(pd.DataFrame(invoice_data))
+            
+            if st.button("Download Latest Invoice PDF"):
+                st.success("Invoice #INV-2026-02 downloaded successfully!")
 
-with col_con1:
-    st.markdown("### 📱 WhatsApp Support")
-    st.write("Instant responses from our executive support team.")
-    st.markdown("[Chat on WhatsApp (Click Here)](https://wa.me/)")
+        with dash_tab4:
+            st.subheader("💬 Direct Support Desk")
+            st.write("Have a question about your build? Chat directly with our technical support engineer.")
+            
+            if "support_msgs" not in st.session_state:
+                st.session_state.support_msgs = [{"role": "assistant", "content": "Hello! How can our support team assist you with your project today?"}]
+                
+            for msg in st.session_state.support_msgs:
+                with st.chat_message(msg["role"]):
+                    st.markdown(msg["content"])
+                    
+            if sup_prompt := st.chat_input("Ask support a question..."):
+                st.session_state.support_msgs.append({"role": "user", "content": sup_prompt})
+                with st.chat_message("user"):
+                    st.markdown(sup_prompt)
+                    
+                reply = "Thank you for reaching out! A human support expert has received your query and will respond via email shortly."
+                st.session_state.support_msgs.append({"role": "assistant", "content": reply})
+                with st.chat_message("assistant"):
+                    st.markdown(reply)
 
-with col_con2:
-    st.markdown("### 📧 Email Us")
-    st.write("Drop your detailed business inquiries to our inbox.")
-    st.markdown("[support@agentflowai.com](mailto:support@agentflowai.com)")
 
-# --- 7. PROFESSIONAL FOOTER ---
-st.markdown("""
-    <div class="footer">
-        <p>© 2026 <span>AgentFlow AI</span>. All rights reserved. Powered by Advanced Language Models.</p>
-    </div>
-""", unsafe_allow_html=True)
+# ==================== 3. ADMIN PORTAL VIEW ====================
+elif nav_choice == "Admin Portal":
+    
+    if not st.session_state.admin_logged_in:
+        st.markdown("<h2 style='text-align: center;'>🔒 Admin Authentication</h2>", unsafe_allow_html=True)
+        
+        col_ad1, col_ad2, col_ad3 = st.columns([1, 2, 1])
+        with col_ad2:
+            admin_pass = st.text_input("Enter Admin Secret Password", type="password")
+            if st.button("Login as Admin"):
+                # Default simple password check (You can change "admin123" to anything you like)
+                if admin_pass == "admin123":
+                    st.session_state.admin_logged_in = True
+                    st.success("Admin login successful!")
+                    st.rerun()
+                else:
+                    st.error("Incorrect password! Try 'admin123'")
+    else:
+        st.markdown("## 🛡️ Admin Dashboard - Captured Leads")
+        st.info("Manage, search, and export all customer leads collected by your AI Sales Agent.")
+        
+        if st.sidebar.button("Admin Logout"):
+            st.session_state.admin_logged_in = False
+            st.rerun()
+            
+        # Check if leads.csv exists
+        if os.path.exists("leads.csv"):
+            df_leads = pd.read_csv("leads.csv")
+            
+            if not df_leads.empty:
+                # Search and Filter Options
+                search_query = st.text_input("🔍 Search Leads (by Name, Email, Business, or Service):")
+                
+                if search_query:
+                    # Filter dataframe based on search text across columns
+                    mask = df_leads.apply(lambda row: row.astype(str).str.contains(search_query, case=False).any(), axis=1)
+                    filtered_df = df_leads[mask]
+                else:
+                    filtered_df = df_leads
+                    
+                st.write(f"Showing **{len(filtered_df)}** lead(s):")
+                st.dataframe(filtered_df, use_container_width=True)
+                
+                # CSV Export Button
+                csv_data = filtered_df.to_csv(index=False).encode('utf-8')
+                st.download_button(
+                    label="📥 Download Leads as CSV",
+                    data=csv_data,
+                    file_name=f"exported_leads_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                    mime="text/csv"
+                )
+            else:
+                st.warning("The leads.csv file is currently empty. No leads collected yet.")
+        else:
+            st.warning("No `leads.csv` file found yet. Try talking to your AI sales bot to generate a lead first!")
