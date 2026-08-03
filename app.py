@@ -4,14 +4,14 @@ import os
 from groq import Groq
 from datetime import datetime
 
-# Page configuration (Wide layout for professional SaaS look)
+# Page configuration
 st.set_page_config(
     page_title="AgentFlow AI | Enterprise SaaS Portal", 
     page_icon="⚡", 
     layout="wide"
 )
 
-# Custom CSS for styling the Landing Page & Dashboard UI
+# Custom CSS for styling
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -19,7 +19,6 @@ st.markdown("""
     html, body, [class*="css"] {
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
-    
     .hero-container {
         text-align: center;
         padding: 40px 20px 20px 20px;
@@ -68,6 +67,14 @@ st.markdown("""
         color: #64748b;
         margin-bottom: 30px;
     }
+    .pricing-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        padding: 30px;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
     .footer {
         text-align: center;
         padding: 30px;
@@ -99,7 +106,7 @@ RULES:
 COMPLETE: Name | Business | Service | Budget | Phone | Email
 """
 
-# Initialize Session States for Auth and Chat
+# Initialize Session States
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
     st.session_state.messages.append({
@@ -111,11 +118,10 @@ if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 if "username" not in st.session_state:
     st.session_state.username = ""
-
 if "admin_logged_in" not in st.session_state:
     st.session_state.admin_logged_in = False
 
-# Function to save leads automatically to CSV
+# Save Leads Function
 def save_lead_to_csv(data_list):
     file_name = "leads.csv"
     new_lead = {
@@ -136,12 +142,11 @@ def save_lead_to_csv(data_list):
 
 # --- SIDEBAR NAVIGATION ---
 st.sidebar.markdown("### ⚡ AgentFlow Portal")
-nav_choice = st.sidebar.radio("Navigation", ["Home / Landing Page", "Customer Login / Signup", "Admin Portal"])
+nav_choice = st.sidebar.radio("Navigation", ["Home / Landing Page", "Pricing & Plans", "Customer Login / Signup", "Admin Portal"])
 
 # ==================== 1. LANDING PAGE VIEW ====================
 if nav_choice == "Home / Landing Page":
     
-    # Hero Section
     st.markdown("""
         <div class="hero-container">
             <div class="hero-badge">⚡ Next-Gen Business Automation</div>
@@ -173,7 +178,7 @@ if nav_choice == "Home / Landing Page":
 
     st.markdown("---")
 
-    # AI Chatbot Section (Center Aligned)
+    # AI Chatbot Section
     st.markdown('<div class="section-title">💬 Interactive AI Sales Assistant</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-subtitle">Chat with our assistant below to share your custom requirements.</div>', unsafe_allow_html=True)
 
@@ -211,7 +216,6 @@ if nav_choice == "Home / Landing Page":
                 except Exception as e:
                     st.error(f"An error occurred: {e}")
 
-    # Footer
     st.markdown("""
         <div class="footer">
             <p>© 2026 <span>AgentFlow AI</span>. All rights reserved.</p>
@@ -219,7 +223,86 @@ if nav_choice == "Home / Landing Page":
     """, unsafe_allow_html=True)
 
 
-# ==================== 2. CUSTOMER LOGIN / SIGNUP & DASHBOARD ====================
+# ==================== 2. UPDATED PRICING PAGE ====================
+elif nav_choice == "Pricing & Plans":
+    st.markdown('<div class="section-title">Choose Your Growth Plan</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-subtitle">Flexible pricing tiers designed to scale with your business needs.</div>', unsafe_allow_html=True)
+
+    col_p1, col_p2, col_p3, col_p4 = st.columns(4)
+
+    # Starter
+    with col_p1:
+        st.markdown("""
+            <div class="pricing-card">
+                <h3>🚀 Starter</h3>
+                <h2>₹999</h2>
+                <p>Ideal for solo creators and small projects.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        user_email_1 = st.text_input("Your Email", key="email_starter")
+        if st.button("Choose Starter", key="btn_starter"):
+            if user_email_1:
+                st.session_state.logged_in = True
+                st.session_state.username = user_email_1.split("@")[0]
+                st.success("Plan selected! Account created. Redirecting to Dashboard...")
+                st.balloons()
+            else:
+                st.warning("Please enter your email first.")
+
+    # Pro
+    with col_p2:
+        st.markdown("""
+            <div class="pricing-card" style="border: 2px solid #7c3aed;">
+                <h3>💼 Pro</h3>
+                <h2>₹2,999</h2>
+                <p>Great for growing businesses looking for automation.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        user_email_2 = st.text_input("Your Email", key="email_pro")
+        if st.button("Choose Pro", key="btn_pro"):
+            if user_email_2:
+                st.session_state.logged_in = True
+                st.session_state.username = user_email_2.split("@")[0]
+                st.success("Plan selected! Account created. Redirecting to Dashboard...")
+                st.balloons()
+            else:
+                st.warning("Please enter your email first.")
+
+    # Premium
+    with col_p3:
+        st.markdown("""
+            <div class="pricing-card">
+                <h3>🔥 Premium</h3>
+                <h2>₹7,999</h2>
+                <p>Advanced capabilities for scaling agencies & enterprises.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        user_email_3 = st.text_input("Your Email", key="email_premium")
+        if st.button("Choose Premium", key="btn_premium"):
+            if user_email_3:
+                st.session_state.logged_in = True
+                st.session_state.username = user_email_3.split("@")[0]
+                st.success("Plan selected! Account created. Redirecting to Dashboard...")
+                st.balloons()
+            else:
+                st.warning("Please enter your email first.")
+
+    # Enterprise
+    with col_p4:
+        st.markdown("""
+            <div class="pricing-card">
+                <h3>🏢 Enterprise</h3>
+                <h2>Contact Sales</h2>
+                <p>Tailored infrastructure and custom workflows.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        st.write("")
+        st.write("")
+        if st.button("Contact Sales"):
+            st.info("Please reach out via our support desk for custom enterprise integrations.")
+
+
+# ==================== 3. CUSTOMER LOGIN / SIGNUP & DASHBOARD ====================
 elif nav_choice == "Customer Login / Signup":
     
     if not st.session_state.logged_in:
@@ -316,7 +399,7 @@ elif nav_choice == "Customer Login / Signup":
             invoice_data = {
                 "Invoice ID": ["#INV-2026-01", "#INV-2026-02"],
                 "Description": ["Starter Tier Setup", "Monthly Maintenance"],
-                "Amount": ["$49.00", "$149.00"],
+                "Amount": ["₹999", "₹2,999"],
                 "Status": ["Paid 🟢", "Pending 🟡"]
             }
             st.table(pd.DataFrame(invoice_data))
@@ -346,7 +429,7 @@ elif nav_choice == "Customer Login / Signup":
                     st.markdown(reply)
 
 
-# ==================== 3. ADMIN PORTAL VIEW ====================
+# ==================== 4. ADMIN PORTAL VIEW ====================
 elif nav_choice == "Admin Portal":
     
     if not st.session_state.admin_logged_in:
@@ -356,7 +439,6 @@ elif nav_choice == "Admin Portal":
         with col_ad2:
             admin_pass = st.text_input("Enter Admin Secret Password", type="password")
             if st.button("Login as Admin"):
-                # Default simple password check (You can change "admin123" to anything you like)
                 if admin_pass == "admin123":
                     st.session_state.admin_logged_in = True
                     st.success("Admin login successful!")
@@ -371,16 +453,13 @@ elif nav_choice == "Admin Portal":
             st.session_state.admin_logged_in = False
             st.rerun()
             
-        # Check if leads.csv exists
         if os.path.exists("leads.csv"):
             df_leads = pd.read_csv("leads.csv")
             
             if not df_leads.empty:
-                # Search and Filter Options
                 search_query = st.text_input("🔍 Search Leads (by Name, Email, Business, or Service):")
                 
                 if search_query:
-                    # Filter dataframe based on search text across columns
                     mask = df_leads.apply(lambda row: row.astype(str).str.contains(search_query, case=False).any(), axis=1)
                     filtered_df = df_leads[mask]
                 else:
@@ -389,7 +468,6 @@ elif nav_choice == "Admin Portal":
                 st.write(f"Showing **{len(filtered_df)}** lead(s):")
                 st.dataframe(filtered_df, use_container_width=True)
                 
-                # CSV Export Button
                 csv_data = filtered_df.to_csv(index=False).encode('utf-8')
                 st.download_button(
                     label="📥 Download Leads as CSV",
