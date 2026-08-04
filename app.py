@@ -3,7 +3,6 @@ import pandas as pd
 import os
 from groq import Groq
 from datetime import datetime
-import io
 
 st.set_page_config(
     page_title="AgentFlow AI | Enterprise SaaS Platform", 
@@ -12,7 +11,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# World-Class Premium Dark Theme UI Design (OpenAI / Stripe / Vercel style)
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
@@ -28,7 +26,6 @@ st.markdown("""
         background-attachment: fixed;
     }
 
-    /* Glassmorphism Cards */
     .glass-card {
         background: rgba(30, 41, 59, 0.5);
         backdrop-filter: blur(16px);
@@ -46,7 +43,6 @@ st.markdown("""
         box-shadow: 0 30px 60px rgba(124, 58, 237, 0.15);
     }
 
-    /* Hero Section Styling */
     .hero-container {
         text-align: center;
         padding: 60px 20px 40px 20px;
@@ -91,7 +87,6 @@ st.markdown("""
         margin-right: auto;
     }
 
-    /* Statistics / Counters */
     .stat-card {
         background: rgba(15, 23, 42, 0.6);
         border: 1px solid rgba(255, 255, 255, 0.05);
@@ -113,7 +108,6 @@ st.markdown("""
         font-weight: 500;
     }
 
-    /* Floating WhatsApp Button */
     .whatsapp-float {
         position: fixed;
         bottom: 30px;
@@ -137,7 +131,6 @@ st.markdown("""
         transform: scale(1.1);
     }
 
-    /* Footer styling */
     .footer {
         background: rgba(11, 16, 32, 0.8);
         border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -145,7 +138,6 @@ st.markdown("""
         margin-top: 80px;
     }
 
-    /* Streamlit Overrides for Dark Theme Input */
     .stTextInput input, .stSelectbox select, .stTextArea textarea {
         background-color: rgba(30, 41, 59, 0.6) !important;
         color: #ffffff !important;
@@ -157,7 +149,6 @@ st.markdown("""
 <a href="https://wa.me/919876543210?text=Hello%20AgentFlow%20AI,%20I%20want%20to%20know%20more%20about%20your%20services!" class="whatsapp-float" target="_blank" title="Chat on WhatsApp">💬</a>
 """, unsafe_allow_html=True)
 
-# Secure Client Initializations
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
 SYSTEM_PROMPT = """You are an expert AI Sales Agent for AgentFlow AI. Collect 6 details: Name, Business Name, Service Required, Budget, Phone Number, Email Address. When collected, output EXACTLY: COMPLETE: Name | Business | Service | Budget | Phone | Email"""
@@ -191,7 +182,6 @@ def generate_invoice_pdf(email, plan, amount):
     Thank you for your business!
     """
 
-# Sidebar Navigation
 st.sidebar.markdown("### ⚡ AgentFlow AI")
 st.sidebar.caption("Enterprise SaaS & Automation")
 st.sidebar.markdown("---")
@@ -209,9 +199,7 @@ nav = st.sidebar.radio("Navigation", [
     "Legal & Policies"
 ])
 
-# ==================== HOME / LANDING PAGE ====================
 if nav == "Home / Landing Page":
-    # Hero Section
     st.markdown("""
         <div class="hero-container">
             <div class="hero-badge">✨ Next-Gen Enterprise AI & Automation</div>
@@ -220,7 +208,6 @@ if nav == "Home / Landing Page":
         </div>
     """, unsafe_allow_html=True)
 
-    # Hero CTAs & Illustration split
     col_h1, col_h2 = st.columns([1.2, 1], gap="large")
     with col_h1:
         st.write("")
@@ -242,7 +229,6 @@ if nav == "Home / Landing Page":
 
     st.markdown("<br><br>", unsafe_allow_html=True)
 
-    # Statistics Section
     st.markdown("<h2 style='text-align: center; font-weight: 800; margin-bottom: 30px;'>Trusted by Industry Leaders Worldwide</h2>", unsafe_allow_html=True)
     s1, s2, s3, s4 = st.columns(4)
     with s1: st.markdown('<div class="stat-card"><div class="stat-number">100+</div><div class="stat-label">Clients</div></div>', unsafe_allow_html=True)
@@ -252,7 +238,6 @@ if nav == "Home / Landing Page":
 
     st.markdown("<br><br>", unsafe_allow_html=True)
 
-    # Services Section (Glass Cards)
     st.markdown("<h2 style='text-align: center; font-weight: 800; margin-bottom: 10px;'>Our Core Services</h2>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; color: #94a3b8; margin-bottom: 40px;'>Comprehensive digital and artificial intelligence solutions designed for scale.</p>", unsafe_allow_html=True)
 
@@ -271,8 +256,7 @@ if nav == "Home / Landing Page":
 
     st.markdown("<br><br>", unsafe_allow_html=True)
 
-    # Interactive AI Chat Assistant Section
-    st.markdown("<div class='glass-card' style='text-align: left; max-width: 900px; margin: 0 auto;'>", unsafe_allow_html=True)
+    st.markdown('<div class="glass-card" style="text-align: left; max-width: 900px; margin: 0 auto;">', unsafe_allow_html=True)
     st.markdown("### 💬 Interactive AI Sales Assistant")
     for msg in st.session_state.messages:
         if msg["role"] != "system":
@@ -292,10 +276,14 @@ if nav == "Home / Landing Page":
         except Exception as e: st.error(f"Error: {e}")
     st.markdown("</div>", unsafe_allow_html=True)
 
-# ==================== PRICING & PLANS ====================
 elif nav == "Pricing & Plans":
     if not st.session_state.checkout_active:
-        st.markdown("<div class='hero-container'><div class='hero-title'>Simple, Transparent <span>Pricing</span></div><p style='color: #94a3b8;'>Choose the ideal plan to scale your automated operations.</p></div>", unsafe_allow_html=True)
+        st.markdown("""
+            <div class="hero-container">
+                <div class="hero-title">Simple, Transparent <span>Pricing</span></div>
+                <p style="color: #94a3b8;">Choose the ideal plan to scale your automated operations.</p>
+            </div>
+        """, unsafe_allow_html=True)
         c1, c2, c3 = st.columns(3)
         with c1:
             st.markdown('<div class="glass-card"><h3>Starter</h3><h2 style="color: #a78bfa; margin: 20px 0;">₹999</h2><p style="color: #94a3b8;">Perfect for solo creators & small tasks.</p></div>', unsafe_allow_html=True)
@@ -308,7 +296,12 @@ elif nav == "Pricing & Plans":
             if st.button("Select Premium", use_container_width=True): st.session_state.selected_plan = {"name": "Premium", "price": "₹7,999"}; st.session_state.checkout_active = True; st.rerun()
     else:
         p = st.session_state.selected_plan
-        st.markdown(f"<div class='hero-container'><div class='hero-title'>Real Razorpay Secure <span>Checkout</span></div><p style='color: #94a3b8;'>Plan: {p['name']} | Amount: {p['price']}</p></div>", unsafe_allow_html=True)
+        st.markdown(f"""
+            <div class="hero-container">
+                <div class="hero-title">Real Razorpay Secure <span>Checkout</span></div>
+                <p style="color: #94a3b8;">Plan: {p['name']} | Amount: {p['price']}</p>
+            </div>
+        """, unsafe_allow_html=True)
         
         col_chk1, col_chk2 = st.columns([1, 1])
         with col_chk1:
@@ -325,9 +318,13 @@ elif nav == "Pricing & Plans":
             if st.button("⬅️ Back to Pricing", use_container_width=True): st.session_state.checkout_active = False; st.rerun()
             st.markdown('</div>', unsafe_allow_html=True)
 
-# ==================== AI PACKAGE RECOMMENDER ====================
 elif nav == "AI Package Recommender":
-    st.markdown("<div class='hero-container'><div class='hero-title'>AI Package <span>Recommender</span></div><p style='color: #94a3b8;'>Let our AI analyze your requirements instantly.</p></div>", unsafe_allow_html=True)
+    st.markdown("""
+        <div class="hero-container">
+            <div class="hero-title">AI Package <span>Recommender</span></div>
+            <p style="color: #94a3b8;">Let our AI analyze your requirements instantly.</p>
+        </div>
+    """, unsafe_allow_html=True)
     col_r1, col_r2 = st.columns(2)
     with col_r1:
         st.markdown('<div class="glass-card" style="text-align: left;">', unsafe_allow_html=True)
@@ -340,22 +337,42 @@ elif nav == "AI Package Recommender":
             else: st.info("🔥 **Recommended Plan: Premium (₹7,999+)**")
         st.markdown('</div>', unsafe_allow_html=True)
 
-# ==================== PORTFOLIO / PROJECTS ====================
 elif nav == "Portfolio / Projects":
-    st.markdown("<div class='hero-container'><div class='hero-title'>Our <span>Portfolio</span></div><p style='color: #94a3b8;'>Explore our world-class enterprise deployments.</p></div>", unsafe_allow_html=True)
+    st.markdown("""
+        <div class="hero-container">
+            <div class="hero-title">Our <span>Portfolio</span></div>
+            <p style="color: #94a3b8;">Explore our world-class enterprise deployments.</p>
+        </div>
+    """, unsafe_allow_html=True)
     p1, p2, p3 = st.columns(3)
     with p1: st.markdown('<div class="glass-card"><h3>🛒 AI E-Commerce Suite</h3><p style="color: #94a3b8; font-size: 14px;">Automated conversational sales bot boosting conversion by 45%.</p><br><b style="color: #a78bfa;">Tech: Python, Groq AI</b></div>', unsafe_allow_html=True)
     with p2: st.markdown('<div class="glass-card"><h3>🏥 HealthTech Portal</h3><p style="color: #94a3b8; font-size: 14px;">Secure patient management portal with automated scheduling.</p><br><b style="color: #a78bfa;">Tech: React, FastAPI</b></div>', unsafe_allow_html=True)
     with p3: st.markdown('<div class="glass-card"><h3>📊 FinTech Analytics Bot</h3><p style="color: #94a3b8; font-size: 14px;">Real-time financial compliance and tax report generation.</p><br><b style="color: #a78bfa;">Tech: Python, Pandas</b></div>', unsafe_allow_html=True)
 
-# ==================== TESTIMONIALS ====================
 elif nav == "Testimonials":
-    st.markdown("<div class='hero-container'><div class='hero-title'>Client <span>Testimonials</span></div><p style='color: #94a3b8;'>See what industry leaders say about AgentFlow AI.</p></div>", unsafe_allow_html=True)
+    st.markdown("""
+        <div class="hero-container">
+            <div class="hero-title">Client <span>Testimonials</span></div>
+            <p style="color: #94a3b8;">See what industry leaders say about AgentFlow AI.</p>
+        </div>
+    """, unsafe_allow_html=True)
     t1, t2, t3 = st.columns(3)
     with t1: st.markdown('<div class="glass-card">"AgentFlow AI automated our entire lead pipeline. Conversion rate jumped by 300%!"<br><br><b style="color: #a78bfa;">— Rajesh Sharma</b><br><span style="color:#64748b;">CEO, TechCorp</span></div>', unsafe_allow_html=True)
     with t2: st.markdown('<div class="glass-card">"The custom AI chatbot handles customer queries 24/7 flawlessly. Exceptional work!"<br><br><b style="color: #a78bfa;">— Priya Patel</b><br><span style="color:#64748b;">Founder, StyleHub</span></div>', unsafe_allow_html=True)
     with t3: st.markdown('<div class="glass-card">"Incredible platform and seamless Razorpay payment integration. Highly recommended!"<br><br><b style="color: #a78bfa;">— Amit Verma</b><br><span style="color:#64748b;">Director, LogiTech</span></div>', unsafe_allow_html=True)
 
-# ==================== BOOK A MEETING ====================
 elif nav == "Book a Meeting":
-    st.markdown("<div class='hero-container'><div class='hero-title'>Book a Strategy <span>Consultation</span></div><p style='color: #94a3b8;'>Schedule a 1-on-1 session with our senior enterprise architect.</p></div>", unsafe_
+    st.markdown("""
+        <div class="hero-container">
+            <div class="hero-title">Book a Strategy <span>Consultation</span></div>
+            <p style="color: #94a3b8;">Schedule a 1-on-1 session with our senior enterprise architect.</p>
+        </div>
+    """, unsafe_allow_html=True)
+    col_bm1, col_bm2 = st.columns([1, 1])
+    with col_bm1:
+        st.markdown('<div class="glass-card" style="text-align: left;">', unsafe_allow_html=True)
+        bname = st.text_input("Full Name", key="bk_name")
+        bemail = st.text_input("Email Address", key="bk_email")
+        bphone = st.text_input("Phone Number", key="bk_phone")
+        bdate = st.date_input("Meeting Date", key="bk_date")
+        bslot = st.selectbox("Time Slot", ["10:00 AM - 11:00 AM", "02:00 PM - 03:00 PM", "04:00 PM
