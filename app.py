@@ -108,9 +108,7 @@ st.markdown("""
 
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
-SYSTEM_PROMPT = """You are an expert AI Sales Agent for AgentFlow AI. Your goal is to converse with the user and collect exactly these 6 details:
-1. Name, 2. Business Name, 3. Service Required, 4. Budget, 5. Phone Number, 6. Email Address.
-When all 6 are collected, output EXACTLY: COMPLETE: Name | Business | Service | Budget | Phone | Email"""
+SYSTEM_PROMPT = "You are an expert AI Sales Agent for AgentFlow AI. Collect 6 details: Name, Business, Service, Budget, Phone, Email. When collected, output EXACTLY: COMPLETE: Name | Business | Service | Budget | Phone | Email"
 
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
@@ -390,13 +388,13 @@ elif nav_choice == "Customer Login / Signup":
         st.markdown("<h2 style='text-align: center;'>🔐 Customer Portal Authentication</h2>", unsafe_allow_html=True)
         
         st.markdown("### 🔑 Existing User Login")
-        u = st.text_input("Username or Email", key="l_u")
-        p = st.text_input("Password", type="password", key="l_p")
+        login_user_input = st.text_input("Username or Email", key="l_u")
+        login_pass_input = st.text_input("Password", type="password", key="l_p")
         if st.button("Login"):
-            if u and p:
+            if login_user_input and login_pass_input:
                 st.session_state.logged_in = True
-                st.session_state.username = u
-                st.session_state.user_email = u if "@" in u else f"{u}@agentflow.ai"
+                st.session_state.username = login_user_input
+                st.session_state.user_email = login_user_input if "@" in login_user_input else f"{login_user_input}@agentflow.ai"
                 st.success("Login successful!")
                 st.rerun()
             else:
@@ -404,4 +402,4 @@ elif nav_choice == "Customer Login / Signup":
 
         st.markdown("---")
         st.markdown("### 📝 New User Signup")
-        new_username = st.text_input("Choose Username
+        signup_username_input = st.text_input("Choo
