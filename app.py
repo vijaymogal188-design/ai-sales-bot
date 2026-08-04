@@ -5,140 +5,115 @@ from groq import Groq
 from datetime import datetime
 
 st.set_page_config(
-    page_title="AgentFlow AI | Enterprise SaaS Platform", 
+    page_title="AgentFlow AI | Premium Enterprise SaaS", 
     page_icon="⚡", 
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# Hide Streamlit Default Sidebar / Navigation UI on Landing Page for Full Screen OpenAI/Stripe Style
+# World-Class Premium SaaS CSS (Sticky Navbar, Glassmorphism, Pure White/Dark Theme, Smooth Gradients)
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
     
     html, body, [class*="css"] {
         font-family: 'Inter', 'Poppins', sans-serif;
-        background-color: #0B1020;
-        color: #F8FAFC;
-    }
-    
-    .stApp {
-        background: radial-gradient(circle at 50% -20%, #1e1b4b 0%, #0B1020 60%);
-        background-attachment: fixed;
+        background-color: #030712;
+        color: #FFFFFF;
     }
 
-    /* Hide standard sidebar if needed, keep navigation functional */
+    /* Hide standard sidebar */
     [data-testid="stSidebar"] {
-        background-color: #0B1020;
-        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        display: none;
+    }
+
+    /* Sticky Transparent Navbar */
+    .nav-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 99999;
+        background: rgba(3, 7, 18, 0.8);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 16px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .nav-logo {
+        font-size: 20px;
+        font-weight: 800;
+        color: #FFFFFF;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Full-Screen Hero Section with Gradients */
+    .hero-section {
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        padding: 120px 20px 60px 20px;
+        background: radial-gradient(circle at 70% 30%, rgba(124, 58, 237, 0.15) 0%, rgba(59, 130, 246, 0.1) 40%, transparent 70%);
     }
 
     /* Glassmorphism Cards */
     .glass-card {
-        background: rgba(30, 41, 59, 0.5);
+        background: rgba(17, 24, 39, 0.6);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 20px;
+        border-radius: 24px;
         padding: 32px;
-        text-align: center;
+        text-align: left;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
     }
     .glass-card:hover {
         transform: translateY(-6px);
-        border-color: rgba(124, 58, 237, 0.4);
-        box-shadow: 0 30px 60px rgba(124, 58, 237, 0.15);
-    }
-
-    /* Hero Section */
-    .hero-container {
-        padding: 40px 20px;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-    .hero-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: rgba(124, 58, 237, 0.15);
-        border: 1px solid rgba(124, 58, 237, 0.3);
-        color: #a78bfa;
-        font-weight: 600;
-        font-size: 13px;
-        padding: 8px 18px;
-        border-radius: 50px;
-        margin-bottom: 24px;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-    .hero-title {
-        font-size: 54px;
-        font-weight: 800;
-        color: #ffffff;
-        line-height: 1.15;
-        margin-bottom: 20px;
-        letter-spacing: -0.02em;
-    }
-    .hero-title span {
-        background: linear-gradient(135deg, #a78bfa 0%, #6366f1 50%, #3b82f6 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    .hero-subtitle {
-        font-size: 18px;
-        color: #94a3b8;
-        line-height: 1.6;
-        margin-bottom: 35px;
-    }
-
-    /* Floating Chatbot Widget (Bottom Right) */
-    .chatbot-float-container {
-        position: fixed;
-        bottom: 25px;
-        right: 25px;
-        width: 380px;
-        max-height: 500px;
-        background: rgba(15, 23, 42, 0.92);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(124, 58, 237, 0.3);
-        border-radius: 20px;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
-        z-index: 9999;
-        padding: 16px;
-        display: flex;
-        flex-direction: column;
+        border-color: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 30px 60px rgba(124, 58, 237, 0.2);
     }
 
     /* Floating WhatsApp Button */
     .whatsapp-float {
         position: fixed;
         bottom: 25px;
-        left: 25px;
+        right: 25px;
         background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
         color: white;
         border-radius: 50px;
         text-align: center;
         font-size: 26px;
         box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
-        z-index: 1000;
+        z-index: 10000;
         width: 55px;
         height: 55px;
         display: flex;
         align-items: center;
         justify-content: center;
         text-decoration: none;
-        transition: transform 0.3s ease;
     }
-    .whatsapp-float:hover { transform: scale(1.1); }
 
     .footer {
-        background: rgba(11, 16, 32, 0.8);
+        background: #030712;
         border-top: 1px solid rgba(255, 255, 255, 0.08);
-        padding: 60px 30px 30px 30px;
+        padding: 60px 40px 30px 40px;
         margin-top: 80px;
     }
 </style>
+
+<!-- Sticky Transparent Navbar HTML -->
+<div class="nav-container">
+    <div class="nav-logo">⚡ AgentFlow AI</div>
+    <div style="color: #94A3B8; font-size: 14px;">Enterprise AI & Business Automation Platform</div>
+</div>
 
 <a href="https://wa.me/919876543210" class="whatsapp-float" target="_blank" title="Chat on WhatsApp">💬</a>
 """, unsafe_allow_html=True)
@@ -151,12 +126,8 @@ if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
     st.session_state.messages.append({"role": "assistant", "content": "👋 Hello! Welcome to AgentFlow AI. What is your name?"})
 
-if "logged_in" not in st.session_state: st.session_state.logged_in = False
-if "username" not in st.session_state: st.session_state.username = ""
-if "admin_logged_in" not in st.session_state: st.session_state.admin_logged_in = False
 if "selected_plan" not in st.session_state: st.session_state.selected_plan = None
 if "checkout_active" not in st.session_state: st.session_state.checkout_active = False
-if "chat_open" not in st.session_state: st.session_state.chat_open = True
 
 def save_to_csv(filename, data_dict):
     df = pd.DataFrame([data_dict])
@@ -176,237 +147,181 @@ def generate_invoice_pdf(email, plan, amount):
     Thank you for your business!
     """
 
-st.sidebar.markdown("### ⚡ AgentFlow AI")
-st.sidebar.caption("Enterprise SaaS & Automation")
-st.sidebar.markdown("---")
+# ==================== HERO SECTION ====================
+st.markdown('<div class="hero-section">', unsafe_allow_html=True)
+col_h1, col_h2 = st.columns([1.2, 1], gap="large")
 
-nav = st.sidebar.radio("Navigation", [
-    "Home / Landing Page", 
-    "Pricing & Plans", 
-    "AI Package Recommender", 
-    "Portfolio / Projects", 
-    "Testimonials", 
-    "Book a Meeting", 
-    "Contact Us", 
-    "Customer Login / Signup", 
-    "Admin CRM Dashboard", 
-    "Legal & Policies"
-])
-
-if nav == "Home / Landing Page":
-    # OpenAI / Stripe / Vercel style Full-Screen Hero Section with 3D AI Illustration on right
+with col_h1:
     st.markdown("""
-        <div class="hero-container">
-            <div class="hero-badge">✨ Next-Gen Enterprise AI & Automation</div>
+        <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #FFFFFF; font-weight: 600; font-size: 13px; padding: 6px 16px; border-radius: 50px; margin-bottom: 20px;">
+            ✨ Next-Gen Enterprise AI & Automation
+        </div>
+        <h1 style="font-size: 56px; font-weight: 800; color: #FFFFFF; line-height: 1.15; margin-bottom: 20px;">
+            Scale Your Business with AgentFlow AI
+        </h1>
+        <p style="font-size: 18px; color: #94A3B8; line-height: 1.6; margin-bottom: 35px;">
+            AI Chatbots, Websites, Mobile Apps & Business Automation for Modern Companies.
+        </p>
+    """, unsafe_allow_html=True)
+
+    ch1, ch2 = st.columns(2)
+    with ch1:
+        if st.button("🚀 Get Started", use_container_width=True):
+            st.balloons()
+    with ch2:
+        if st.button("📅 Book Demo", use_container_width=True):
+            st.info("Scroll down to the Contact & Booking section below.")
+
+with col_h2:
+    st.markdown("""
+        <div class="glass-card" style="text-align: center; padding: 50px 30px; background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);">
+            <h2 style="font-size: 64px; margin-bottom: 15px;">🤖⚡</h2>
+            <h3 style="color: #FFFFFF; margin-bottom: 10px;">Futuristic AI Dashboard</h3>
+            <p style="font-size: 14px; color: #94A3B8;">Autonomous agents analyzing pipelines and optimizing conversion rates 24/7.</p>
         </div>
     """, unsafe_allow_html=True)
 
-    col_h1, col_h2 = st.columns([1.3, 1], gap="large")
-    with col_h1:
-        st.markdown("""
-            <div class="hero-title">Scale Your Business with <span>AgentFlow AI</span></div>
-            <div class="hero-subtitle">AI Chatbots, Websites, Mobile Apps & Business Automation for Modern Companies.</div>
-        """, unsafe_allow_html=True)
-        
-        ch1, ch2 = st.columns(2)
-        with ch1:
-            if st.button("🚀 Get Free Demo", use_container_width=True):
-                st.balloons()
-        with ch2:
-            if st.button("📅 Book a Meeting", use_container_width=True):
-                st.info("Navigate to 'Book a Meeting' via sidebar.")
+st.markdown('</div>', unsafe_allow_html=True)
 
-    with col_h2:
-        # 3D AI Illustration Mockup Card
-        st.markdown("""
-            <div class="glass-card" style="padding: 40px; background: linear-gradient(135deg, rgba(124,58,237,0.2) 0%, rgba(59,130,246,0.1) 100%);">
-                <h2 style="font-size: 48px; margin-bottom: 10px;">🤖⚡</h2>
-                <h3 style="color: #a78bfa; margin-bottom: 10px;">Autonomous AI Core</h3>
-                <p style="font-size: 14px; color: #94a3b8;">Real-time workflow pipelines, 24/7 conversational sales bots, and enterprise security.</p>
-            </div>
-        """, unsafe_allow_html=True)
+# ==================== TRUST SECTION ====================
+st.markdown("<br><br>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center; font-weight: 800; margin-bottom: 40px; color: #FFFFFF;'>Trusted by Industry Leaders Worldwide</h2>", unsafe_allow_html=True)
+t1, t2, t3, t4 = st.columns(4)
+with t1: st.markdown('<div class="glass-card" style="text-align: center;"><h2 style="color: #FFFFFF; font-size: 38px; margin-bottom: 5px;">100+</h2><p style="color: #94A3B8;">Clients</p></div>', unsafe_allow_html=True)
+with t2: st.markdown('<div class="glass-card" style="text-align: center;"><h2 style="color: #FFFFFF; font-size: 38px; margin-bottom: 5px;">500+</h2><p style="color: #94A3B8;">Projects</p></div>', unsafe_allow_html=True)
+with t3: st.markdown('<div class="glass-card" style="text-align: center;"><h2 style="color: #FFFFFF; font-size: 38px; margin-bottom: 5px;">99%</h2><p style="color: #94A3B8;">Satisfaction</p></div>', unsafe_allow_html=True)
+with t4: st.markdown('<div class="glass-card" style="text-align: center;"><h2 style="color: #FFFFFF; font-size: 38px; margin-bottom: 5px;">24/7</h2><p style="color: #94A3B8;">Support</p></div>', unsafe_allow_html=True)
 
-    st.markdown("<br><br>", unsafe_allow_html=True)
+# ==================== SERVICES ====================
+st.markdown("<br><br><br>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center; font-weight: 800; margin-bottom: 10px; color: #FFFFFF;'>Our Core Services</h2>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #94A3B8; margin-bottom: 40px;'>Comprehensive digital and artificial intelligence solutions designed for scale.</p>", unsafe_allow_html=True)
 
-    # Statistics Section
-    st.markdown("<h2 style='text-align: center; font-weight: 800; margin-bottom: 30px;'>Trusted by Industry Leaders Worldwide</h2>", unsafe_allow_html=True)
-    s1, s2, s3, s4 = st.columns(4)
-    with s1: st.markdown('<div class="glass-card"><h2 style="color: #a78bfa;">100+</h2><p style="color: #94a3b8;">Clients</p></div>', unsafe_allow_html=True)
-    with s2: st.markdown('<div class="glass-card"><h2 style="color: #a78bfa;">500+</h2><p style="color: #94a3b8;">Projects</p></div>', unsafe_allow_html=True)
-    with s3: st.markdown('<div class="glass-card"><h2 style="color: #a78bfa;">99%</h2><p style="color: #94a3b8;">Satisfaction</p></div>', unsafe_allow_html=True)
-    with s4: st.markdown('<div class="glass-card"><h2 style="color: #a78bfa;">24/7</h2><p style="color: #94a3b8;">Support</p></div>', unsafe_allow_html=True)
+srv1, srv2, srv3, srv4 = st.columns(4)
+with srv1: st.markdown('<div class="glass-card"><h3>🤖 AI Chatbots</h3><p style="color: #94A3B8; font-size: 14px; margin-top: 10px;">Intelligent customer support and sales conversion bots.</p></div>', unsafe_allow_html=True)
+with srv2: st.markdown('<div class="glass-card"><h3>🎙️ AI Voice Agents</h3><p style="color: #94A3B8; font-size: 14px; margin-top: 10px;">Human-like voice assistants for phone calls and inquiries.</p></div>', unsafe_allow_html=True)
+with srv3: st.markdown('<div class="glass-card"><h3>🌐 Website Development</h3><p style="color: #94A3B8; font-size: 14px; margin-top: 10px;">Lightning-fast, high-converting modern web applications.</p></div>', unsafe_allow_html=True)
+with srv4: st.markdown('<div class="glass-card"><h3>📱 Mobile Apps</h3><p style="color: #94A3B8; font-size: 14px; margin-top: 10px;">Scalable iOS & Android apps built for performance.</p></div>', unsafe_allow_html=True)
 
-    st.markdown("<br><br>", unsafe_allow_html=True)
+st.markdown("<br>", unsafe_allow_html=True)
+srv5, srv6, srv7, srv8 = st.columns(4)
+with srv5: st.markdown('<div class="glass-card"><h3>💬 WhatsApp Automation</h3><p style="color: #94A3B8; font-size: 14px; margin-top: 10px;">Automate messaging, broadcasts, and lead routing.</p></div>', unsafe_allow_html=True)
+with srv6: st.markdown('<div class="glass-card"><h3>📊 CRM Automation</h3><p style="color: #94A3B8; font-size: 14px; margin-top: 10px;">Seamless pipeline management and data synchronization.</p></div>', unsafe_allow_html=True)
+with srv7: st.markdown('<div class="glass-card"><h3>⚡ AI Integrations</h3><p style="color: #94A3B8; font-size: 14px; margin-top: 10px;">Custom LLM embeddings and intelligent workflows.</p></div>', unsafe_allow_html=True)
+with srv8: st.markdown('<div class="glass-card"><h3>🎨 UI/UX Design</h3><p style="color: #94A3B8; font-size: 14px; margin-top: 10px;">World-class user interfaces crafted for maximum engagement.</p></div>', unsafe_allow_html=True)
 
-    # Floating Chatbot in Bottom-Right Corner
-    st.markdown("""
-        <div style="position: fixed; bottom: 25px; right: 25px; z-index: 9999;">
-    """, unsafe_allow_html=True)
-    
-    with st.popover("💬 AI Chat Assistant"):
-        st.write("### AI Sales Agent")
-        for msg in st.session_state.messages:
-            if msg["role"] != "system":
-                with st.chat_message(msg["role"]): st.markdown(msg["content"])
-        if prompt := st.chat_input("Type message..."):
-            st.session_state.messages.append({"role": "user", "content": prompt})
-            with st.chat_message("user"): st.markdown(prompt)
-            try:
-                res = client.chat.completions.create(messages=st.session_state.messages, model="llama-3.1-8b-instant", temperature=0.5).choices[0].message.content
-                if "COMPLETE:" in res:
-                    d = res.split("COMPLETE:")[1].strip().split("|")
-                    if len(d) == 6:
-                        save_to_csv("leads.csv", {"Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "Name": d[0].strip(), "Business": d[1].strip(), "Service": d[2].strip(), "Budget": d[3].strip(), "Phone": d[4].strip(), "Email": d[5].strip(), "Status": "New", "Notes": "None"})
-                    res = "Thank you! Our team will contact you soon."
-                st.session_state.messages.append({"role": "assistant", "content": res})
-                with st.chat_message("assistant"): st.markdown(res)
-            except Exception as e: st.error(f"Error: {e}")
+# ==================== PORTFOLIO ====================
+st.markdown("<br><br><br>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center; font-weight: 800; margin-bottom: 10px; color: #FFFFFF;'>Featured Portfolio</h2>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #94A3B8; margin-bottom: 40px;'>Explore our successful enterprise deployments.</p>", unsafe_allow_html=True)
 
-    st.markdown("</div>", unsafe_allow_html=True)
+p1, p2, p3 = st.columns(3)
+with p1: st.markdown('<div class="glass-card"><h3>🛒 AI E-Commerce Suite</h3><p style="color: #94A3B8; font-size: 14px; margin-top: 10px;">Automated conversational sales bot boosting conversions by 45%.</p><br><b style="color: #FFFFFF;">Tech: Python, Groq AI</b></div>', unsafe_allow_html=True)
+with p2: st.markdown('<div class="glass-card"><h3>🏥 HealthTech Portal</h3><p style="color: #94A3B8; font-size: 14px; margin-top: 10px;">Secure patient management portal with automated scheduling.</p><br><b style="color: #FFFFFF;">Tech: React, FastAPI</b></div>', unsafe_allow_html=True)
+with p3: st.markdown('<div class="glass-card"><h3>📊 FinTech Analytics Bot</h3><p style="color: #94A3B8; font-size: 14px; margin-top: 10px;">Real-time financial compliance and tax report generation.</p><br><b style="color: #FFFFFF;">Tech: Python, Pandas</b></div>', unsafe_allow_html=True)
 
-elif nav == "Pricing & Plans":
-    if not st.session_state.checkout_active:
-        st.markdown("### Choose Your Growth Plan")
-        c1, c2, c3 = st.columns(3)
-        with c1:
-            st.markdown('<div class="glass-card"><h3>Starter</h3><h2>₹999</h2></div>', unsafe_allow_html=True)
-            if st.button("Select Starter"): st.session_state.selected_plan = {"name": "Starter", "price": "₹999"}; st.session_state.checkout_active = True; st.rerun()
-        with c2:
-            st.markdown('<div class="glass-card"><h3>Pro</h3><h2>₹2,999</h2></div>', unsafe_allow_html=True)
-            if st.button("Select Pro"): st.session_state.selected_plan = {"name": "Pro", "price": "₹2,999"}; st.session_state.checkout_active = True; st.rerun()
-        with c3:
-            st.markdown('<div class="glass-card"><h3>Premium</h3><h2>₹7,999</h2></div>', unsafe_allow_html=True)
-            if st.button("Select Premium"): st.session_state.selected_plan = {"name": "Premium", "price": "₹7,999"}; st.session_state.checkout_active = True; st.rerun()
-    else:
-        p = st.session_state.selected_plan
-        st.markdown(f"### Razorpay Secure Checkout - {p['name']} ({p['price']})")
-        pay_method = st.selectbox("Payment Method", ["UPI", "Cards", "Net Banking", "Wallets"])
-        email = st.text_input("Billing Email")
-        if st.button("Pay Now"):
+# ==================== TESTIMONIALS ====================
+st.markdown("<br><br><br>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center; font-weight: 800; margin-bottom: 10px; color: #FFFFFF;'>Client Testimonials</h2>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #94A3B8; margin-bottom: 40px;'>Hear what founders and industry leaders say about AgentFlow AI.</p>", unsafe_allow_html=True)
+
+ts1, ts2, ts3 = st.columns(3)
+with ts1: st.markdown('<div class="glass-card">"AgentFlow AI automated our entire lead pipeline. Conversion rate jumped by 300%!"<br><br><b style="color: #FFFFFF;">— Rajesh Sharma</b><br><span style="color:#94A3B8; font-size: 13px;">CEO, TechCorp</span></div>', unsafe_allow_html=True)
+with ts2: st.markdown('<div class="glass-card">"The custom AI chatbot handles customer queries 24/7 flawlessly. Exceptional work!"<br><br><b style="color: #FFFFFF;">— Priya Patel</b><br><span style="color:#94A3B8; font-size: 13px;">Founder, StyleHub</span></div>', unsafe_allow_html=True)
+with ts3: st.markdown('<div class="glass-card">"Incredible platform and seamless Razorpay payment integration. Highly recommended!"<br><br><b style="color: #FFFFFF;">— Amit Verma</b><br><span style="color:#94A3B8; font-size: 13px;">Director, LogiTech</span></div>', unsafe_allow_html=True)
+
+# ==================== PRICING ====================
+st.markdown("<br><br><br>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center; font-weight: 800; margin-bottom: 10px; color: #FFFFFF;'>Transparent Pricing Plans</h2>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #94A3B8; margin-bottom: 40px;'>Choose the ideal tier with instant Razorpay checkout.</p>", unsafe_allow_html=True)
+
+if not st.session_state.checkout_active:
+    pr1, pr2, pr3 = st.columns(3)
+    with pr1:
+        st.markdown('<div class="glass-card"><h3>Starter</h3><h2 style="color: #FFFFFF; margin: 20px 0;">₹999</h2><p style="color: #94A3B8;">Ideal for solo creators & small tasks.</p></div>', unsafe_allow_html=True)
+        if st.button("Select Starter", use_container_width=True, key="btn_st"): st.session_state.selected_plan = {"name": "Starter", "price": "₹999"}; st.session_state.checkout_active = True; st.rerun()
+    with pr2:
+        st.markdown('<div class="glass-card" style="border-color: rgba(124, 58, 237, 0.5);"><h3>Business</h3><h2 style="color: #FFFFFF; margin: 20px 0;">₹4,999</h2><p style="color: #94A3B8;">For growing businesses & automated scaling.</p></div>', unsafe_allow_html=True)
+        if st.button("Select Business", use_container_width=True, key="btn_bs"): st.session_state.selected_plan = {"name": "Business", "price": "₹4,999"}; st.session_state.checkout_active = True; st.rerun()
+    with pr3:
+        st.markdown('<div class="glass-card"><h3>Enterprise</h3><h2 style="color: #FFFFFF; margin: 20px 0;">Custom</h2><p style="color: #94A3B8;">Tailored solutions for large organizations.</p></div>', unsafe_allow_html=True)
+        if st.button("Contact Sales", use_container_width=True, key="btn_en"): st.info("Reach out via our contact section below.")
+else:
+    p = st.session_state.selected_plan
+    col_chk1, col_chk2 = st.columns([1, 1])
+    with col_chk1:
+        st.markdown(f'<div class="glass-card"><h3>Razorpay Secure Checkout</h3><p style="color: #94A3B8; margin: 15px 0;">Plan: <b>{p["name"]}</b> | Amount: <b>{p["price"]}</b></p>', unsafe_allow_html=True)
+        pay_method = st.selectbox("Select Payment Method", ["UPI (Google Pay / PhonePe / Paytm)", "Credit / Debit Cards", "Net Banking", "Mobile Wallets"])
+        email = st.text_input("Billing Email Address")
+        if st.button("Pay Now via Live Razorpay Gateway", use_container_width=True):
             if email:
                 save_to_csv("paid_customers.csv", {"Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "Email": email, "Plan": p['name'], "Amount": p['price'], "Project Status": "In Progress", "Notes": f"Paid via {pay_method}"})
-                st.session_state.logged_in = True; st.session_state.username = email.split("@")[0]; st.session_state.checkout_active = False
-                st.success("Payment Successful! Invoice generated.")
+                st.session_state.checkout_active = False
+                st.success("Payment Successful via Razorpay! Confirmation & invoice generated.")
                 st.balloons()
-            else: st.warning("Enter email.")
-        if st.button("Back"): st.session_state.checkout_active = False; st.rerun()
+            else: st.warning("Please enter your email.")
+        if st.button("⬅️ Back to Pricing", use_container_width=True): st.session_state.checkout_active = False; st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
-elif nav == "AI Package Recommender":
-    st.markdown("### 🤖 AI Package Recommender")
-    biz = st.selectbox("Business Type", ["Solo Creator", "Startup / SME", "Enterprise"])
-    if st.button("Get Recommendation"):
-        st.info("Based on your input, we recommend the Pro Plan.")
+# ==================== FAQ ====================
+st.markdown("<br><br><br>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center; font-weight: 800; margin-bottom: 10px; color: #FFFFFF;'>Frequently Asked Questions</h2>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #94A3B8; margin-bottom: 40px;'>Everything you need to know about the product and billing.</p>", unsafe_allow_html=True)
 
-elif nav == "Portfolio / Projects":
-    st.markdown("### Portfolio & Projects")
-    p1, p2 = st.columns(2)
-    with p1: st.markdown('<div class="glass-card"><h3>AI E-Commerce Bot</h3><p>Boosted sales by 45%.</p></div>', unsafe_allow_html=True)
-    with p2: st.markdown('<div class="glass-card"><h3>HealthTech Portal</h3><p>Secure patient portal.</p></div>', unsafe_allow_html=True)
+col_faq1, col_faq2 = st.columns(2)
+with col_faq1:
+    with st.expander("How quickly can my AI chatbot be deployed?"):
+        st.write("Most chatbots are fully deployed and integrated into your workflow within 24 to 48 hours.")
+    with st.expander("Are payments secure with Razorpay?"):
+        st.write("Yes! All transactions are encrypted and processed securely through Razorpay supporting UPI, cards, and wallets.")
+with col_faq2:
+    with st.expander("Can I upgrade or downgrade my plan?"):
+        st.write("You can upgrade or modify your subscription tier at any time directly through your dashboard or by contacting support.")
+    with st.expander("Do you offer custom enterprise solutions?"):
+        st.write("Yes, our Enterprise tier includes dedicated server hosting, custom LLM embeddings, and 24/7 priority support.")
 
-elif nav == "Testimonials":
-    st.markdown("### ⭐ Client Testimonials")
-    st.markdown('<div class="glass-card">"AgentFlow AI transformed our lead pipeline!"<br><b>— Rajesh Sharma</b></div>', unsafe_allow_html=True)
+# ==================== CONTACT & BOOKING ====================
+st.markdown("<br><br><br>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center; font-weight: 800; margin-bottom: 10px; color: #FFFFFF;'>Contact & Book Meeting</h2>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #94A3B8; margin-bottom: 40px;'>Connect with our team or schedule a strategy consultation.</p>", unsafe_allow_html=True)
 
-elif nav == "Book a Meeting":
-    st.markdown("### 📅 Book a Meeting")
-    bname = st.text_input("Full Name", key="bn")
-    bemail = st.text_input("Email", key="be")
-    bphone = st.text_input("Phone", key="bp")
-    bdate = st.date_input("Date")
-    bslot = st.selectbox("Time Slot", ["10:00 AM", "02:00 PM", "04:00 PM"])
-    if st.button("Submit Booking"):
+con1, con2 = st.columns(2, gap="large")
+with con1:
+    st.markdown("""
+        <div class="glass-card">
+            <h3>Get in Touch</h3>
+            <p style="color: #94A3B8; margin: 15px 0 25px 0;">Reach out through any of our official channels:</p>
+            <p style="margin-bottom: 10px;">💬 <b>WhatsApp:</b> +91 98765 43210</p>
+            <p style="margin-bottom: 10px;">📧 <b>Email:</b> support@agentflow.ai</p>
+            <p style="margin-bottom: 10px;">📞 <b>Phone:</b> +91 98765 43210</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+with con2:
+    st.markdown('<div class="glass-card">', unsafe_allow_html=True)
+    st.subheader("Book Meeting Form")
+    bname = st.text_input("Full Name", key="bk_name")
+    bemail = st.text_input("Email Address", key="bk_email")
+    bphone = st.text_input("Phone Number", key="bk_phone")
+    bdate = st.date_input("Meeting Date", key="bk_date")
+    bslot = st.selectbox("Time Slot", ["10:00 AM - 11:00 AM", "02:00 PM - 03:00 PM", "04:00 PM - 05:00 PM"])
+    if st.button("Confirm Meeting Booking", use_container_width=True):
         if bname and bemail:
             save_to_csv("bookings.csv", {"Submission Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "Customer Name": bname, "Email": bemail, "Phone": bphone, "Service": "Consultation", "Meeting Date": str(bdate), "Time Slot": bslot, "Status": "Pending", "Notes": "Booked"})
-            st.success("Meeting booked successfully!")
-        else: st.warning("Fill required details.")
+            st.success("Meeting booked successfully! Admin notified.")
+        else: st.warning("Please fill in required details.")
+    st.markdown('</div>', unsafe_allow_html=True)
 
-elif nav == "Contact Us":
-    st.markdown("### Contact Us")
-    cname = st.text_input("Name", key="cn")
-    cemail = st.text_input("Email", key="ce")
-    cmsg = st.text_area("Message")
-    if st.button("Submit Inquiry"):
-        if cname and cemail:
-            save_to_csv("leads.csv", {"Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "Name": cname, "Business": "Contact Form", "Service": "Inquiry", "Budget": "N/A", "Phone": "N/A", "Email": cemail, "Status": "New", "Notes": cmsg})
-            st.success("Inquiry sent successfully!")
-        else: st.warning("Fill all fields.")
-
-elif nav == "Customer Login / Signup":
-    if not st.session_state.logged_in:
-        t1, t2 = st.tabs(["Login", "Signup"])
-        with t1:
-            u = st.text_input("Username", key="lu")
-            p = st.text_input("Password", type="password", key="lp")
-            if st.button("Login"):
-                if u and p: st.session_state.logged_in = True; st.session_state.username = u; st.success("Logged in!"); st.rerun()
-        with t2:
-            nu = st.text_input("Username", key="su")
-            ne = st.text_input("Email", key="se")
-            np = st.text_input("Password", type="password", key="sp")
-            if st.button("Sign Up"):
-                if nu and ne: st.session_state.logged_in = True; st.session_state.username = nu; st.success("Account created!"); st.rerun()
-    else:
-        st.markdown(f"## Welcome back, {st.session_state.username}!")
-        if os.path.exists("paid_customers.csv"):
-            df_cust = pd.read_csv("paid_customers.csv")
-            user_invoices = df_cust[df_cust["Email"].str.contains(st.session_state.username, case=False, na=False)]
-            if not user_invoices.empty:
-                st.dataframe(user_invoices, use_container_width=True)
-                for idx, row in user_invoices.iterrows():
-                    inv_text = generate_invoice_pdf(row['Email'], row['Plan'], row['Amount'])
-                    st.download_button(f"Download Invoice ({row['Plan']})", inv_text, file_name=f"invoice_{row['Plan']}.txt", mime="text/plain", key=f"inv_{idx}")
-        if st.button("Logout"): st.session_state.logged_in = False; st.rerun()
-
-elif nav == "Admin CRM Dashboard":
-    if not st.session_state.admin_logged_in:
-        ap = st.text_input("Admin Password", type="password")
-        if st.button("Login Admin"):
-            if ap == "admin123": st.session_state.admin_logged_in = True; st.rerun()
-            else: st.error("Wrong password!")
-    else:
-        st.markdown("## 🛡️ Admin CRM Dashboard")
-        if st.button("Logout Admin"): st.session_state.admin_logged_in = False; st.rerun()
-        
-        tot_l = len(pd.read_csv("leads.csv")) if os.path.exists("leads.csv") else 0
-        tot_c = len(pd.read_csv("paid_customers.csv")) if os.path.exists("paid_customers.csv") else 0
-        tot_b = len(pd.read_csv("bookings.csv")) if os.path.exists("bookings.csv") else 0
-        
-        c1, c2, c3 = st.columns(3)
-        with c1: st.metric("Total Leads", tot_l)
-        with c2: st.metric("Total Customers", tot_c)
-        with c3: st.metric("Total Bookings", tot_b)
-        
-        st.markdown("---")
-        t1, t2, t3 = st.tabs(["Leads", "Bookings", "Customers"])
-        with t1:
-            if os.path.exists("leads.csv"): st.dataframe(pd.read_csv("leads.csv"), use_container_width=True)
-            else: st.info("No leads yet.")
-        with t2:
-            if os.path.exists("bookings.csv"): st.dataframe(pd.read_csv("bookings.csv"), use_container_width=True)
-            else: st.info("No bookings yet.")
-        with t3:
-            if os.path.exists("paid_customers.csv"): st.dataframe(pd.read_csv("paid_customers.csv"), use_container_width=True)
-            else: st.info("No customers yet.")
-
-elif nav == "Legal & Policies":
-    st.markdown("### Legal Policies & Terms")
-    st.write("Privacy Policy, Terms & Conditions, and Refund Policy apply.")
-
+# ==================== FOOTER ====================
 st.markdown("""
     <div class="footer">
         <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 30px; max-width: 1200px; margin: 0 auto;">
             <div>
                 <h3>⚡ AgentFlow AI</h3>
-                <p style="color: #94a3b8; font-size: 14px; max-width: 300px;">Enterprise-grade AI automation and software development solutions.</p>
+                <p style="color: #94A3B8; font-size: 14px; max-width: 300px; margin-top: 10px;">Enterprise-grade AI automation and software development solutions.</p>
             </div>
             <div>
-                <h4>Contact Desk</h4>
-                <p style="color: #94a3b8; font-size: 14px;">📧 Email: support@agentflow.ai</p>
-                <p style="color: #94a3b8; font-size: 14px;">💬 WhatsApp: +91 98765 43210</p>
-            </div>
-        </div>
-        <div style="text-align: center; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 40px; padding-top: 20px; color: #64748b; font-size: 14px;">
-            <p>© 2026 AgentFlow AI. All rights reserved.</p>
-        </div>
-    </div>
-""", unsafe_allow_html=True)
+                <h4>Legal & Policies</h4>
+                <p style="color: #94A3B8; font-size: 14px; margin-top: 8px;">🔒 Privacy Policy</p>
+                <p style="color: #94A3B8; font-size: 14px;">📜 Terms & Conditions</p>
+                <p style="color: #94A3B8; font-size: 14
