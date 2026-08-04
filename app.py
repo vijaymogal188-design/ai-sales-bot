@@ -8,78 +8,130 @@ st.set_page_config(
     page_title="AgentFlow AI | Enterprise SaaS Platform", 
     page_icon="⚡", 
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
+# Hide Streamlit Default Sidebar / Navigation UI on Landing Page for Full Screen OpenAI/Stripe Style
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
+    
     html, body, [class*="css"] {
         font-family: 'Inter', 'Poppins', sans-serif;
         background-color: #0B1020;
         color: #F8FAFC;
     }
+    
     .stApp {
         background: radial-gradient(circle at 50% -20%, #1e1b4b 0%, #0B1020 60%);
         background-attachment: fixed;
     }
+
+    /* Hide standard sidebar if needed, keep navigation functional */
+    [data-testid="stSidebar"] {
+        background-color: #0B1020;
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Glassmorphism Cards */
     .glass-card {
         background: rgba(30, 41, 59, 0.5);
         backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 20px;
         padding: 32px;
         text-align: center;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
+    .glass-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(124, 58, 237, 0.4);
+        box-shadow: 0 30px 60px rgba(124, 58, 237, 0.15);
+    }
+
+    /* Hero Section */
     .hero-container {
-        text-align: center;
-        padding: 60px 20px 40px 20px;
-        max-width: 900px;
+        padding: 40px 20px;
+        max-width: 1200px;
         margin: 0 auto;
     }
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(124, 58, 237, 0.15);
+        border: 1px solid rgba(124, 58, 237, 0.3);
+        color: #a78bfa;
+        font-weight: 600;
+        font-size: 13px;
+        padding: 8px 18px;
+        border-radius: 50px;
+        margin-bottom: 24px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
     .hero-title {
-        font-size: 52px;
+        font-size: 54px;
         font-weight: 800;
         color: #ffffff;
         line-height: 1.15;
         margin-bottom: 20px;
+        letter-spacing: -0.02em;
     }
     .hero-title span {
         background: linear-gradient(135deg, #a78bfa 0%, #6366f1 50%, #3b82f6 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
-    .stat-card {
-        background: rgba(15, 23, 42, 0.6);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 16px;
-        padding: 24px;
-        text-align: center;
+    .hero-subtitle {
+        font-size: 18px;
+        color: #94a3b8;
+        line-height: 1.6;
+        margin-bottom: 35px;
     }
-    .stat-number {
-        font-size: 36px;
-        font-weight: 800;
-        color: #ffffff;
-        margin-bottom: 8px;
+
+    /* Floating Chatbot Widget (Bottom Right) */
+    .chatbot-float-container {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        width: 380px;
+        max-height: 500px;
+        background: rgba(15, 23, 42, 0.92);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(124, 58, 237, 0.3);
+        border-radius: 20px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+        z-index: 9999;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
     }
+
+    /* Floating WhatsApp Button */
     .whatsapp-float {
         position: fixed;
-        bottom: 30px;
-        right: 30px;
+        bottom: 25px;
+        left: 25px;
         background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
         color: white;
         border-radius: 50px;
         text-align: center;
-        font-size: 28px;
+        font-size: 26px;
+        box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
         z-index: 1000;
-        width: 60px;
-        height: 60px;
+        width: 55px;
+        height: 55px;
         display: flex;
         align-items: center;
         justify-content: center;
         text-decoration: none;
+        transition: transform 0.3s ease;
     }
+    .whatsapp-float:hover { transform: scale(1.1); }
+
     .footer {
         background: rgba(11, 16, 32, 0.8);
         border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -87,7 +139,8 @@ st.markdown("""
         margin-top: 80px;
     }
 </style>
-<a href="https://wa.me/919876543210" class="whatsapp-float" target="_blank">💬</a>
+
+<a href="https://wa.me/919876543210" class="whatsapp-float" target="_blank" title="Chat on WhatsApp">💬</a>
 """, unsafe_allow_html=True)
 
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
@@ -103,6 +156,7 @@ if "username" not in st.session_state: st.session_state.username = ""
 if "admin_logged_in" not in st.session_state: st.session_state.admin_logged_in = False
 if "selected_plan" not in st.session_state: st.session_state.selected_plan = None
 if "checkout_active" not in st.session_state: st.session_state.checkout_active = False
+if "chat_open" not in st.session_state: st.session_state.chat_open = True
 
 def save_to_csv(filename, data_dict):
     df = pd.DataFrame([data_dict])
@@ -140,24 +194,75 @@ nav = st.sidebar.radio("Navigation", [
 ])
 
 if nav == "Home / Landing Page":
-    st.markdown('<div class="hero-container"><div class="hero-title">Scale Your Business with <span>AgentFlow AI</span></div></div>', unsafe_allow_html=True)
-    st.markdown("### 💬 Interactive AI Sales Assistant")
-    for msg in st.session_state.messages:
-        if msg["role"] != "system":
-            with st.chat_message(msg["role"]): st.markdown(msg["content"])
-    if prompt := st.chat_input("Type message..."):
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"): st.markdown(prompt)
-        try:
-            res = client.chat.completions.create(messages=st.session_state.messages, model="llama-3.1-8b-instant", temperature=0.5).choices[0].message.content
-            if "COMPLETE:" in res:
-                d = res.split("COMPLETE:")[1].strip().split("|")
-                if len(d) == 6:
-                    save_to_csv("leads.csv", {"Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "Name": d[0].strip(), "Business": d[1].strip(), "Service": d[2].strip(), "Budget": d[3].strip(), "Phone": d[4].strip(), "Email": d[5].strip(), "Status": "New", "Notes": "None"})
-                res = "Thank you! Our team will contact you soon."
-            st.session_state.messages.append({"role": "assistant", "content": res})
-            with st.chat_message("assistant"): st.markdown(res)
-        except Exception as e: st.error(f"Error: {e}")
+    # OpenAI / Stripe / Vercel style Full-Screen Hero Section with 3D AI Illustration on right
+    st.markdown("""
+        <div class="hero-container">
+            <div class="hero-badge">✨ Next-Gen Enterprise AI & Automation</div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    col_h1, col_h2 = st.columns([1.3, 1], gap="large")
+    with col_h1:
+        st.markdown("""
+            <div class="hero-title">Scale Your Business with <span>AgentFlow AI</span></div>
+            <div class="hero-subtitle">AI Chatbots, Websites, Mobile Apps & Business Automation for Modern Companies.</div>
+        """, unsafe_allow_html=True)
+        
+        ch1, ch2 = st.columns(2)
+        with ch1:
+            if st.button("🚀 Get Free Demo", use_container_width=True):
+                st.balloons()
+        with ch2:
+            if st.button("📅 Book a Meeting", use_container_width=True):
+                st.info("Navigate to 'Book a Meeting' via sidebar.")
+
+    with col_h2:
+        # 3D AI Illustration Mockup Card
+        st.markdown("""
+            <div class="glass-card" style="padding: 40px; background: linear-gradient(135deg, rgba(124,58,237,0.2) 0%, rgba(59,130,246,0.1) 100%);">
+                <h2 style="font-size: 48px; margin-bottom: 10px;">🤖⚡</h2>
+                <h3 style="color: #a78bfa; margin-bottom: 10px;">Autonomous AI Core</h3>
+                <p style="font-size: 14px; color: #94a3b8;">Real-time workflow pipelines, 24/7 conversational sales bots, and enterprise security.</p>
+            </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<br><br>", unsafe_allow_html=True)
+
+    # Statistics Section
+    st.markdown("<h2 style='text-align: center; font-weight: 800; margin-bottom: 30px;'>Trusted by Industry Leaders Worldwide</h2>", unsafe_allow_html=True)
+    s1, s2, s3, s4 = st.columns(4)
+    with s1: st.markdown('<div class="glass-card"><h2 style="color: #a78bfa;">100+</h2><p style="color: #94a3b8;">Clients</p></div>', unsafe_allow_html=True)
+    with s2: st.markdown('<div class="glass-card"><h2 style="color: #a78bfa;">500+</h2><p style="color: #94a3b8;">Projects</p></div>', unsafe_allow_html=True)
+    with s3: st.markdown('<div class="glass-card"><h2 style="color: #a78bfa;">99%</h2><p style="color: #94a3b8;">Satisfaction</p></div>', unsafe_allow_html=True)
+    with s4: st.markdown('<div class="glass-card"><h2 style="color: #a78bfa;">24/7</h2><p style="color: #94a3b8;">Support</p></div>', unsafe_allow_html=True)
+
+    st.markdown("<br><br>", unsafe_allow_html=True)
+
+    # Floating Chatbot in Bottom-Right Corner
+    st.markdown("""
+        <div style="position: fixed; bottom: 25px; right: 25px; z-index: 9999;">
+    """, unsafe_allow_html=True)
+    
+    with st.popover("💬 AI Chat Assistant"):
+        st.write("### AI Sales Agent")
+        for msg in st.session_state.messages:
+            if msg["role"] != "system":
+                with st.chat_message(msg["role"]): st.markdown(msg["content"])
+        if prompt := st.chat_input("Type message..."):
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            with st.chat_message("user"): st.markdown(prompt)
+            try:
+                res = client.chat.completions.create(messages=st.session_state.messages, model="llama-3.1-8b-instant", temperature=0.5).choices[0].message.content
+                if "COMPLETE:" in res:
+                    d = res.split("COMPLETE:")[1].strip().split("|")
+                    if len(d) == 6:
+                        save_to_csv("leads.csv", {"Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "Name": d[0].strip(), "Business": d[1].strip(), "Service": d[2].strip(), "Budget": d[3].strip(), "Phone": d[4].strip(), "Email": d[5].strip(), "Status": "New", "Notes": "None"})
+                    res = "Thank you! Our team will contact you soon."
+                st.session_state.messages.append({"role": "assistant", "content": res})
+                with st.chat_message("assistant"): st.markdown(res)
+            except Exception as e: st.error(f"Error: {e}")
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
 elif nav == "Pricing & Plans":
     if not st.session_state.checkout_active:
@@ -286,3 +391,22 @@ elif nav == "Admin CRM Dashboard":
 elif nav == "Legal & Policies":
     st.markdown("### Legal Policies & Terms")
     st.write("Privacy Policy, Terms & Conditions, and Refund Policy apply.")
+
+st.markdown("""
+    <div class="footer">
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 30px; max-width: 1200px; margin: 0 auto;">
+            <div>
+                <h3>⚡ AgentFlow AI</h3>
+                <p style="color: #94a3b8; font-size: 14px; max-width: 300px;">Enterprise-grade AI automation and software development solutions.</p>
+            </div>
+            <div>
+                <h4>Contact Desk</h4>
+                <p style="color: #94a3b8; font-size: 14px;">📧 Email: support@agentflow.ai</p>
+                <p style="color: #94a3b8; font-size: 14px;">💬 WhatsApp: +91 98765 43210</p>
+            </div>
+        </div>
+        <div style="text-align: center; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 40px; padding-top: 20px; color: #64748b; font-size: 14px;">
+            <p>© 2026 AgentFlow AI. All rights reserved.</p>
+        </div>
+    </div>
+""", unsafe_allow_html=True)
