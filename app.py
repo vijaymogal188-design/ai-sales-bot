@@ -175,9 +175,25 @@ def save_paid_customer(email, plan_name, amount):
     if not os.path.exists(file_name): df.to_csv(file_name, index=False)
     else: df.to_csv(file_name, mode='a', header=False, index=False)
 
+def save_booking_to_csv(name, email, phone, service, date, time_slot):
+    file_name = "bookings.csv"
+    record = {
+        "Submission Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "Customer Name": name,
+        "Email": email,
+        "Phone": phone,
+        "Service": service,
+        "Meeting Date": str(date),
+        "Time Slot": str(time_slot),
+        "Status": "Pending"
+    }
+    df = pd.DataFrame([record])
+    if not os.path.exists(file_name): df.to_csv(file_name, index=False)
+    else: df.to_csv(file_name, mode='a', header=False, index=False)
+
 # Sidebar Navigation with Logo Branding
 st.sidebar.markdown("### ⚡ AgentFlow AI")
-st.sidebar.caption("Enterprise SaaS Portal v2.5")
+st.sidebar.caption("Enterprise SaaS Portal v2.6")
 st.sidebar.markdown("---")
 
 nav_choice = st.sidebar.radio("Navigation", [
@@ -319,26 +335,31 @@ elif nav_choice == "Testimonials":
     with t2: st.markdown('<div class="testimonial-card">"The custom AI chatbot handles customer queries 24/7 flawlessly. Exceptional work!"<br><br><b>— Priya Patel</b><br><span style="color:#64748b;">Founder, StyleHub</span></div>', unsafe_allow_html=True)
     with t3: st.markdown('<div class="testimonial-card">"Incredible platform and seamless Razorpay payment integration. Highly recommended!"<br><br><b>— Amit Verma</b><br><span style="color:#64748b;">Director, LogiTech</span></div>', unsafe_allow_html=True)
 
-# ==================== 6. BOOK A MEETING ====================
+# ==================== 6. BOOK A MEETING (COMPLETE BOOKING SYSTEM) ====================
 elif nav_choice == "Book a Meeting":
-    st.markdown('<div class="section-title">📅 Book a Strategy Call</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-subtitle">Schedule a 1-on-1 consultation with our senior enterprise architect.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">📅 Enterprise Meeting Booking System</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-subtitle">Select your preferred date, time slot, and service to schedule a strategy consultation.</div>', unsafe_allow_html=True)
     
-    m_col1, m_col2 = st.columns(2)
-    with m_col1:
-        m_name = st.text_input("Your Name")
-        m_email = st.text_input("Email Address")
-        m_date = st.date_input("Select Preferred Date")
-    with m_col2:
-        m_time = st.time_input("Select Preferred Time")
-        m_notes = st.text_area("Briefly describe your project")
-        if st.button("Confirm Meeting Booking"):
-            if m_name and m_email:
-                st.success(f"🎉 Meeting successfully booked for {m_date} at {m_time}! Calendar invite sent to {m_email}.")
-            else:
-                st.warning("Please fill in your name and email.")
+    col_b1, col_b2 = st.columns(2)
+    with col_b1:
+        b_name = st.text_input("Full Name", key="bk_name")
+        b_email = st.text_input("Email Address", key="bk_email")
+        b_phone = st.text_input("Phone Number", key="bk_phone")
+    with col_b2:
+        b_service = st.selectbox("Service Required", ["AI Chatbot Implementation", "Website Development", "Mobile App Development", "Enterprise Automation", "General Consultation"])
+        b_date = st.date_input("Select Meeting Date", key="bk_date")
+        b_time = st.selectbox("Select Time Slot", ["10:00 AM - 11:00 AM", "11:30 AM - 12:30 PM", "02:00 PM - 03:00 PM", "04:00 PM - 05:00 PM"])
 
-# ==================== 7. CONTACT US (CONNECTED TO ADMIN) ====================
+    st.write("")
+    if st.button("Submit Meeting Booking"):
+        if b_name and b_email and b_phone:
+            save_booking_to_csv(b_name, b_email, b_phone, b_service, b_date, b_time)
+            st.success(f"🎉 Booking successfully submitted for {b_date} ({b_time})! Your appointment status is currently **Pending**. Our team will confirm shortly.")
+            st.balloons()
+        else:
+            st.warning("Please fill in your Name, Email, and Phone Number.")
+
+# ==================== 7. CONTACT US ====================
 elif nav_choice == "Contact Us":
     st.markdown('<div class="section-title">Contact Us</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-subtitle">Inquiries submitted here are directly routed to the Admin Portal.</div>', unsafe_allow_html=True)
@@ -350,7 +371,6 @@ elif nav_choice == "Contact Us":
     
     if st.button("Submit Inquiry"):
         if c_name and c_email and c_msg:
-            # Save inquiry directly to leads.csv so admin can view it
             save_lead_to_csv([c_name, "Inquiry Form", c_service, "Custom", "N/A", c_email])
             st.success("✅ Inquiry submitted successfully! Our team and admin portal have received your message.")
         else:
@@ -369,20 +389,4 @@ elif nav_choice == "Customer Login / Signup":
         with t2:
             nu = st.text_input("Choose Username", key="s_u"); ne = st.text_input("Email Address", key="s_e"); np = st.text_input("Create Password", type="password", key="s_p")
             if st.button("Sign Up"):
-                if nu and ne and np: st.session_state.logged_in = True; st.session_state.username = nu; st.success("Account created!"); st.rerun()
-                else: st.warning("Fill all details.")
-    else:
-        st.markdown(f"## 👋 Welcome back, {st.session_state.username}!")
-        dt1, dt2, dt3, dt4 = st.tabs(["📊 Project Status", "📁 My Projects & Files", "💳 Invoices", "💬 Chat with Support"])
-        with dt1: st.metric(label="Current Project", value="AI Sales Agent MVP", delta="Phase 2")
-        with dt2: st.download_button("📥 Download Source Code (.zip)", "Dummy source code bytes", "agentflow_project.zip")
-        with dt3: st.table(pd.DataFrame({"Invoice ID": ["#INV-1"], "Amount": ["₹999"], "Status": ["Paid 🟢"]}))
-        with dt4: st.write("Direct support chat active.")
-
-# ==================== 9. ADMIN PORTAL ====================
-elif nav_choice == "Admin Portal":
-    if not st.session_state.admin_logged_in:
-        st.markdown("<h2 style='text-align: center;'>🔒 Admin Authentication</h2>", unsafe_allow_html=True)
-        col_ad1, col_ad2, col_ad3 = st.columns([1, 2, 1])
-        with col_ad2:
-            admin_pass = st.te
+                if nu and ne and np: st.session_state.logged_in = True; st.session_state.username = nu; st.success("Acc
