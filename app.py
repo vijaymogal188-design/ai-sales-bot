@@ -388,18 +388,20 @@ elif nav_choice == "Contact Us":
 elif nav_choice == "Customer Login / Signup":
     if not st.session_state.logged_in:
         st.markdown("<h2 style='text-align: center;'>🔐 Customer Portal Authentication</h2>", unsafe_allow_html=True)
-        col_la1, col_la2 = st.columns(2)
-        with col_la1:
-            st.markdown("### 🔑 Existing User Login")
-            u = st.text_input("Username or Email", key="l_u")
-            p = st.text_input("Password", type="password", key="l_p")
-            if st.button("Login"):
-                if u and p:
-                    st.session_state.logged_in = True
-                    st.session_state.username = u
-                    st.session_state.user_email = u if "@" in u else f"{u}@agentflow.ai"
-                    st.success("Login successful!")
-                    st.rerun()
-                else:
-                    st.warning("Fill both fields.")
-        with col_la2:
+        
+        st.markdown("### 🔑 Existing User Login")
+        u = st.text_input("Username or Email", key="l_u")
+        p = st.text_input("Password", type="password", key="l_p")
+        if st.button("Login"):
+            if u and p:
+                st.session_state.logged_in = True
+                st.session_state.username = u
+                st.session_state.user_email = u if "@" in u else f"{u}@agentflow.ai"
+                st.success("Login successful!")
+                st.rerun()
+            else:
+                st.warning("Fill both fields.")
+
+        st.markdown("---")
+        st.markdown("### 📝 New User Signup")
+        new_username = st.text_input("Choose Username
