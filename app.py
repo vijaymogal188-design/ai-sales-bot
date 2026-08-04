@@ -389,15 +389,14 @@ elif nav_choice == "Customer Login / Signup":
     if not st.session_state.logged_in:
         st.markdown("<h2 style='text-align: center;'>🔐 Customer Portal Authentication</h2>", unsafe_allow_html=True)
         
-        st.markdown("### 🔑 Existing User Login")
-        login_user_input = st.text_input("Username or Email", key="l_u")
-        login_pass_input = st.text_input("Password", type="password", key="l_p")
-        if st.button("Login"):
-            if login_user_input and login_pass_input:
-                st.session_state.logged_in = True
-                st.session_state.username = login_user_input
-                st.session_state.user_email = login_user_input if "@" in login_user_input else f"{login_user_input}@agentflow.ai"
-                st.success("Login successful!")
-                st.rerun()
-            else:
-                st.warning("Fill both fields.")
+        tab_login, tab_signup = st.tabs(["🔑 Login", "📝 Signup"])
+        
+        with tab_login:
+            login_user_input = st.text_input("Username or Email", key="l_u")
+            login_pass_input = st.text_input("Password", type="password", key="l_p")
+            if st.button("Login"):
+                if login_user_input and login_pass_input:
+                    st.session_state.logged_in = True
+                    st.session_state.username = login_user_input
+                    st.session_state.user_email = login_user_input if "@" in login_user_input else f"{login_user_input}@agentflow.ai"
+                    st.success("Login successful!")
