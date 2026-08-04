@@ -3,7 +3,6 @@ import pandas as pd
 import os
 from groq import Groq
 from datetime import datetime
-import base6io as _b64  # placeholder safe import or standard library alternatives if needed
 import io
 
 st.set_page_config(
@@ -13,7 +12,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom styling supporting Dark Mode state if toggled
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
@@ -53,7 +51,6 @@ def save_to_csv(filename, data_dict):
     else: df.to_csv(filename, mode='a', header=False, index=False)
 
 def generate_invoice_pdf(email, plan, amount):
-    # Generates text/markdown representation for invoice download simulation
     invoice_content = f"""
     AGENTFLOW AI - OFFICIAL INVOICE
     -----------------------------------
@@ -70,7 +67,6 @@ def generate_invoice_pdf(email, plan, amount):
 
 st.sidebar.markdown("### ⚡ AgentFlow AI")
 st.sidebar.markdown("---")
-# Dark Mode Toggle feature
 dark_mode_toggle = st.sidebar.checkbox("🌙 Dark Mode", value=st.session_state.dark_mode)
 if dark_mode_toggle != st.session_state.dark_mode:
     st.session_state.dark_mode = dark_mode_toggle
@@ -125,11 +121,8 @@ elif nav == "Pricing & Plans":
     else:
         p = st.session_state.selected_plan
         st.markdown(f"### Real Razorpay Secure Checkout - {p['name']} ({p['price']})")
-        
-        # Payment method selection (UPI, Cards, Net Banking, Wallet)
         pay_method = st.selectbox("Select Payment Method", ["UPI (Google Pay / PhonePe / Paytm)", "Credit / Debit Cards", "Net Banking", "Mobile Wallets"])
         email = st.text_input("Billing Email Address")
-        
         if st.button("Pay Now via Live Razorpay Gateway"):
             if email:
                 save_to_csv("paid_customers.csv", {"Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "Email": email, "Plan": p['name'], "Amount": p['price'], "Project Status": "In Progress", "Notes": f"Paid via {pay_method}"})
@@ -224,7 +217,6 @@ elif nav == "Admin CRM Dashboard":
         st.markdown("## 🛡️ Enterprise Admin CRM & Analytics Dashboard")
         if st.button("Logout Admin"): st.session_state.admin_logged_in = False; st.rerun()
         
-        # Analytics Dashboard Metrics
         tot_l = len(pd.read_csv("leads.csv")) if os.path.exists("leads.csv") else 0
         tot_c = len(pd.read_csv("paid_customers.csv")) if os.path.exists("paid_customers.csv") else 0
         tot_b = len(pd.read_csv("bookings.csv")) if os.path.exists("bookings.csv") else 0
