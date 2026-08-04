@@ -389,16 +389,17 @@ elif nav_choice == "Customer Login / Signup":
     if not st.session_state.logged_in:
         st.markdown("<h2 style='text-align: center;'>🔐 Customer Portal Authentication</h2>", unsafe_allow_html=True)
         t1, t2 = st.tabs(["🔑 Login", "📝 Signup"])
+        
         with t1:
-            u = st.text_input("Username or Email", key="l_u")
-            p = st.text_input("Password", type="password", key="l_p")
-            if st.button("Login"):
-                if u and p: 
-                    # Check users.csv if exists
-                    login_success = True
-                    if os.path.exists("users.csv"):
-                        df_users = pd.read_csv("users.csv")
-                        match = df_users[(df_users['Username'] == u) | (df_users['Email'] == u)]
-                        if not match.empty:
-                            if match.iloc[0]['Password'] != p:
-                                login_s
+            with st.form("login_form"):
+                u = st.text_input("Username or Email", key="l_u")
+                p = st.text_input("Password", type="password", key="l_p")
+                submit_login = st.form_submit_button("Login")
+                
+                if submit_login:
+                    if u and p: 
+                        login_success = True
+                        if os.path.exists("users.csv"):
+                            df_users = pd.read_csv("users.csv")
+                            match = df_users[(df_users['Username'] == u) | (df_users['Email'] == u)]
+                            if not match
