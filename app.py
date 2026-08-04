@@ -121,9 +121,22 @@ if "messages" not in st.session_state:
 
 if "logged_in" not in st.session_state: st.session_state.logged_in = False
 if "username" not in st.session_state: st.session_state.username = ""
+if "user_email" not in st.session_state: st.session_state.user_email = ""
 if "admin_logged_in" not in st.session_state: st.session_state.admin_logged_in = False
 if "selected_plan" not in st.session_state: st.session_state.selected_plan = None
 if "checkout_active" not in st.session_state: st.session_state.checkout_active = False
+
+def save_user_to_csv(username, email, password):
+    file_name = "users.csv"
+    new_user = {
+        "Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "Username": username,
+        "Email": email,
+        "Password": password
+    }
+    df = pd.DataFrame([new_user])
+    if not os.path.exists(file_name): df.to_csv(file_name, index=False)
+    else: df.to_csv(file_name, mode='a', header=False, index=False)
 
 def save_lead_to_csv(data_list):
     file_name = "leads.csv"
@@ -283,6 +296,7 @@ elif nav_choice == "Pricing & Plans":
                     save_paid_customer(email_input, plan['name'], plan['price'])
                     st.session_state.logged_in = True
                     st.session_state.username = email_input.split("@")[0]
+                    st.session_state.user_email = email_input
                     st.session_state.checkout_active = False
                     st.success("Payment Successful via Razorpay! Redirecting to Dashboard...")
                     st.balloons()
@@ -380,24 +394,11 @@ elif nav_choice == "Customer Login / Signup":
             p = st.text_input("Password", type="password", key="l_p")
             if st.button("Login"):
                 if u and p: 
-                    st.session_state.logged_in = True
-                    st.session_state.username = u
-                    st.success("Login successful!")
-                    st.rerun()
-                else: 
-                    st.warning("Fill both fields.")
-        with t2:
-            nu = st.text_input("Choose Username", key="s_u")
-            ne = st.text_input("Email Address", key="s_e")
-            np = st.text_input("Create Password", type="password", key="s_p")
-            if st.button("Sign Up"):
-                if nu and ne and np: 
-                    st.session_state.logged_in = True
-                    st.session_state.username = nu
-                    st.success("Account created successfully!")
-                    st.rerun()
-                else: 
-                    st.warning("Fill all details.")
-    else:
-        st.markdown("## 👋 Welcome back, " + st.session_state.username + "!")
-        cust_tab1, cust_tab2 = st.tabs(["Payment History & Invoices", "Support"])
+                    # Check users.csv if exists
+                    login_success = True
+                    if os.path.exists("users.csv"):
+                        df_users = pd.read_csv("users.csv")
+                        match = df_users[(df_users['Username'] == u) | (df_users['Email'] == u)]
+                        if not match.empty:
+                            if match.iloc[0]['Password'] != p:
+                                login_s
