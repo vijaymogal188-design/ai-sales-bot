@@ -4,24 +4,35 @@ import os
 from groq import Groq
 from datetime import datetime
 
-# Page configuration
 st.set_page_config(
-    page_title="AgentFlow AI | Enterprise SaaS Portal", 
+    page_title="AgentFlow AI | Enterprise SaaS & Business Automation", 
     page_icon="⚡", 
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-# Custom CSS for styling
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
     
     html, body, [class*="css"] {
         font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: #f8fafc;
+        color: #0f172a;
     }
+
+    .stApp {
+        background-color: #f8fafc;
+    }
+
+    [data-testid="stSidebar"] {
+        background-color: #ffffff;
+        border-right: 1px solid #e2e8f0;
+    }
+
     .hero-container {
         text-align: center;
-        padding: 40px 20px 20px 20px;
+        padding: 50px 20px 30px 20px;
         max-width: 900px;
         margin: 0 auto;
     }
@@ -36,7 +47,7 @@ st.markdown("""
         margin-bottom: 16px;
     }
     .hero-title {
-        font-size: 42px;
+        font-size: 46px;
         font-weight: 800;
         color: #0f172a;
         line-height: 1.2;
@@ -51,14 +62,14 @@ st.markdown("""
         font-size: 16px;
         color: #64748b;
         line-height: 1.6;
-        margin-bottom: 25px;
+        margin-bottom: 30px;
     }
     .section-title {
         text-align: center;
         font-size: 28px;
         font-weight: 800;
         color: #0f172a;
-        margin-top: 40px;
+        margin-top: 50px;
         margin-bottom: 10px;
     }
     .section-subtitle {
@@ -67,43 +78,39 @@ st.markdown("""
         color: #64748b;
         margin-bottom: 30px;
     }
-    .pricing-card {
+    .pricing-card, .feature-card, .testimonial-card, .portfolio-card {
         background: #ffffff;
         border: 1px solid #e2e8f0;
         padding: 30px;
         border-radius: 16px;
         text-align: center;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+    }
+    .pricing-card:hover, .feature-card:hover, .testimonial-card:hover, .portfolio-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.1);
     }
     .footer {
-        text-align: center;
-        padding: 30px;
+        background: #0f172a;
+        color: #f8fafc;
+        padding: 50px 30px 20px 30px;
+        border-top: 1px solid #1e293b;
+        margin-top: 60px;
+        border-radius: 16px 16px 0 0;
+    }
+    .footer a {
         color: #94a3b8;
-        font-size: 14px;
-        border-top: 1px solid #e2e8f0;
-        margin-top: 50px;
-        background: #ffffff;
+        text-decoration: none;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Initialize Groq Client securely
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
-SYSTEM_PROMPT = """You are an expert AI Sales Agent for AgentFlow AI. You can converse in both English and Hindi (or Hinglish) depending on user preference. Your goal is to naturally converse with the user and collect exactly these 6 details:
-1. Name
-2. Business Name
-3. Service Required
-4. Budget
-5. Phone Number
-6. Email Address
-
-RULES:
-- Match user's language (English/Hindi).
-- Ask conversationally, one or two details at a time.
-- Once ALL 6 details are collected, output EXACTLY this format and nothing else:
-COMPLETE: Name | Business | Service | Budget | Phone | Email
-"""
+SYSTEM_PROMPT = """You are an expert AI Sales Agent for AgentFlow AI. Your goal is to converse with the user and collect exactly these 6 details:
+1. Name, 2. Business Name, 3. Service Required, 4. Budget, 5. Phone Number, 6. Email Address.
+When all 6 are collected, output EXACTLY: COMPLETE: Name | Business | Service | Budget | Phone | Email"""
 
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
@@ -112,12 +119,24 @@ if "messages" not in st.session_state:
         "content": "👋 Hello! Welcome to AgentFlow AI. To get started, could you please tell me your name?"
     })
 
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
-if "username" not in st.session_state:
-    st.session_state.username = ""
-if "admin_logged_in" not in st.session_state:
-    st.session_state.admin_logged_in = False
+if "logged_in" not in st.session_state: st.session_state.logged_in = False
+if "username" not in st.session_state: st.session_state.username = ""
+if "user_email" not in st.session_state: st.session_state.user_email = ""
+if "admin_logged_in" not in st.session_state: st.session_state.admin_logged_in = False
+if "selected_plan" not in st.session_state: st.session_state.selected_plan = None
+if "checkout_active" not in st.session_state: st.session_state.checkout_active = False
+
+def save_user_to_csv(username, email, password):
+    file_name = "users.csv"
+    new_user = {
+        "Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "Username": username,
+        "Email": email,
+        "Password": password
+    }
+    df = pd.DataFrame([new_user])
+    if not os.path.exists(file_name): df.to_csv(file_name, index=False)
+    else: df.to_csv(file_name, mode='a', header=False, index=False)
 
 def save_lead_to_csv(data_list):
     file_name = "leads.csv"
@@ -128,13 +147,13 @@ def save_lead_to_csv(data_list):
         "Service": data_list[2].strip(),
         "Budget": data_list[3].strip(),
         "Phone": data_list[4].strip(),
-        "Email": data_list[5].strip()
+        "Email": data_list[5].strip(),
+        "Status": "New",
+        "Notes": "None"
     }
     df = pd.DataFrame([new_lead])
-    if not os.path.exists(file_name):
-        df.to_csv(file_name, index=False)
-    else:
-        df.to_csv(file_name, mode='a', header=False, index=False)
+    if not os.path.exists(file_name): df.to_csv(file_name, index=False)
+    else: df.to_csv(file_name, mode='a', header=False, index=False)
 
 def save_paid_customer(email, plan_name, amount):
     file_name = "paid_customers.csv"
@@ -142,342 +161,243 @@ def save_paid_customer(email, plan_name, amount):
         "Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "Email": email,
         "Plan": plan_name,
-        "Amount": amount
+        "Amount": amount,
+        "Project Status": "In Progress",
+        "Notes": "New subscription paid"
     }
     df = pd.DataFrame([record])
-    if not os.path.exists(file_name):
-        df.to_csv(file_name, index=False)
-    else:
-        df.to_csv(file_name, mode='a', header=False, index=False)
+    if not os.path.exists(file_name): df.to_csv(file_name, index=False)
+    else: df.to_csv(file_name, mode='a', header=False, index=False)
 
-st.sidebar.markdown("### ⚡ AgentFlow Portal")
-nav_choice = st.sidebar.radio("Navigation", ["Home / Landing Page", "Pricing & Plans", "Customer Login / Signup", "Admin Portal"])
+def save_booking_to_csv(name, email, phone, service, date, time_slot):
+    file_name = "bookings.csv"
+    record = {
+        "Submission Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "Customer Name": name,
+        "Email": email,
+        "Phone": phone,
+        "Service": service,
+        "Meeting Date": str(date),
+        "Time Slot": str(time_slot),
+        "Status": "Pending",
+        "Notes": "Scheduled consultation"
+    }
+    df = pd.DataFrame([record])
+    if not os.path.exists(file_name): df.to_csv(file_name, index=False)
+    else: df.to_csv(file_name, mode='a', header=False, index=False)
+
+def generate_invoice_pdf(email, plan, amount):
+    return f"""
+    AGENTFLOW AI - OFFICIAL INVOICE
+    -----------------------------------
+    Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+    Customer Email: {email}
+    Plan Selected: {plan}
+    Payment Methods: Razorpay (UPI / Cards / Net Banking / Wallet)
+    Amount Paid: {amount}
+    Status: SUCCESSFUL / VERIFIED
+    -----------------------------------
+    Thank you for your business!
+    """
+
+st.sidebar.markdown("### ⚡ AgentFlow AI")
+st.sidebar.caption("Enterprise SaaS Portal v3.2")
+st.sidebar.markdown("---")
+
+nav_choice = st.sidebar.radio("Navigation", [
+    "Home / Landing Page", 
+    "Pricing & Plans", 
+    "AI Package Recommender",
+    "Portfolio / Projects", 
+    "Testimonials", 
+    "Book a Meeting",
+    "Contact Us", 
+    "Customer Login / Signup", 
+    "Admin CRM Dashboard",
+    "Legal & Policies"
+])
+
+st.sidebar.markdown("---")
+st.sidebar.markdown("🛡️ **Enterprise Security**")
+st.sidebar.caption("SSL Secured | 24/7 Support")
 
 if nav_choice == "Home / Landing Page":
     st.markdown("""
         <div class="hero-container">
-            <div class="hero-badge">⚡ Next-Gen Business Automation</div>
+            <div class="hero-badge">⚡ Next-Gen Business Automation & AI</div>
             <div class="hero-title">Scale Your Growth with <span>AgentFlow AI</span></div>
-            <div class="hero-subtitle">Experience lightning-fast client acquisition, intelligent workflow automations, and bespoke digital solutions designed to elevate your brand.</div>
+            <div class="hero-subtitle">Experience lightning-fast client acquisition, intelligent workflow automations, and bespoke digital solutions designed to elevate your brand globally.</div>
         </div>
     """, unsafe_allow_html=True)
 
     st.markdown('<div class="section-title">Our Professional Services</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-subtitle">Comprehensive solutions tailored to scale your digital presence.</div>', unsafe_allow_html=True)
     
     col_s1, col_s2, col_s3, col_s4, col_s5 = st.columns(5)
-    with col_s1:
-        st.markdown("### 🌐 Website Dev")
-        st.write("High-performing modern responsive websites.")
-    with col_s2:
-        st.markdown("### 🤖 AI Chatbots")
-        st.write("24/7 intelligent sales conversational bots.")
-    with col_s3:
-        st.markdown("### 📱 App Dev")
-        st.write("Scalable mobile apps for iOS & Android.")
-    with col_s4:
-        st.markdown("### 🎨 Logo Design")
-        st.write("Memorable brand identities & graphics.")
-    with col_s5:
-        st.markdown("### 📈 Marketing")
-        st.write("Data-driven customer growth campaigns.")
+    with col_s1: st.markdown('<div class="feature-card"><h3>🌐 Website Dev</h3><p>Modern responsive sites.</p></div>', unsafe_allow_html=True)
+    with col_s2: st.markdown('<div class="feature-card"><h3>🤖 AI Chatbots</h3><p>24/7 intelligent sales bots.</p></div>', unsafe_allow_html=True)
+    with col_s3: st.markdown('<div class="feature-card"><h3>📱 App Dev</h3><p>Scalable mobile apps.</p></div>', unsafe_allow_html=True)
+    with col_s4: st.markdown('<div class="feature-card"><h3>🎨 Logo Design</h3><p>Memorable brand identities.</p></div>', unsafe_allow_html=True)
+    with col_s5: st.markdown('<div class="feature-card"><h3>📈 Marketing</h3><p>Growth campaigns.</p></div>', unsafe_allow_html=True)
 
     st.markdown("---")
-
     st.markdown('<div class="section-title">💬 Interactive AI Sales Assistant</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-subtitle">Chat with our assistant below to share your custom requirements.</div>', unsafe_allow_html=True)
-
+    
     col_c1, col_chat, col_c3 = st.columns([1, 2.5, 1])
     with col_chat:
         for message in st.session_state.messages:
             if message["role"] != "system":
-                with st.chat_message(message["role"]):
-                    st.markdown(message["content"])
-
+                with st.chat_message(message["role"]): st.markdown(message["content"])
         if prompt := st.chat_input("Type your message here..."):
             st.chat_message("user").markdown(prompt)
             st.session_state.messages.append({"role": "user", "content": prompt})
-
             with st.chat_message("assistant"):
                 try:
-                    chat_completion = client.chat.completions.create(
-                        messages=st.session_state.messages,
-                        model="llama-3.1-8b-instant",
-                        temperature=0.5
-                    )
+                    chat_completion = client.chat.completions.create(messages=st.session_state.messages, model="llama-3.1-8b-instant", temperature=0.5)
                     response_text = chat_completion.choices[0].message.content
-                    
                     if "COMPLETE:" in response_text:
-                        data_part = response_text.split("COMPLETE:")[1].strip()
-                        lead_data = data_part.split("|")
-                        if len(lead_data) == 6:
-                            save_lead_to_csv(lead_data)
+                        lead_data = response_text.split("COMPLETE:")[1].strip().split("|")
+                        if len(lead_data) == 6: save_lead_to_csv(lead_data)
                         final_msg = "Thank you! Your details have been received. Our team will contact you soon."
                         st.markdown(final_msg)
                         st.session_state.messages.append({"role": "assistant", "content": final_msg})
                     else:
                         st.markdown(response_text)
                         st.session_state.messages.append({"role": "assistant", "content": response_text})
-                except Exception as e:
-                    st.error(f"An error occurred: {e}")
-
-    st.markdown("""
-        <div class="footer">
-            <p>© 2026 <span>AgentFlow AI</span>. All rights reserved.</p>
-        </div>
-    """, unsafe_allow_html=True)
+                except Exception as e: st.error(f"Error: {e}")
 
 elif nav_choice == "Pricing & Plans":
-    st.markdown('<div class="section-title">Choose Your Growth Plan</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-subtitle">Secure checkout via Razorpay with automatic account creation and instant login access.</div>', unsafe_allow_html=True)
+    if not st.session_state.checkout_active:
+        st.markdown('<div class="section-title">Choose Your Growth Plan</div>', unsafe_allow_html=True)
+        col_p1, col_p2, col_p3, col_p4 = st.columns(4)
+        with col_p1:
+            st.markdown('<div class="pricing-card"><h3>🚀 Starter</h3><h2>₹999</h2><p>Ideal for solo creators.</p></div>', unsafe_allow_html=True)
+            if st.button("Select Starter", key="sel_s"): st.session_state.selected_plan = {"name": "Starter", "price": "₹999"}; st.session_state.checkout_active = True; st.rerun()
+        with col_p2:
+            st.markdown('<div class="pricing-card" style="border: 2px solid #7c3aed;"><h3>💼 Pro</h3><h2>₹2,999</h2><p>For growing businesses.</p></div>', unsafe_allow_html=True)
+            if st.button("Select Pro", key="sel_p"): st.session_state.selected_plan = {"name": "Pro", "price": "₹2,999"}; st.session_state.checkout_active = True; st.rerun()
+        with col_p3:
+            st.markdown('<div class="pricing-card"><h3>🔥 Premium</h3><h2>₹7,999</h2><p>For scaling enterprises.</p></div>', unsafe_allow_html=True)
+            if st.button("Select Premium", key="sel_pr"): st.session_state.selected_plan = {"name": "Premium", "price": "₹7,999"}; st.session_state.checkout_active = True; st.rerun()
+        with col_p4:
+            st.markdown('<div class="pricing-card"><h3>🏢 Enterprise</h3><h2>Custom</h2><p>Tailored solutions.</p></div>', unsafe_allow_html=True)
+            if st.button("Contact Sales"): st.info("Reach out via support desk.")
+    else:
+        plan = st.session_state.selected_plan
+        st.markdown(f"<h2 style='text-align: center;'>🔒 Secure Checkout - {plan['name']}</h2>", unsafe_allow_html=True)
+        col_c1, col_box, col_c3 = st.columns([1, 2, 1])
+        with col_box:
+            st.markdown('<div class="checkout-box" style="background:#ffffff; padding:30px; border-radius:16px; border:1px solid #e2e8f0;"><h3>📋 Order Summary</h3>', unsafe_allow_html=True)
+            st.write(f"**Plan Tier:** {plan['name']} Subscription")
+            st.write(f"**Total Amount:** {plan['price']}")
+            pay_method = st.selectbox("Select Payment Method", ["Razorpay (UPI / Google Pay / PhonePe / Paytm)", "Credit / Debit Cards", "Net Banking", "Mobile Wallets"])
+            email_input = st.text_input("Billing Email Address")
+            if st.button("Pay Securely with Razorpay"):
+                if email_input:
+                    save_paid_customer(email_input, plan['name'], plan['price'])
+                    st.session_state.logged_in = True
+                    st.session_state.username = email_input.split("@")[0]
+                    st.session_state.user_email = email_input
+                    st.session_state.checkout_active = False
+                    st.success("Payment Successful via Razorpay! Redirecting to Dashboard...")
+                    st.balloons()
+                    st.rerun()
+                else: 
+                    st.warning("Please enter your email.")
+            if st.button("⬅️ Back to Pricing"): 
+                st.session_state.checkout_active = False
+                st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
 
-    col_p1, col_p2, col_p3, col_p4 = st.columns(4)
-
-    with col_p1:
-        st.markdown("""
-            <div class="pricing-card">
-                <h3>🚀 Starter</h3>
-                <h2>₹999</h2>
-                <p>Ideal for solo creators and small projects.</p>
-            </div>
-        """, unsafe_allow_html=True)
-        email_1 = st.text_input("Enter your Email", key="email_starter")
-        if st.button("Pay ₹999 with Razorpay", key="btn_starter"):
-            if email_1:
-                save_paid_customer(email_1, "Starter", "₹999")
-                st.session_state.logged_in = True
-                st.session_state.username = email_1.split("@")[0]
-                st.success("Payment Successful via Razorpay! Account created automatically.")
-                st.info(f"📩 Login credentials & receipt sent to {email_1}")
-                st.balloons()
-            else:
-                st.warning("Please enter your email address.")
-
-    with col_p2:
-        st.markdown("""
-            <div class="pricing-card" style="border: 2px solid #7c3aed;">
-                <h3>💼 Pro</h3>
-                <h2>₹2,999</h2>
-                <p>Great for growing businesses looking for automation.</p>
-            </div>
-        """, unsafe_allow_html=True)
-        email_2 = st.text_input("Enter your Email", key="email_pro")
-        if st.button("Pay ₹2,999 with Razorpay", key="btn_pro"):
-            if email_2:
-                save_paid_customer(email_2, "Pro", "₹2,999")
-                st.session_state.logged_in = True
-                st.session_state.username = email_2.split("@")[0]
-                st.success("Payment Successful via Razorpay! Account created automatically.")
-                st.info(f"📩 Login credentials & receipt sent to {email_2}")
-                st.balloons()
-            else:
-                st.warning("Please enter your email address.")
-
-    with col_p3:
-        st.markdown("""
-            <div class="pricing-card">
-                <h3>🔥 Premium</h3>
-                <h2>₹7,999</h2>
-                <p>Advanced capabilities for scaling agencies & enterprises.</p>
-            </div>
-        """, unsafe_allow_html=True)
-        email_3 = st.text_input("Enter your Email", key="email_premium")
-        if st.button("Pay ₹7,999 with Razorpay", key="btn_premium"):
-            if email_3:
-                save_paid_customer(email_3, "Premium", "₹7,999")
-                st.session_state.logged_in = True
-                st.session_state.username = email_3.split("@")[0]
-                st.success("Payment Successful via Razorpay! Account created automatically.")
-                st.info(f"📩 Login credentials & receipt sent to {email_3}")
-                st.balloons()
-            else:
-                st.warning("Please enter your email address.")
-
-    with col_p4:
-        st.markdown("""
-            <div class="pricing-card">
-                <h3>🏢 Enterprise</h3>
-                <h2>Contact Sales</h2>
-                <p>Tailored infrastructure and custom workflows.</p>
-            </div>
-        """, unsafe_allow_html=True)
+elif nav_choice == "AI Package Recommender":
+    st.markdown('<div class="section-title">🤖 AI Package Recommender</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-subtitle">Answer 2 quick questions and let our AI suggest the best plan for you!</div>', unsafe_allow_html=True)
+    
+    col_r1, col_r2 = st.columns(2)
+    with col_r1:
+        biz_type = st.selectbox("What is your business type?", ["Solo Creator / Freelancer", "Growing Startup / SME", "Large Enterprise"])
+        main_goal = st.selectbox("What is your primary goal?", ["Lead Generation & Chatbots", "Full Website & App Development", "Custom Enterprise Automation"])
+    with col_r2:
         st.write("")
         st.write("")
-        if st.button("Contact Sales"):
-            st.info("Please reach out via our support desk for custom enterprise integrations.")
+        if st.button("✨ Get AI Recommendation"):
+            st.success("Analysis complete! Based on your profile:")
+            if biz_type == "Solo Creator / Freelancer":
+                st.info("🚀 **Recommended Plan: Starter (₹999)** - Perfect for getting your digital presence off the ground.")
+            elif biz_type == "Growing Startup / SME":
+                st.info("💼 **Recommended Plan: Pro (₹2,999)** - Ideal for scaling automated customer acquisition.")
+            else:
+                st.info("🔥 **Recommended Plan: Premium / Enterprise (₹7,999+)** - Built for heavy enterprise automation.")
+
+elif nav_choice == "Portfolio / Projects":
+    st.markdown('<div class="section-title">Our Portfolio & Project Cards</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-subtitle">Explore our previous successful client deployments.</div>', unsafe_allow_html=True)
+    
+    p1, p2, p3 = st.columns(3)
+    with p1: st.markdown('<div class="portfolio-card"><h3>🛒 AI E-Commerce Suite</h3><p>Automated conversational sales bot for retail brand, boosting conversion by 45%.</p><br><b>Tech:</b> Python, Groq AI</div>', unsafe_allow_html=True)
+    with p2: st.markdown('<div class="portfolio-card"><h3>🏥 HealthTech SaaS</h3><p>Secure patient management portal with automated billing and scheduling.</p><br><b>Tech:</b> React, FastAPI</div>', unsafe_allow_html=True)
+    with p3: st.markdown('<div class="portfolio-card"><h3>📊 FinTech Analytics Bot</h3><p>Real-time financial compliance and automated tax report generation.</p><br><b>Tech:</b> Python, Pandas</div>', unsafe_allow_html=True)
+
+elif nav_choice == "Testimonials":
+    st.markdown('<div class="section-title">⭐ Client Testimonials</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-subtitle">Hear what founders and industry leaders say about AgentFlow AI.</div>', unsafe_allow_html=True)
+    
+    t1, t2, t3 = st.columns(3)
+    with t1: st.markdown('<div class="testimonial-card">"AgentFlow AI automated our entire lead pipeline. Conversion rate jumped by 300%!"<br><br><b>— Rajesh Sharma</b><br><span style="color:#64748b;">CEO, TechCorp</span></div>', unsafe_allow_html=True)
+    with t2: st.markdown('<div class="testimonial-card">"The custom AI chatbot handles customer queries 24/7 flawlessly. Exceptional work!"<br><br><b>— Priya Patel</b><br><span style="color:#64748b;">Founder, StyleHub</span></div>', unsafe_allow_html=True)
+    with t3: st.markdown('<div class="testimonial-card">"Incredible platform and seamless Razorpay payment integration. Highly recommended!"<br><br><b>— Amit Verma</b><br><span style="color:#64748b;">Director, LogiTech</span></div>', unsafe_allow_html=True)
+
+elif nav_choice == "Book a Meeting":
+    st.markdown('<div class="section-title">📅 Enterprise Meeting Booking System</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-subtitle">Select your preferred date, time slot, and service to schedule a strategy consultation.</div>', unsafe_allow_html=True)
+    
+    col_b1, col_b2 = st.columns(2)
+    with col_b1:
+        b_name = st.text_input("Full Name", key="bk_name")
+        b_email = st.text_input("Email Address", key="bk_email")
+        b_phone = st.text_input("Phone Number", key="bk_phone")
+    with col_b2:
+        b_service = st.selectbox("Service Required", ["AI Chatbot Implementation", "Website Development", "Mobile App Development", "Enterprise Automation", "General Consultation"])
+        b_date = st.date_input("Select Meeting Date", key="bk_date")
+        b_time = st.selectbox("Select Time Slot", ["10:00 AM - 11:00 AM", "11:30 AM - 12:30 PM", "02:00 PM - 03:00 PM", "04:00 PM - 05:00 PM"])
+
+    st.write("")
+    if st.button("Submit Meeting Booking"):
+        if b_name and b_email and b_phone:
+            save_booking_to_csv(b_name, b_email, b_phone, b_service, b_date, b_time)
+            st.success(f"🎉 Booking successfully submitted for {b_date} ({b_time})! Your appointment status is currently **Pending**. Our team will confirm shortly.")
+            st.balloons()
+        else:
+            st.warning("Please fill in your Name, Email, and Phone Number.")
+
+elif nav_choice == "Contact Us":
+    st.markdown('<div class="section-title">Contact Us</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-subtitle">Inquiries submitted here are directly routed to the Admin CRM Dashboard.</div>', unsafe_allow_html=True)
+    
+    c_name = st.text_input("Your Full Name")
+    c_email = st.text_input("Your Email Address")
+    c_service = st.selectbox("Service Interested In", ["Website Dev", "AI Chatbot", "App Dev", "Logo Design", "Marketing"])
+    c_msg = st.text_area("Your Message")
+    
+    if st.button("Submit Inquiry"):
+        if c_name and c_email and c_msg:
+            save_lead_to_csv([c_name, "Inquiry Form", c_service, "Custom", "N/A", c_email])
+            st.success("✅ Inquiry successfully submitted! Our team and CRM dashboard have received your message.")
+        else:
+            st.warning("Please fill in all required fields.")
 
 elif nav_choice == "Customer Login / Signup":
     if not st.session_state.logged_in:
         st.markdown("<h2 style='text-align: center;'>🔐 Customer Portal Authentication</h2>", unsafe_allow_html=True)
         
-        auth_tab1, auth_tab2 = st.tabs(["🔑 Login", "📝 Signup"])
-        
-        with auth_tab1:
-            st.subheader("Login to your Dashboard")
-            login_user = st.text_input("Username or Email", key="login_email")
-            login_pass = st.text_input("Password", type="password", key="login_pass")
-            
-            if st.button("Login"):
-                if login_user and login_pass:
-                    st.session_state.logged_in = True
-                    st.session_state.username = login_user
-                    st.success("Login successful! Redirecting to Dashboard...")
-                    st.rerun()
-                else:
-                    st.warning("Please fill in both fields.")
-                    
-        with auth_tab2:
-            st.subheader("Create a New Account")
-            new_user = st.text_input("Choose a Username", key="signup_user")
-            new_email = st.text_input("Email Address", key="signup_email")
-            new_pass = st.text_input("Create Password", type="password", key="signup_pass")
-            
-            if st.button("Sign Up"):
-                if new_user and new_email and new_pass:
-                    st.session_state.logged_in = True
-                    st.session_state.username = new_user
-                    st.success("Account created successfully! Welcome.")
-                    st.rerun()
-                else:
-                    st.warning("Please fill in all details.")
-
-    else:
-        st.markdown(f"## 👋 Welcome back, {st.session_state.username}!")
-        st.info("Here is your centralized project control room and client workspace.")
-        
-        if st.sidebar.button("Logout"):
-            st.session_state.logged_in = False
-            st.session_state.username = ""
-            st.rerun()
-
-        dash_tab1, dash_tab2, dash_tab3, dash_tab4 = st.tabs([
-            "📊 Project Status", 
-            "📁 My Projects & Files", 
-            "💳 Invoices", 
-            "💬 Chat with Support"
-        ])
-        
-        with dash_tab1:
-            st.subheader("Active Project Tracking")
-            col1, col2, col3 = st.columns(3)
-            with col1:
-                st.metric(label="Current Project", value="AI Sales Agent MVP", delta="Phase 2")
-            with col2:
-                st.metric(label="Status", value="In Progress 🔄", delta="On Track")
-            with col3:
-                st.metric(label="Estimated Delivery", value="5 Days Left")
-            
-            st.write("---")
-            st.write("### Milestone Timeline")
-            st.progress(70, text="70% Project Completion Completed")
-            st.markdown("- ✅ **Milestone 1:** Architecture & Requirements Setup")
-            st.markdown("- ✅ **Milestone 2:** Groq AI Model Integration & Prompt Design")
-            st.markdown("- 🔄 **Milestone 3:** SaaS Landing Page & UI Polish (In Progress)")
-            st.markdown("- ⏳ **Milestone 4:** Final QA Testing & Live Deployment")
-
-        with dash_tab2:
-            st.subheader("📦 My Projects & Deliverables")
-            st.write("Download your project source codes, reports, and assets below:")
-            
-            st.download_button(
-                label="📥 Download Project Source Code (.zip)",
-                data="Dummy project source code bytes data",
-                file_name="agentflow_project_files.zip",
-                mime="application/zip"
-            )
-            
-            st.markdown("---")
-            st.subheader("Project History")
-            project_data = {
-                "Project ID": ["#PRJ-101", "#PRJ-102"],
-                "Service Name": ["AI Chatbot Implementation", "Website Development"],
-                "Status": ["Completed ✅", "In Progress 🔄"],
-                "Date Started": ["2026-01-15", "2026-02-01"]
-            }
-            st.table(pd.DataFrame(project_data))
-
-        with dash_tab3:
-            st.subheader("💳 Billing & Invoices")
-            invoice_data = {
-                "Invoice ID": ["#INV-2026-01", "#INV-2026-02"],
-                "Description": ["Starter Tier Setup", "Monthly Maintenance"],
-                "Amount": ["₹999", "₹2,999"],
-                "Status": ["Paid 🟢", "Pending 🟡"]
-            }
-            st.table(pd.DataFrame(invoice_data))
-            
-            if st.button("Download Latest Invoice PDF"):
-                st.success("Invoice #INV-2026-02 downloaded successfully!")
-
-        with dash_tab4:
-            st.subheader("💬 Direct Support Desk")
-            st.write("Have a question about your build? Chat directly with our technical support engineer.")
-            
-            if "support_msgs" not in st.session_state:
-                st.session_state.support_msgs = [{"role": "assistant", "content": "Hello! How can our support team assist you with your project today?"}]
-                
-            for msg in st.session_state.support_msgs:
-                with st.chat_message(msg["role"]):
-                    st.markdown(msg["content"])
-                    
-            if sup_prompt := st.chat_input("Ask support a question..."):
-                st.session_state.support_msgs.append({"role": "user", "content": sup_prompt})
-                with st.chat_message("user"):
-                    st.markdown(sup_prompt)
-                    
-                reply = "Thank you for reaching out! A human support expert has received your query and will respond via email shortly."
-                st.session_state.support_msgs.append({"role": "assistant", "content": reply})
-                with st.chat_message("assistant"):
-                    st.markdown(reply)
-
-elif nav_choice == "Admin Portal":
-    if not st.session_state.admin_logged_in:
-        st.markdown("<h2 style='text-align: center;'>🔒 Admin Authentication</h2>", unsafe_allow_html=True)
-        
-        col_ad1, col_ad2, col_ad3 = st.columns([1, 2, 1])
-        with col_ad2:
-            admin_pass = st.text_input("Enter Admin Secret Password", type="password")
-            if st.button("Login as Admin"):
-                if admin_pass == "admin123":
-                    st.session_state.admin_logged_in = True
-                    st.success("Admin login successful!")
-                    st.rerun()
-                else:
-                    st.error("Incorrect password! Try 'admin123'")
-    else:
-        st.markdown("## 🛡️ Admin Portal - Notifications & Leads")
-        
-        if st.sidebar.button("Admin Logout"):
-            st.session_state.admin_logged_in = False
-            st.rerun()
-            
-        admin_tab1, admin_tab2 = st.tabs(["🔔 Paid Customers (Notifications)", "📋 Captured AI Leads"])
-        
-        with admin_tab1:
-            st.subheader("Notifications of New Paid Customers")
-            if os.path.exists("paid_customers.csv"):
-                df_paid = pd.read_csv("paid_customers.csv")
-                if not df_paid.empty:
-                    st.success(f"🔔 You have {len(df_paid)} new paid customer(s) registered!")
-                    st.dataframe(df_paid, use_container_width=True)
-                    
-                    csv_paid = df_paid.to_csv(index=False).encode('utf-8')
-                    st.download_button(
-                        label="📥 Download Paid Customers CSV",
-                        data=csv_paid,
-                        file_name=f"paid_customers_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
-                        mime="text/csv"
-                    )
-                else:
-                    st.warning("No paid customers yet.")
+        st.markdown("### 🔑 Existing User Login")
+        login_user_input = st.text_input("Username or Email", key="l_u")
+        login_pass_input = st.text_input("Password", type="password", key="l_p")
+        if st.button("Login"):
+            if login_user_input and login_pass_input:
+                st.session_state.logged_in = True
+                st.session_state.username = login_user_input
+                st.session_state.user_email = login_user_input if "@" in login_user_input else f"{login_user_input}@agentflow.ai"
+                st.success("Login successful!")
+                st.rerun()
             else:
-                st.warning("No paid customers records found yet.")
-                
-        with admin_tab2:
-            st.subheader("Captured Leads from AI Sales Bot")
-            if os.path.exists("leads.csv"):
-                df_leads = pd.read_csv("leads.csv")
-                if not df_leads.empty:
-                    search_query = st.text_input("🔍 Search Leads (by Name, Email, Business, or Service):")
-                    if search_query:
-                        mask = df_leads.apply(lambda row: row.astype(str).str.contains(search_qu
+                st.warning("Fill both fields.")
