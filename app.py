@@ -398,6 +398,7 @@ elif nav_choice == "Customer Login / Signup":
                     st.warning("Fill all details.")
     else:
         st.markdown(f"## 👋 Welcome back, {st.session_state.username}!")
-        dt1, dt2, dt3, dt4 = st.tabs(["📊 Project Status", "📁 My Projects & Files", "💳 Invoices", "💬 Chat with Support"])
-        with dt1: st.metric(label="Current Project", value="AI Sales Agent MVP", delta="Phase 2")
-        with dt2: st.download_button("Download Source Code Zip", "Dummy source
+        dash_tab1, dash_tab2, dash_tab3, dash_tab4 = st.tabs(["📊 Project Status", "📁 My Projects & Files", "💳 Invoices", "💬 Chat with Support"])
+        with dash_tab1: 
+            st.metric(label="Current Project", value="AI Sales Agent MVP", delta="Phase 2")
+        with dash_tab2:
