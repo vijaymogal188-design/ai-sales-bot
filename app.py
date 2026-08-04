@@ -11,7 +11,6 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# World-Class Premium SaaS CSS (Sticky Navbar, Glassmorphism, Pure White/Dark Theme, Smooth Gradients)
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
@@ -22,12 +21,10 @@ st.markdown("""
         color: #FFFFFF;
     }
 
-    /* Hide standard sidebar */
     [data-testid="stSidebar"] {
         display: none;
     }
 
-    /* Sticky Transparent Navbar */
     .nav-container {
         position: fixed;
         top: 0;
@@ -53,7 +50,6 @@ st.markdown("""
         gap: 8px;
     }
 
-    /* Full-Screen Hero Section with Gradients */
     .hero-section {
         min-height: 90vh;
         display: flex;
@@ -62,7 +58,6 @@ st.markdown("""
         background: radial-gradient(circle at 70% 30%, rgba(124, 58, 237, 0.15) 0%, rgba(59, 130, 246, 0.1) 40%, transparent 70%);
     }
 
-    /* Glassmorphism Cards */
     .glass-card {
         background: rgba(17, 24, 39, 0.6);
         backdrop-filter: blur(16px);
@@ -81,7 +76,6 @@ st.markdown("""
         box-shadow: 0 30px 60px rgba(124, 58, 237, 0.2);
     }
 
-    /* Floating WhatsApp Button */
     .whatsapp-float {
         position: fixed;
         bottom: 25px;
@@ -109,7 +103,6 @@ st.markdown("""
     }
 </style>
 
-<!-- Sticky Transparent Navbar HTML -->
 <div class="nav-container">
     <div class="nav-logo">⚡ AgentFlow AI</div>
     <div style="color: #94A3B8; font-size: 14px;">Enterprise AI & Business Automation Platform</div>
@@ -135,19 +128,9 @@ def save_to_csv(filename, data_dict):
     else: df.to_csv(filename, mode='a', header=False, index=False)
 
 def generate_invoice_pdf(email, plan, amount):
-    return f"""
-    AGENTFLOW AI - OFFICIAL INVOICE
-    -----------------------------------
-    Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-    Customer Email: {email}
-    Plan Selected: {plan}
-    Amount Paid: {amount}
-    Status: SUCCESSFUL / VERIFIED
-    -----------------------------------
-    Thank you for your business!
-    """
+    return f"AGENTFLOW AI - OFFICIAL INVOICE\nDate: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\nCustomer: {email}\nPlan: {plan}\nAmount: {amount}\nStatus: SUCCESSFUL"
 
-# ==================== HERO SECTION ====================
+# HERO SECTION
 st.markdown('<div class="hero-section">', unsafe_allow_html=True)
 col_h1, col_h2 = st.columns([1.2, 1], gap="large")
 
@@ -183,7 +166,7 @@ with col_h2:
 
 st.markdown('</div>', unsafe_allow_html=True)
 
-# ==================== TRUST SECTION ====================
+# TRUST SECTION
 st.markdown("<br><br>", unsafe_allow_html=True)
 st.markdown("<h2 style='text-align: center; font-weight: 800; margin-bottom: 40px; color: #FFFFFF;'>Trusted by Industry Leaders Worldwide</h2>", unsafe_allow_html=True)
 t1, t2, t3, t4 = st.columns(4)
@@ -192,7 +175,7 @@ with t2: st.markdown('<div class="glass-card" style="text-align: center;"><h2 st
 with t3: st.markdown('<div class="glass-card" style="text-align: center;"><h2 style="color: #FFFFFF; font-size: 38px; margin-bottom: 5px;">99%</h2><p style="color: #94A3B8;">Satisfaction</p></div>', unsafe_allow_html=True)
 with t4: st.markdown('<div class="glass-card" style="text-align: center;"><h2 style="color: #FFFFFF; font-size: 38px; margin-bottom: 5px;">24/7</h2><p style="color: #94A3B8;">Support</p></div>', unsafe_allow_html=True)
 
-# ==================== SERVICES ====================
+# SERVICES
 st.markdown("<br><br><br>", unsafe_allow_html=True)
 st.markdown("<h2 style='text-align: center; font-weight: 800; margin-bottom: 10px; color: #FFFFFF;'>Our Core Services</h2>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: #94A3B8; margin-bottom: 40px;'>Comprehensive digital and artificial intelligence solutions designed for scale.</p>", unsafe_allow_html=True)
@@ -210,7 +193,7 @@ with srv6: st.markdown('<div class="glass-card"><h3>📊 CRM Automation</h3><p s
 with srv7: st.markdown('<div class="glass-card"><h3>⚡ AI Integrations</h3><p style="color: #94A3B8; font-size: 14px; margin-top: 10px;">Custom LLM embeddings and intelligent workflows.</p></div>', unsafe_allow_html=True)
 with srv8: st.markdown('<div class="glass-card"><h3>🎨 UI/UX Design</h3><p style="color: #94A3B8; font-size: 14px; margin-top: 10px;">World-class user interfaces crafted for maximum engagement.</p></div>', unsafe_allow_html=True)
 
-# ==================== PORTFOLIO ====================
+# PORTFOLIO
 st.markdown("<br><br><br>", unsafe_allow_html=True)
 st.markdown("<h2 style='text-align: center; font-weight: 800; margin-bottom: 10px; color: #FFFFFF;'>Featured Portfolio</h2>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: #94A3B8; margin-bottom: 40px;'>Explore our successful enterprise deployments.</p>", unsafe_allow_html=True)
@@ -220,7 +203,7 @@ with p1: st.markdown('<div class="glass-card"><h3>🛒 AI E-Commerce Suite</h3><
 with p2: st.markdown('<div class="glass-card"><h3>🏥 HealthTech Portal</h3><p style="color: #94A3B8; font-size: 14px; margin-top: 10px;">Secure patient management portal with automated scheduling.</p><br><b style="color: #FFFFFF;">Tech: React, FastAPI</b></div>', unsafe_allow_html=True)
 with p3: st.markdown('<div class="glass-card"><h3>📊 FinTech Analytics Bot</h3><p style="color: #94A3B8; font-size: 14px; margin-top: 10px;">Real-time financial compliance and tax report generation.</p><br><b style="color: #FFFFFF;">Tech: Python, Pandas</b></div>', unsafe_allow_html=True)
 
-# ==================== TESTIMONIALS ====================
+# TESTIMONIALS
 st.markdown("<br><br><br>", unsafe_allow_html=True)
 st.markdown("<h2 style='text-align: center; font-weight: 800; margin-bottom: 10px; color: #FFFFFF;'>Client Testimonials</h2>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: #94A3B8; margin-bottom: 40px;'>Hear what founders and industry leaders say about AgentFlow AI.</p>", unsafe_allow_html=True)
@@ -230,7 +213,7 @@ with ts1: st.markdown('<div class="glass-card">"AgentFlow AI automated our entir
 with ts2: st.markdown('<div class="glass-card">"The custom AI chatbot handles customer queries 24/7 flawlessly. Exceptional work!"<br><br><b style="color: #FFFFFF;">— Priya Patel</b><br><span style="color:#94A3B8; font-size: 13px;">Founder, StyleHub</span></div>', unsafe_allow_html=True)
 with ts3: st.markdown('<div class="glass-card">"Incredible platform and seamless Razorpay payment integration. Highly recommended!"<br><br><b style="color: #FFFFFF;">— Amit Verma</b><br><span style="color:#94A3B8; font-size: 13px;">Director, LogiTech</span></div>', unsafe_allow_html=True)
 
-# ==================== PRICING ====================
+# PRICING
 st.markdown("<br><br><br>", unsafe_allow_html=True)
 st.markdown("<h2 style='text-align: center; font-weight: 800; margin-bottom: 10px; color: #FFFFFF;'>Transparent Pricing Plans</h2>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: #94A3B8; margin-bottom: 40px;'>Choose the ideal tier with instant Razorpay checkout.</p>", unsafe_allow_html=True)
@@ -263,7 +246,7 @@ else:
         if st.button("⬅️ Back to Pricing", use_container_width=True): st.session_state.checkout_active = False; st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
-# ==================== FAQ ====================
+# FAQ
 st.markdown("<br><br><br>", unsafe_allow_html=True)
 st.markdown("<h2 style='text-align: center; font-weight: 800; margin-bottom: 10px; color: #FFFFFF;'>Frequently Asked Questions</h2>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: #94A3B8; margin-bottom: 40px;'>Everything you need to know about the product and billing.</p>", unsafe_allow_html=True)
@@ -280,7 +263,7 @@ with col_faq2:
     with st.expander("Do you offer custom enterprise solutions?"):
         st.write("Yes, our Enterprise tier includes dedicated server hosting, custom LLM embeddings, and 24/7 priority support.")
 
-# ==================== CONTACT & BOOKING ====================
+# CONTACT & BOOKING
 st.markdown("<br><br><br>", unsafe_allow_html=True)
 st.markdown("<h2 style='text-align: center; font-weight: 800; margin-bottom: 10px; color: #FFFFFF;'>Contact & Book Meeting</h2>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: #94A3B8; margin-bottom: 40px;'>Connect with our team or schedule a strategy consultation.</p>", unsafe_allow_html=True)
@@ -312,7 +295,7 @@ with con2:
         else: st.warning("Please fill in required details.")
     st.markdown('</div>', unsafe_allow_html=True)
 
-# ==================== FOOTER ====================
+# FOOTER
 st.markdown("""
     <div class="footer">
         <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 30px; max-width: 1200px; margin: 0 auto;">
@@ -324,4 +307,17 @@ st.markdown("""
                 <h4>Legal & Policies</h4>
                 <p style="color: #94A3B8; font-size: 14px; margin-top: 8px;">🔒 Privacy Policy</p>
                 <p style="color: #94A3B8; font-size: 14px;">📜 Terms & Conditions</p>
-                <p style="color: #94A3B8; font-size: 14
+                <p style="color: #94A3B8; font-size: 14px;">💸 Refund Policy</p>
+            </div>
+            <div>
+                <h4>Connect Socially</h4>
+                <p style="color: #94A3B8; font-size: 14px; margin-top: 8px;">🐦 Twitter / X</p>
+                <p style="color: #94A3B8; font-size: 14px;">💼 LinkedIn</p>
+                <p style="color: #94A3B8; font-size: 14px;">📸 Instagram</p>
+            </div>
+        </div>
+        <div style="text-align: center; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 40px; padding-top: 20px; color: #94A3B8; font-size: 14px;">
+            <p>© 2026 AgentFlow AI. All rights reserved.</p>
+        </div>
+    </div>
+""", unsafe_allow_html=True)
