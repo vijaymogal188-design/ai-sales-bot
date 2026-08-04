@@ -14,95 +14,20 @@ st.set_page_config(
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-    
-    html, body, [class*="css"] {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        background-color: #f8fafc;
-        color: #0f172a;
-    }
-
-    .stApp {
-        background-color: #f8fafc;
-    }
-
-    [data-testid="stSidebar"] {
-        background-color: #ffffff;
-        border-right: 1px solid #e2e8f0;
-    }
-
-    .hero-container {
-        text-align: center;
-        padding: 50px 20px 30px 20px;
-        max-width: 900px;
-        margin: 0 auto;
-    }
-    .hero-badge {
-        display: inline-block;
-        background: #ede9fe;
-        color: #7c3aed;
-        font-weight: 700;
-        font-size: 13px;
-        padding: 6px 16px;
-        border-radius: 50px;
-        margin-bottom: 16px;
-    }
-    .hero-title {
-        font-size: 46px;
-        font-weight: 800;
-        color: #0f172a;
-        line-height: 1.2;
-        margin-bottom: 16px;
-    }
-    .hero-title span {
-        background: linear-gradient(90deg, #7c3aed 0%, #4f46e5 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    .hero-subtitle {
-        font-size: 16px;
-        color: #64748b;
-        line-height: 1.6;
-        margin-bottom: 30px;
-    }
-    .section-title {
-        text-align: center;
-        font-size: 28px;
-        font-weight: 800;
-        color: #0f172a;
-        margin-top: 50px;
-        margin-bottom: 10px;
-    }
-    .section-subtitle {
-        text-align: center;
-        font-size: 15px;
-        color: #64748b;
-        margin-bottom: 30px;
-    }
-    .pricing-card, .feature-card, .testimonial-card, .portfolio-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        padding: 30px;
-        border-radius: 16px;
-        text-align: center;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        transition: transform 0.3s ease;
-    }
-    .pricing-card:hover, .feature-card:hover, .testimonial-card:hover, .portfolio-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.1);
-    }
-    .footer {
-        background: #0f172a;
-        color: #f8fafc;
-        padding: 50px 30px 20px 30px;
-        border-top: 1px solid #1e293b;
-        margin-top: 60px;
-        border-radius: 16px 16px 0 0;
-    }
-    .footer a {
-        color: #94a3b8;
-        text-decoration: none;
-    }
+    html, body, [class*="css"] { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #0f172a; }
+    .stApp { background-color: #f8fafc; }
+    [data-testid="stSidebar"] { background-color: #ffffff; border-right: 1px solid #e2e8f0; }
+    .hero-container { text-align: center; padding: 50px 20px 30px 20px; max-width: 900px; margin: 0 auto; }
+    .hero-badge { display: inline-block; background: #ede9fe; color: #7c3aed; font-weight: 700; font-size: 13px; padding: 6px 16px; border-radius: 50px; margin-bottom: 16px; }
+    .hero-title { font-size: 46px; font-weight: 800; color: #0f172a; line-height: 1.2; margin-bottom: 16px; }
+    .hero-title span { background: linear-gradient(90deg, #7c3aed 0%, #4f46e5 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero-subtitle { font-size: 16px; color: #64748b; line-height: 1.6; margin-bottom: 30px; }
+    .section-title { text-align: center; font-size: 28px; font-weight: 800; color: #0f172a; margin-top: 50px; margin-bottom: 10px; }
+    .section-subtitle { text-align: center; font-size: 15px; color: #64748b; margin-bottom: 30px; }
+    .pricing-card, .feature-card, .testimonial-card, .portfolio-card { background: #ffffff; border: 1px solid #e2e8f0; padding: 30px; border-radius: 16px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: transform 0.3s ease; }
+    .pricing-card:hover, .feature-card:hover, .testimonial-card:hover, .portfolio-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.1); }
+    .footer { background: #0f172a; color: #f8fafc; padding: 50px 30px 20px 30px; border-top: 1px solid #1e293b; margin-top: 60px; border-radius: 16px 16px 0 0; }
+    .footer a { color: #94a3b8; text-decoration: none; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -404,4 +329,13 @@ elif nav_choice == "Customer Login / Signup":
 
         st.markdown("---")
         st.markdown("### 📝 New User Signup")
-        new_username = st.text_input("Choose Username
+        new_username = st.text_input("Choose Username", key="s_u")
+        new_email = st.text_input("Email Address", key="s_e")
+        new_password = st.text_input("Create Password", type="password", key="s_p")
+        if st.button("Create Account"):
+            if new_username and new_email and new_password:
+                save_user_to_csv(new_username, new_email, new_password)
+                st.session_state.logged_in = True
+                st.session_state.username = new_username
+                st.session_state.user_email = new_email
+                st.succes
