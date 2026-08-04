@@ -387,16 +387,86 @@ elif nav_choice == "Contact Us":
 
 elif nav_choice == "Customer Login / Signup":
     if not st.session_state.logged_in:
-        st.markdown("<h2 style='text-align: center;'>🔐 Customer Portal Authentication</h2>", unsafe_allow_html=True)
+        st.markdown("<h2 style='text-align: center;'>🔒 Customer Portal Authentication</h2>", unsafe_allow_html=True)
         
-        auth_mode = st.radio("Select Portal Mode", ["🔑 Existing User Login", "📝 New User Signup"], horizontal=True, label_visibility="collapsed")
+        auth_choice = st.selectbox("Select Portal Mode", ["🔑 Existing User Login", "📝 New User Signup"], key="portal_auth_selectbox")
         
-        if auth_mode == "🔑 Existing User Login":
-            st.markdown("### 🔑 Existing User Login")
-            login_user_input = st.text_input("Username or Email", key="l_u")
-            login_pass_input = st.text_input("Password", type="password", key="l_p")
-            if st.button("Login"):
-                if login_user_input and login_pass_input:
-                    st.session_state.logged_in = True
-                    st.session_state.username = login_user_input
-                    st.session_state.user_e
+        if auth_choice == "🔑 Existing User Login":
+            with st.container():
+                st.markdown("### 🔑 Existing User Login")
+                login_user_input = st.text_input("Username or Email", key="unique_login_user_input")
+                login_pass_input = st.text_input("Password", type="password", key="unique_login_pass_input")
+                if st.button("Login", key="unique_login_action_btn"):
+                    if login_user_input and login_pass_input:
+                        st.session_state.logged_in = True
+                        st.session_state.username = login_user_input
+                        st.session_state.user_email = login_user_input if "@" in login_user_input else f"{login_user_input}@agentflow.ai"
+                        st.success("Login successful!")
+                        st.rerun()
+                    else:
+                        st.warning("Fill both fields.")
+                st.markdown("[Forgot Password? Click here to reset](#)")
+        
+        else:
+            with st.container():
+                st.markdown("### 📝 New User Signup")
+                signup_username_input = st.text_input("Username", key="unique_signup_user_input")
+                signup_email_input = st.text_input("Email", key="unique_signup_email_input")
+                signup_pass_input = st.text_input("Password", type="password", key="unique_signup_pass_input")
+                signup_conf_pass_input = st.text_input("Confirm Password", type="password", key="unique_signup_conf_pass_input")
+                if st.button("Create Account", key="unique_signup_action_btn"):
+                    if signup_username_input and signup_email_input and signup_pass_input and signup_conf_pass_input:
+                        if signup_pass_input == signup_conf_pass_input:
+                            save_user_to_csv(signup_username_input, signup_email_input, signup_pass_input)
+                            st.session_state.logged_in = True
+                            st.session_state.username = signup_username_input
+                            st.session_state.user_email = signup_email_input
+                            st.success("Account created successfully!")
+                            st.balloons()
+                            st.rerun()
+                        else:
+                            st.error("Passwords do not match!")
+                    else:
+                        st.warning("Please fill all fields.")
+    else:
+        st.markdown(f"## 👋 Welcome back, {st.session_state.username}!")
+        cust_tab1, cust_tab2, cust_tab3 = st.tabs(["📊 Profile & Project Status", "💳 Payment History & Invoices", "💬 Support Chat"])
+        with cust_tab1:
+            st.subheader("Customer Profile & Active Project Status")
+            st.write(f"**Username:** {st.session_state.username}")
+            st.write(f"**Email:** {st.session_state.user_email if st.session_state.user_email else 'N/A'}")
+            st.metric(label="Current Project Status", value="AI Sales Agent MVP", delta="Phase 2 In Progress")
+            st.progress(65, text="Project Completion Progress: 65%")
+        with cust_tab2:
+            st.subheader("Your Invoices & Subscriptions")
+            if os.path.exists("paid_customers.csv"):
+                df_cust = pd.read_csv("paid_customers.csv")
+                target_email = st.session_state.user_email if st.session_state.user_email else st.session_state.username
+                user_invoices = df_cust[df_cust["Email"].str.contains(target_email, case=False, na=False)]
+                if not user_invoices.empty:
+                    st.dataframe(user_invoices, use_container_width=True)
+                    for idx, row in user_invoices.iterrows():
+                        inv_text = generate_invoice_pdf(row['Email'], row['Plan'], row['Amount'])
+                        st.download_button(f"Download Invoice ({row['Plan']})", inv_text, file_name=f"invoice_{row['Plan']}.txt", mime="text/plain", key=f"inv_{idx}")
+                else:
+                    st.info("No payment history found matching your account.")
+                    st.dataframe(df_cust, use_container_width=True)
+            else:
+                st.info("No transactions found.")
+        with cust_tab3:
+            st.subheader("Direct Customer Support")
+            if "support_messages" not in st.session_state:
+                st.session_state.support_messages = [{"role": "assistant", "content": "Hello! How can our support team assist you today?"}]
+            for sm in st.session_state.support_messages:
+                with st.chat_message(sm["role"]): st.markdown(sm["content"])
+            if sprompt := st.chat_input("Ask support a question..."):
+                st.session_state.support_messages.append({"role": "user", "content": sprompt})
+                with st.chat_message("user"): st.markdown(sprompt)
+                reply = "Thank you for reaching out. A support engineer will review your query and respond shortly."
+                st.session_state.support_messages.append({"role": "assistant", "content": reply})
+                with st.chat_message("assistant"): st.markdown(reply)
+        if st.button("Logout", key="customer_portal_logout_btn"): 
+            st.session_state.logged_in = False
+            st.session_state.username = ""
+            st.session_state.user_email = ""
+            st.rerun()
