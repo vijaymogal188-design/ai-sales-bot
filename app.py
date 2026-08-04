@@ -4,7 +4,6 @@ import os
 from groq import Groq
 from datetime import datetime
 
-# Page configuration with Professional Logo/Favicon branding
 st.set_page_config(
     page_title="AgentFlow AI | Enterprise SaaS & Business Automation", 
     page_icon="⚡", 
@@ -12,7 +11,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for Modern Premium UI & Floating WhatsApp Button
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -90,7 +88,6 @@ st.markdown("""
         max-width: 600px;
         margin: 0 auto;
     }
-    /* Floating WhatsApp Button Styling */
     .whatsapp-float {
         position: fixed;
         bottom: 30px;
@@ -127,13 +124,11 @@ st.markdown("""
     }
 </style>
 
-<!-- Floating WhatsApp Widget HTML -->
 <a href="https://wa.me/919876543210?text=Hello%20AgentFlow%20AI,%20I%20want%20to%20know%20more%20about%20your%20services!" class="whatsapp-float" target="_blank" title="Chat on WhatsApp">
     💬
 </a>
 """, unsafe_allow_html=True)
 
-# Initialize Groq Client securely
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
 SYSTEM_PROMPT = """You are an expert AI Sales Agent for AgentFlow AI. Your goal is to converse with the user and collect exactly these 6 details:
@@ -191,7 +186,6 @@ def save_booking_to_csv(name, email, phone, service, date, time_slot):
     if not os.path.exists(file_name): df.to_csv(file_name, index=False)
     else: df.to_csv(file_name, mode='a', header=False, index=False)
 
-# Sidebar Navigation with Logo Branding
 st.sidebar.markdown("### ⚡ AgentFlow AI")
 st.sidebar.caption("Enterprise SaaS Portal v2.6")
 st.sidebar.markdown("---")
@@ -213,7 +207,6 @@ st.sidebar.markdown("---")
 st.sidebar.markdown("🛡️ **Enterprise Security**")
 st.sidebar.caption("SSL Secured | 24/7 Support")
 
-# ==================== 1. LANDING PAGE ====================
 if nav_choice == "Home / Landing Page":
     st.markdown("""
         <div class="hero-container">
@@ -258,7 +251,6 @@ if nav_choice == "Home / Landing Page":
                         st.session_state.messages.append({"role": "assistant", "content": response_text})
                 except Exception as e: st.error(f"Error: {e}")
 
-# ==================== 2. PRICING & PLANS ====================
 elif nav_choice == "Pricing & Plans":
     if not st.session_state.checkout_active:
         st.markdown('<div class="section-title">Choose Your Growth Plan</div>', unsafe_allow_html=True)
@@ -287,14 +279,19 @@ elif nav_choice == "Pricing & Plans":
             if st.button("Pay Securely with Razorpay"):
                 if email_input:
                     save_paid_customer(email_input, plan['name'], plan['price'])
-                    st.session_state.logged_in = True; st.session_state.username = email_input.split("@")[0]; st.session_state.checkout_active = False
+                    st.session_state.logged_in = True
+                    st.session_state.username = email_input.split("@")[0]
+                    st.session_state.checkout_active = False
                     st.success("Payment Successful via Razorpay! Redirecting to Dashboard...")
-                    st.balloons(); st.rerun()
-                else: st.warning("Please enter your email.")
-            if st.button("⬅️ Back to Pricing"): st.session_state.checkout_active = False; st.rerun()
+                    st.balloons()
+                    st.rerun()
+                else: 
+                    st.warning("Please enter your email.")
+            if st.button("⬅️ Back to Pricing"): 
+                st.session_state.checkout_active = False
+                st.rerun()
             st.markdown('</div>', unsafe_allow_html=True)
 
-# ==================== 3. AI PACKAGE RECOMMENDER ====================
 elif nav_choice == "AI Package Recommender":
     st.markdown('<div class="section-title">🤖 AI Package Recommender</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-subtitle">Answer 2 quick questions and let our AI suggest the best plan for you!</div>', unsafe_allow_html=True)
@@ -315,7 +312,6 @@ elif nav_choice == "AI Package Recommender":
             else:
                 st.info("🔥 **Recommended Plan: Premium / Enterprise (₹7,999+)** - Built for heavy enterprise automation.")
 
-# ==================== 4. PORTFOLIO / PROJECTS ====================
 elif nav_choice == "Portfolio / Projects":
     st.markdown('<div class="section-title">Our Portfolio & Project Cards</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-subtitle">Explore our previous successful client deployments.</div>', unsafe_allow_html=True)
@@ -325,7 +321,6 @@ elif nav_choice == "Portfolio / Projects":
     with p2: st.markdown('<div class="portfolio-card"><h3>🏥 HealthTech SaaS</h3><p>Secure patient management portal with automated billing and scheduling.</p><br><b>Tech:</b> React, FastAPI</div>', unsafe_allow_html=True)
     with p3: st.markdown('<div class="portfolio-card"><h3>📊 FinTech Analytics Bot</h3><p>Real-time financial compliance and automated tax report generation.</p><br><b>Tech:</b> Python, Pandas</div>', unsafe_allow_html=True)
 
-# ==================== 5. TESTIMONIALS ====================
 elif nav_choice == "Testimonials":
     st.markdown('<div class="section-title">⭐ Client Testimonials</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-subtitle">Hear what founders and industry leaders say about AgentFlow AI.</div>', unsafe_allow_html=True)
@@ -335,7 +330,6 @@ elif nav_choice == "Testimonials":
     with t2: st.markdown('<div class="testimonial-card">"The custom AI chatbot handles customer queries 24/7 flawlessly. Exceptional work!"<br><br><b>— Priya Patel</b><br><span style="color:#64748b;">Founder, StyleHub</span></div>', unsafe_allow_html=True)
     with t3: st.markdown('<div class="testimonial-card">"Incredible platform and seamless Razorpay payment integration. Highly recommended!"<br><br><b>— Amit Verma</b><br><span style="color:#64748b;">Director, LogiTech</span></div>', unsafe_allow_html=True)
 
-# ==================== 6. BOOK A MEETING (COMPLETE BOOKING SYSTEM) ====================
 elif nav_choice == "Book a Meeting":
     st.markdown('<div class="section-title">📅 Enterprise Meeting Booking System</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-subtitle">Select your preferred date, time slot, and service to schedule a strategy consultation.</div>', unsafe_allow_html=True)
@@ -359,7 +353,6 @@ elif nav_choice == "Book a Meeting":
         else:
             st.warning("Please fill in your Name, Email, and Phone Number.")
 
-# ==================== 7. CONTACT US ====================
 elif nav_choice == "Contact Us":
     st.markdown('<div class="section-title">Contact Us</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-subtitle">Inquiries submitted here are directly routed to the Admin Portal.</div>', unsafe_allow_html=True)
@@ -376,17 +369,35 @@ elif nav_choice == "Contact Us":
         else:
             st.warning("Please fill in all required fields.")
 
-# ==================== 8. CUSTOMER LOGIN / DASHBOARD ====================
 elif nav_choice == "Customer Login / Signup":
     if not st.session_state.logged_in:
         st.markdown("<h2 style='text-align: center;'>🔐 Customer Portal Authentication</h2>", unsafe_allow_html=True)
         t1, t2 = st.tabs(["🔑 Login", "📝 Signup"])
         with t1:
-            u = st.text_input("Username or Email", key="l_u"); p = st.text_input("Password", type="password", key="l_p")
+            u = st.text_input("Username or Email", key="l_u")
+            p = st.text_input("Password", type="password", key="l_p")
             if st.button("Login"):
-                if u and p: st.session_state.logged_in = True; st.session_state.username = u; st.success("Login successful!"); st.rerun()
-                else: st.warning("Fill both fields.")
+                if u and p: 
+                    st.session_state.logged_in = True
+                    st.session_state.username = u
+                    st.success("Login successful!")
+                    st.rerun()
+                else: 
+                    st.warning("Fill both fields.")
         with t2:
-            nu = st.text_input("Choose Username", key="s_u"); ne = st.text_input("Email Address", key="s_e"); np = st.text_input("Create Password", type="password", key="s_p")
+            nu = st.text_input("Choose Username", key="s_u")
+            ne = st.text_input("Email Address", key="s_e")
+            np = st.text_input("Create Password", type="password", key="s_p")
             if st.button("Sign Up"):
-                if nu and ne and np: st.session_state.logged_in = True; st.session_state.username = nu; st.success("Acc
+                if nu and ne and np: 
+                    st.session_state.logged_in = True
+                    st.session_state.username = nu
+                    st.success("Account created successfully!")
+                    st.rerun()
+                else: 
+                    st.warning("Fill all details.")
+    else:
+        st.markdown(f"## 👋 Welcome back, {st.session_state.username}!")
+        dt1, dt2, dt3, dt4 = st.tabs(["📊 Project Status", "📁 My Projects & Files", "💳 Invoices", "💬 Chat with Support"])
+        with dt1: st.metric(label="Current Project", value="AI Sales Agent MVP", delta="Phase 2")
+        with dt2: st.download_button("📥 Download Source Code (.zip)", "Dummy
