@@ -398,8 +398,8 @@ elif nav_choice == "Customer Login / Signup":
                 
                 if submit_login:
                     if u and p: 
-                        login_success = True
-                        if os.path.exists("users.csv"):
-                            df_users = pd.read_csv("users.csv")
-                            match = df_users[(df_users['Username'] == u) | (df_users['Email'] == u)]
-                            if not match
+                        st.session_state.logged_in = True
+                        st.session_state.username = u
+                        st.session_state.user_email = u if "@" in u else f"{u}@agentflow.ai"
+                        st.success("Login successful!")
+                        st.rerun()
