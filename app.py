@@ -11,7 +11,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Professional White Modern Premium UI with Clean Spacing & Animations
+# Professional White Modern Premium UI (Floating WhatsApp Button removed completely as requested)
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -92,28 +92,6 @@ st.markdown("""
         transform: translateY(-5px);
         box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.1);
     }
-    .whatsapp-float {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        background-color: #25d366;
-        color: white;
-        border-radius: 50px;
-        text-align: center;
-        font-size: 30px;
-        box-shadow: 2px 2px 3px #999;
-        z-index: 1000;
-        width: 60px;
-        height: 60px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-    }
-    .whatsapp-float:hover {
-        background-color: #20ba5a;
-        color: white;
-    }
     .footer {
         background: #0f172a;
         color: #f8fafc;
@@ -127,10 +105,6 @@ st.markdown("""
         text-decoration: none;
     }
 </style>
-
-<a href="https://wa.me/919876543210?text=Hello%20AgentFlow%20AI,%20I%20want%20to%20know%20more%20about%20your%20services!" class="whatsapp-float" target="_blank" title="Chat on WhatsApp">
-    💬
-</a>
 """, unsafe_allow_html=True)
 
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
@@ -410,4 +384,20 @@ elif nav_choice == "Customer Login / Signup":
                     st.session_state.logged_in = True
                     st.session_state.username = u
                     st.success("Login successful!")
-                    st.rer
+                    st.rerun()
+                else: 
+                    st.warning("Fill both fields.")
+        with t2:
+            nu = st.text_input("Choose Username", key="s_u")
+            ne = st.text_input("Email Address", key="s_e")
+            np = st.text_input("Create Password", type="password", key="s_p")
+            if st.button("Sign Up"):
+                if nu and ne and np: 
+                    st.session_state.logged_in = True
+                    st.session_state.username = nu
+                    st.success("Account created successfully!")
+                    st.rerun()
+                else: 
+                    st.warning("Fill all details.")
+    else:
+        st.markdown(f"## 👋 Welcome back, {st.session_state.usern
