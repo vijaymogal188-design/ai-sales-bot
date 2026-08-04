@@ -400,4 +400,4 @@ elif nav_choice == "Customer Login / Signup":
         st.markdown(f"## 👋 Welcome back, {st.session_state.username}!")
         dt1, dt2, dt3, dt4 = st.tabs(["📊 Project Status", "📁 My Projects & Files", "💳 Invoices", "💬 Chat with Support"])
         with dt1: st.metric(label="Current Project", value="AI Sales Agent MVP", delta="Phase 2")
-        with dt2: st.download_button("📥 Download Source Code (.zip)", "Dummy
+        with dt2: st.download_button("Download Source Code Zip", "Dummy source
