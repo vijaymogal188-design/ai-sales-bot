@@ -372,8 +372,8 @@ elif nav_choice == "Contact Us":
 elif nav_choice == "Customer Login / Signup":
     if not st.session_state.logged_in:
         st.markdown("<h2 style='text-align: center;'>🔐 Customer Portal Authentication</h2>", unsafe_allow_html=True)
-        t1, t2 = st.tabs(["🔑 Login", "📝 Signup"])
-        with t1:
+        auth_tab1, auth_tab2 = st.tabs(["🔑 Login", "📝 Signup"])
+        with auth_tab1:
             u = st.text_input("Username or Email", key="l_u")
             p = st.text_input("Password", type="password", key="l_p")
             if st.button("Login"):
@@ -384,7 +384,7 @@ elif nav_choice == "Customer Login / Signup":
                     st.rerun()
                 else: 
                     st.warning("Fill both fields.")
-        with t2:
+        with auth_tab2:
             nu = st.text_input("Choose Username", key="s_u")
             ne = st.text_input("Email Address", key="s_e")
             np = st.text_input("Create Password", type="password", key="s_p")
@@ -401,4 +401,3 @@ elif nav_choice == "Customer Login / Signup":
         dash_tab1, dash_tab2, dash_tab3, dash_tab4 = st.tabs(["📊 Project Status", "📁 My Projects & Files", "💳 Invoices", "💬 Chat with Support"])
         with dash_tab1: 
             st.metric(label="Current Project", value="AI Sales Agent MVP", delta="Phase 2")
-        with dash_tab2:
