@@ -142,7 +142,8 @@ elif nav_choice == "Pricing & Plans":
                 else: st.warning("Enter email.")
             if st.button("⬅️ Back"): st.session_state.checkout_active = False; st.rerun()
             st.markdown('</div>', unsafe_allow_html=True)
-            elif nav_choice == "About Us":
+
+elif nav_choice == "About Us":
     st.markdown('<div class="section-title">About AgentFlow AI</div>', unsafe_allow_html=True)
     col_a1, col_a2 = st.columns(2)
     with col_a1:
