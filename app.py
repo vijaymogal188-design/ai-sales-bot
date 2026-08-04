@@ -11,7 +11,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Professional White Modern Premium UI (Floating WhatsApp Button removed completely as requested)
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -400,4 +399,5 @@ elif nav_choice == "Customer Login / Signup":
                 else: 
                     st.warning("Fill all details.")
     else:
-        st.markdown(f"## 👋 Welcome back, {st.session_state.usern
+        st.markdown("## 👋 Welcome back, " + st.session_state.username + "!")
+        cust_tab1, cust_tab2 = st.tabs(["Payment History & Invoices", "Support"])
