@@ -402,4 +402,4 @@ elif nav_choice == "Customer Login / Signup":
 
         st.markdown("---")
         st.markdown("### 📝 New User Signup")
-        signup_username_input = st.text_input("Choo
+        signup_username_input = st.text_input("User
