@@ -5,7 +5,7 @@ from groq import Groq
 from datetime import datetime
 
 st.set_page_config(
-    page_title="AgentFlow AI | Enterprise SaaS & Business Automation", 
+    page_title="AgentFlow AI | Enterprise CRM Dashboard", 
     page_icon="⚡", 
     layout="wide",
     initial_sidebar_state="expanded"
@@ -14,119 +14,23 @@ st.set_page_config(
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-    
-    html, body, [class*="css"] {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-    
-    .hero-container {
-        text-align: center;
-        padding: 40px 20px 20px 20px;
-        max-width: 900px;
-        margin: 0 auto;
-    }
-    .hero-badge {
-        display: inline-block;
-        background: #ede9fe;
-        color: #7c3aed;
-        font-weight: 700;
-        font-size: 13px;
-        padding: 6px 16px;
-        border-radius: 50px;
-        margin-bottom: 16px;
-    }
-    .hero-title {
-        font-size: 42px;
-        font-weight: 800;
-        color: #0f172a;
-        line-height: 1.2;
-        margin-bottom: 16px;
-    }
-    .hero-title span {
-        background: linear-gradient(90deg, #7c3aed 0%, #4f46e5 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    .hero-subtitle {
-        font-size: 16px;
-        color: #64748b;
-        line-height: 1.6;
-        margin-bottom: 25px;
-    }
-    .section-title {
-        text-align: center;
-        font-size: 28px;
-        font-weight: 800;
-        color: #0f172a;
-        margin-top: 50px;
-        margin-bottom: 10px;
-    }
-    .section-subtitle {
-        text-align: center;
-        font-size: 15px;
-        color: #64748b;
-        margin-bottom: 30px;
-    }
-    .pricing-card, .feature-card, .testimonial-card, .portfolio-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        padding: 30px;
-        border-radius: 16px;
-        text-align: center;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        transition: transform 0.3s ease;
-    }
-    .pricing-card:hover, .feature-card:hover, .testimonial-card:hover, .portfolio-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.1);
-    }
-    .checkout-box {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        padding: 30px;
-        border-radius: 16px;
-        max-width: 600px;
-        margin: 0 auto;
-    }
-    .whatsapp-float {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        background-color: #25d366;
-        color: white;
-        border-radius: 50px;
-        text-align: center;
-        font-size: 30px;
-        box-shadow: 2px 2px 3px #999;
-        z-index: 1000;
-        width: 60px;
-        height: 60px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-    }
-    .whatsapp-float:hover {
-        background-color: #20ba5a;
-        color: white;
-    }
-    .footer {
-        background: #0f172a;
-        color: #f8fafc;
-        padding: 50px 30px 20px 30px;
-        border-top: 1px solid #1e293b;
-        margin-top: 60px;
-        border-radius: 16px 16px 0 0;
-    }
-    .footer a {
-        color: #94a3b8;
-        text-decoration: none;
-    }
+    html, body, [class*="css"] { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .hero-container { text-align: center; padding: 40px 20px 20px 20px; max-width: 900px; margin: 0 auto; }
+    .hero-badge { display: inline-block; background: #ede9fe; color: #7c3aed; font-weight: 700; font-size: 13px; padding: 6px 16px; border-radius: 50px; margin-bottom: 16px; }
+    .hero-title { font-size: 42px; font-weight: 800; color: #0f172a; line-height: 1.2; margin-bottom: 16px; }
+    .hero-title span { background: linear-gradient(90deg, #7c3aed 0%, #4f46e5 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero-subtitle { font-size: 16px; color: #64748b; line-height: 1.6; margin-bottom: 25px; }
+    .section-title { text-align: center; font-size: 28px; font-weight: 800; color: #0f172a; margin-top: 50px; margin-bottom: 10px; }
+    .section-subtitle { text-align: center; font-size: 15px; color: #64748b; margin-bottom: 30px; }
+    .pricing-card, .feature-card, .testimonial-card, .portfolio-card { background: #ffffff; border: 1px solid #e2e8f0; padding: 30px; border-radius: 16px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+    .checkout-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 30px; border-radius: 16px; max-width: 600px; margin: 0 auto; }
+    .whatsapp-float { position: fixed; bottom: 30px; right: 30px; background-color: #25d366; color: white; border-radius: 50px; text-align: center; font-size: 30px; box-shadow: 2px 2px 3px #999; z-index: 1000; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; text-decoration: none; }
+    .whatsapp-float:hover { background-color: #20ba5a; color: white; }
+    .footer { background: #0f172a; color: #f8fafc; padding: 50px 30px 20px 30px; border-top: 1px solid #1e293b; margin-top: 60px; border-radius: 16px 16px 0 0; }
+    .footer a { color: #94a3b8; text-decoration: none; }
 </style>
 
-<a href="https://wa.me/919876543210?text=Hello%20AgentFlow%20AI,%20I%20want%20to%20know%20more%20about%20your%20services!" class="whatsapp-float" target="_blank" title="Chat on WhatsApp">
-    💬
-</a>
+<a href="https://wa.me/919876543210?text=Hello%20AgentFlow%20AI,%20I%20want%20to%20know%20more%20about%20your%20services!" class="whatsapp-float" target="_blank" title="Chat on WhatsApp">💬</a>
 """, unsafe_allow_html=True)
 
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
@@ -137,10 +41,7 @@ When all 6 are collected, output EXACTLY: COMPLETE: Name | Business | Service | 
 
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
-    st.session_state.messages.append({
-        "role": "assistant", 
-        "content": "👋 Hello! Welcome to AgentFlow AI. To get started, could you please tell me your name?"
-    })
+    st.session_state.messages.append({"role": "assistant", "content": "👋 Hello! Welcome to AgentFlow AI. To get started, could you please tell me your name?"})
 
 if "logged_in" not in st.session_state: st.session_state.logged_in = False
 if "username" not in st.session_state: st.session_state.username = ""
@@ -157,7 +58,9 @@ def save_lead_to_csv(data_list):
         "Service": data_list[2].strip(),
         "Budget": data_list[3].strip(),
         "Phone": data_list[4].strip(),
-        "Email": data_list[5].strip()
+        "Email": data_list[5].strip(),
+        "Status": "New",
+        "Notes": "None"
     }
     df = pd.DataFrame([new_lead])
     if not os.path.exists(file_name): df.to_csv(file_name, index=False)
@@ -165,7 +68,14 @@ def save_lead_to_csv(data_list):
 
 def save_paid_customer(email, plan_name, amount):
     file_name = "paid_customers.csv"
-    record = {"Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "Email": email, "Plan": plan_name, "Amount": amount}
+    record = {
+        "Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "Email": email,
+        "Plan": plan_name,
+        "Amount": amount,
+        "Project Status": "In Progress",
+        "Notes": "New subscription paid"
+    }
     df = pd.DataFrame([record])
     if not os.path.exists(file_name): df.to_csv(file_name, index=False)
     else: df.to_csv(file_name, mode='a', header=False, index=False)
@@ -180,14 +90,15 @@ def save_booking_to_csv(name, email, phone, service, date, time_slot):
         "Service": service,
         "Meeting Date": str(date),
         "Time Slot": str(time_slot),
-        "Status": "Pending"
+        "Status": "Pending",
+        "Notes": "Scheduled consultation"
     }
     df = pd.DataFrame([record])
     if not os.path.exists(file_name): df.to_csv(file_name, index=False)
     else: df.to_csv(file_name, mode='a', header=False, index=False)
 
 st.sidebar.markdown("### ⚡ AgentFlow AI")
-st.sidebar.caption("Enterprise SaaS Portal v2.6")
+st.sidebar.caption("Enterprise CRM Dashboard v3.0")
 st.sidebar.markdown("---")
 
 nav_choice = st.sidebar.radio("Navigation", [
@@ -199,7 +110,7 @@ nav_choice = st.sidebar.radio("Navigation", [
     "Book a Meeting",
     "Contact Us", 
     "Customer Login / Signup", 
-    "Admin Portal",
+    "Admin CRM Dashboard",
     "Legal & Policies"
 ])
 
@@ -355,7 +266,7 @@ elif nav_choice == "Book a Meeting":
 
 elif nav_choice == "Contact Us":
     st.markdown('<div class="section-title">Contact Us</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-subtitle">Inquiries submitted here are directly routed to the Admin Portal.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-subtitle">Inquiries submitted here are directly routed to the Admin CRM Dashboard.</div>', unsafe_allow_html=True)
     
     c_name = st.text_input("Your Full Name")
     c_email = st.text_input("Your Email Address")
@@ -365,15 +276,15 @@ elif nav_choice == "Contact Us":
     if st.button("Submit Inquiry"):
         if c_name and c_email and c_msg:
             save_lead_to_csv([c_name, "Inquiry Form", c_service, "Custom", "N/A", c_email])
-            st.success("✅ Inquiry submitted successfully! Our team and admin portal have received your message.")
+            st.success("✅ Inquiry submitted successfully! Our team and CRM dashboard have received your message.")
         else:
             st.warning("Please fill in all required fields.")
 
 elif nav_choice == "Customer Login / Signup":
     if not st.session_state.logged_in:
         st.markdown("<h2 style='text-align: center;'>🔐 Customer Portal Authentication</h2>", unsafe_allow_html=True)
-        auth_tab1, auth_tab2 = st.tabs(["🔑 Login", "📝 Signup"])
-        with auth_tab1:
+        t1, t2 = st.tabs(["🔑 Login", "📝 Signup"])
+        with t1:
             u = st.text_input("Username or Email", key="l_u")
             p = st.text_input("Password", type="password", key="l_p")
             if st.button("Login"):
@@ -384,7 +295,7 @@ elif nav_choice == "Customer Login / Signup":
                     st.rerun()
                 else: 
                     st.warning("Fill both fields.")
-        with auth_tab2:
+        with t2:
             nu = st.text_input("Choose Username", key="s_u")
             ne = st.text_input("Email Address", key="s_e")
             np = st.text_input("Create Password", type="password", key="s_p")
@@ -401,3 +312,17 @@ elif nav_choice == "Customer Login / Signup":
         dash_tab1, dash_tab2, dash_tab3, dash_tab4 = st.tabs(["📊 Project Status", "📁 My Projects & Files", "💳 Invoices", "💬 Chat with Support"])
         with dash_tab1: 
             st.metric(label="Current Project", value="AI Sales Agent MVP", delta="Phase 2")
+        with dash_tab2: 
+            st.download_button("Download Source Code Zip", "Dummy source code bytes", "agentflow_project.zip")
+        with dash_tab3: 
+            st.table(pd.DataFrame({"Invoice ID": ["#INV-1"], "Amount": ["₹999"], "Status": ["Paid 🟢"]}))
+        with dash_tab4: 
+            st.write("Direct support chat active.")
+
+elif nav_choice == "Admin CRM Dashboard":
+    if not st.session_state.admin_logged_in:
+        st.markdown("<h2 style='text-align: center;'>🔒 Admin Authentication</h2>", unsafe_allow_html=True)
+        col_ad1, col_ad2, col_ad3 = st.columns([1, 2, 1])
+        with col_ad2:
+            admin_pass = st.text_input("Enter Admin Password", type="password")
+            if st.button("Login as Ad
