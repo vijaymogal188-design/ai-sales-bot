@@ -388,10 +388,13 @@ elif nav_choice == "Contact Us":
 elif nav_choice == "Customer Login / Signup":
     if not st.session_state.logged_in:
         st.markdown("<h2 style='text-align: center;'>🔐 Customer Portal Authentication</h2>", unsafe_allow_html=True)
-        t1, t2 = st.tabs(["🔑 Login", "📝 Signup"])
         
-        with t1:
-            with st.form("login_form"):
+        # Using radio button toggle instead of tabs for mobile reliability
+        auth_mode = st.radio("Select Mode", ["🔑 Existing User Login", "📝 New User Signup"], horizontal=True)
+        
+        if auth_mode == "🔑 Existing User Login":
+            st.subheader("Login to your account")
+            with st.form("login_form_secure"):
                 u = st.text_input("Username or Email", key="l_u")
                 p = st.text_input("Password", type="password", key="l_p")
                 submit_login = st.form_submit_button("Login")
@@ -399,7 +402,3 @@ elif nav_choice == "Customer Login / Signup":
                 if submit_login:
                     if u and p: 
                         st.session_state.logged_in = True
-                        st.session_state.username = u
-                        st.session_state.user_email = u if "@" in u else f"{u}@agentflow.ai"
-                        st.success("Login successful!")
-                        st.rerun()
