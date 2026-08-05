@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import os
-from groq import Groq
 from datetime import datetime
 
 st.set_page_config(
@@ -106,7 +105,11 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+try:
+    from groq import Groq
+    client = Groq(api_key=st.secrets.get("GROQ_API_KEY", "dummy_key"))
+except Exception:
+    client = None
 
 SYSTEM_PROMPT = """You are an expert AI Sales Agent for AgentFlow AI. Your goal is to converse with the user and collect exactly these 6 details:
 1. Name, 2. Business Name, 3. Service Required, 4. Budget, 5. Phone Number, 6. Email Address.
@@ -256,8 +259,12 @@ if nav_choice == "Home / Landing Page":
             st.session_state.messages.append({"role": "user", "content": prompt})
             with st.chat_message("assistant"):
                 try:
-                    chat_completion = client.chat.completions.create(messages=st.session_state.messages, model="llama-3.1-8b-instant", temperature=0.5)
-                    response_text = chat_completion.choices[0].message.content
+                    if client:
+                        chat_completion = client.chat.completions.create(messages=st.session_state.messages, model="llama-3.1-8b-instant", temperature=0.5)
+                        response_text = chat_completion.choices[0].message.content
+                    else:
+                        response_text = "AI client not initialized. Please configure your Groq API key."
+                    
                     if "COMPLETE:" in response_text:
                         lead_data = response_text.split("COMPLETE:")[1].strip().split("|")
                         if len(lead_data) == 6: save_lead_to_csv(lead_data)
@@ -398,7 +405,4 @@ elif nav_choice == "Customer Login / Signup":
         if auth_choice == "🔑 Existing User Login":
             with st.container():
                 st.markdown("### 🔑 Existing User Login")
-                login_user_input = st.text_input("Username or Email", key="unique_login_user_input")
-                login_pass_input = st.text_input("Password", type="password", key="unique_login_pass_input")
-                if st.button("Login", key="unique_login_action_btn"):
-                    if log
+                login_user_input = st.text_input(
