@@ -204,7 +204,7 @@ st.sidebar.markdown("### ⚡ AgentFlow AI")
 st.sidebar.caption("Enterprise SaaS Portal v3.2")
 st.sidebar.markdown("---")
 
-nav_choice = st.sidebar.radio("Navigation", [
+nav_options = [
     "Home / Landing Page", 
     "Pricing & Plans", 
     "AI Package Recommender",
@@ -213,9 +213,13 @@ nav_choice = st.sidebar.radio("Navigation", [
     "Book a Meeting",
     "Contact Us", 
     "Customer Login / Signup", 
-    "Admin CRM Dashboard",
     "Legal & Policies"
-])
+]
+
+if st.session_state.admin_logged_in:
+    nav_options.append("Admin CRM Dashboard")
+
+nav_choice = st.sidebar.radio("Navigation", nav_options)
 
 st.sidebar.markdown("---")
 st.sidebar.markdown("🛡️ **Enterprise Security**")
@@ -397,5 +401,4 @@ elif nav_choice == "Customer Login / Signup":
                 login_user_input = st.text_input("Username or Email", key="unique_login_user_input")
                 login_pass_input = st.text_input("Password", type="password", key="unique_login_pass_input")
                 if st.button("Login", key="unique_login_action_btn"):
-                    if login_user_input and login_pass_input:
-                        st.session_state.logged_
+                    if log
