@@ -394,4 +394,5 @@ elif nav_choice == "Book a Meeting":
     col_b1, col_b2 = st.columns(2)
     with col_b1:
         b_name = st.text_input("Full Name", key="bk_name")
-        b_email =
+     b_email = st.text_input("Corporate Email", key="bk_email")
+        b_phone = st.text_input("Phone Number", key="bk_phone")  
