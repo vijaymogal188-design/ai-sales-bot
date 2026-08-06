@@ -398,7 +398,8 @@ elif nav_choice == "Contact Us":
             st.success("Inquiry successfully submitted! Our team and CRM dashboard have received your message.")
         else:
             st.warning("Please fill in all required fields.")
-            elif nav_choice == "Customer Login / Signup":
+
+if nav_choice == "Customer Login / Signup":
     if not st.session_state.logged_in:
         st.markdown("<h2 style='text-align: center;'>Customer Portal Authentication</h2>", unsafe_allow_html=True)
         
