@@ -119,7 +119,7 @@ if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
     st.session_state.messages.append({
         "role": "assistant", 
-        "content": "👋 Hello! Welcome to AgentFlow AI. To get started, could you please tell me your name?"
+        "content": "Hello! Welcome to AgentFlow AI. To get started, could you please tell me your name?"
     })
 
 if "logged_in" not in st.session_state: st.session_state.logged_in = False
@@ -206,7 +206,7 @@ def generate_invoice_pdf(email, plan, amount):
 query_params = st.query_params
 is_admin_url = query_params.get("admin") == "true"
 
-st.sidebar.markdown("### ⚡ AgentFlow AI")
+st.sidebar.markdown("### AgentFlow AI")
 st.sidebar.caption("Enterprise SaaS Portal v3.2")
 st.sidebar.markdown("---")
 
@@ -228,13 +228,13 @@ if is_admin_url:
 nav_choice = st.sidebar.radio("Navigation", nav_options)
 
 st.sidebar.markdown("---")
-st.sidebar.markdown("🛡️ **Enterprise Security**")
+st.sidebar.markdown("Enterprise Security")
 st.sidebar.caption("SSL Secured | 24/7 Support")
 
 if nav_choice == "Home / Landing Page":
     st.markdown("""
         <div class="hero-container">
-            <div class="hero-badge">⚡ Next-Gen Business Automation & AI</div>
+            <div class="hero-badge">Next-Gen Business Automation & AI</div>
             <div class="hero-title">Scale Your Growth with <span>AgentFlow AI</span></div>
             <div class="hero-subtitle">Experience lightning-fast client acquisition, intelligent workflow automations, and bespoke digital solutions designed to elevate your brand globally.</div>
         </div>
@@ -243,14 +243,14 @@ if nav_choice == "Home / Landing Page":
     st.markdown('<div class="section-title">Our Professional Services</div>', unsafe_allow_html=True)
     
     col_s1, col_s2, col_s3, col_s4, col_s5 = st.columns(5)
-    with col_s1: st.markdown('<div class="feature-card"><h3>🌐 Website Dev</h3><p>Modern responsive sites.</p></div>', unsafe_allow_html=True)
-    with col_s2: st.markdown('<div class="feature-card"><h3>🤖 AI Chatbots</h3><p>24/7 intelligent sales bots.</p></div>', unsafe_allow_html=True)
-    with col_s3: st.markdown('<div class="feature-card"><h3>📱 App Dev</h3><p>Scalable mobile apps.</p></div>', unsafe_allow_html=True)
-    with col_s4: st.markdown('<div class="feature-card"><h3>🎨 Logo Design</h3><p>Memorable brand identities.</p></div>', unsafe_allow_html=True)
-    with col_s5: st.markdown('<div class="feature-card"><h3>📈 Marketing</h3><p>Growth campaigns.</p></div>', unsafe_allow_html=True)
+    with col_s1: st.markdown('<div class="feature-card"><h3>Website Dev</h3><p>Modern responsive sites.</p></div>', unsafe_allow_html=True)
+    with col_s2: st.markdown('<div class="feature-card"><h3>AI Chatbots</h3><p>24/7 intelligent sales bots.</p></div>', unsafe_allow_html=True)
+    with col_s3: st.markdown('<div class="feature-card"><h3>App Dev</h3><p>Scalable mobile apps.</p></div>', unsafe_allow_html=True)
+    with col_s4: st.markdown('<div class="feature-card"><h3>Logo Design</h3><p>Memorable brand identities.</p></div>', unsafe_allow_html=True)
+    with col_s5: st.markdown('<div class="feature-card"><h3>Marketing</h3><p>Growth campaigns.</p></div>', unsafe_allow_html=True)
 
     st.markdown("---")
-    st.markdown('<div class="section-title">💬 Interactive AI Sales Assistant</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Interactive AI Sales Assistant</div>', unsafe_allow_html=True)
     
     col_c1, col_chat, col_c3 = st.columns([1, 2.5, 1])
     with col_chat:
@@ -284,23 +284,23 @@ elif nav_choice == "Pricing & Plans":
         st.markdown('<div class="section-title">Choose Your Growth Plan</div>', unsafe_allow_html=True)
         col_p1, col_p2, col_p3, col_p4 = st.columns(4)
         with col_p1:
-            st.markdown('<div class="pricing-card"><h3>🚀 Starter</h3><h2>₹999</h2><p>Ideal for solo creators.</p></div>', unsafe_allow_html=True)
-            if st.button("Select Starter", key="sel_s"): st.session_state.selected_plan = {"name": "Starter", "price": "₹999"}; st.session_state.checkout_active = True; st.rerun()
+            st.markdown('<div class="pricing-card"><h3>Starter</h3><h2>Rs 999</h2><p>Ideal for solo creators.</p></div>', unsafe_allow_html=True)
+            if st.button("Select Starter", key="sel_s"): st.session_state.selected_plan = {"name": "Starter", "price": "Rs 999"}; st.session_state.checkout_active = True; st.rerun()
         with col_p2:
-            st.markdown('<div class="pricing-card" style="border: 2px solid #7c3aed;"><h3>💼 Pro</h3><h2>₹2,999</h2><p>For growing businesses.</p></div>', unsafe_allow_html=True)
-            if st.button("Select Pro", key="sel_p"): st.session_state.selected_plan = {"name": "Pro", "price": "₹2,999"}; st.session_state.checkout_active = True; st.rerun()
+            st.markdown('<div class="pricing-card" style="border: 2px solid #7c3aed;"><h3>Pro</h3><h2>Rs 2,999</h2><p>For growing businesses.</p></div>', unsafe_allow_html=True)
+            if st.button("Select Pro", key="sel_p"): st.session_state.selected_plan = {"name": "Pro", "price": "Rs 2,999"}; st.session_state.checkout_active = True; st.rerun()
         with col_p3:
-            st.markdown('<div class="pricing-card"><h3>🔥 Premium</h3><h2>₹7,999</h2><p>For scaling enterprises.</p></div>', unsafe_allow_html=True)
-            if st.button("Select Premium", key="sel_pr"): st.session_state.selected_plan = {"name": "Premium", "price": "₹7,999"}; st.session_state.checkout_active = True; st.rerun()
+            st.markdown('<div class="pricing-card"><h3>Premium</h3><h2>Rs 7,999</h2><p>For scaling enterprises.</p></div>', unsafe_allow_html=True)
+            if st.button("Select Premium", key="sel_pr"): st.session_state.selected_plan = {"name": "Premium", "price": "Rs 7,999"}; st.session_state.checkout_active = True; st.rerun()
         with col_p4:
-            st.markdown('<div class="pricing-card"><h3>🏢 Enterprise</h3><h2>Custom</h2><p>Tailored solutions.</p></div>', unsafe_allow_html=True)
+            st.markdown('<div class="pricing-card"><h3>Enterprise</h3><h2>Custom</h2><p>Tailored solutions.</p></div>', unsafe_allow_html=True)
             if st.button("Contact Sales"): st.info("Reach out via support desk.")
     else:
         plan = st.session_state.selected_plan
-        st.markdown(f"<h2 style='text-align: center;'>🔒 Secure Checkout - {plan['name']}</h2>", unsafe_allow_html=True)
+        st.markdown(f"<h2 style='text-align: center;'>Secure Checkout - {plan['name']}</h2>", unsafe_allow_html=True)
         col_c1, col_box, col_c3 = st.columns([1, 2, 1])
         with col_box:
-            st.markdown('<div class="checkout-box" style="background:#ffffff; padding:30px; border-radius:16px; border:1px solid #e2e8f0;"><h3>📋 Order Summary</h3>', unsafe_allow_html=True)
+            st.markdown('<div class="checkout-box" style="background:#ffffff; padding:30px; border-radius:16px; border:1px solid #e2e8f0;"><h3>Order Summary</h3>', unsafe_allow_html=True)
             st.write(f"**Plan Tier:** {plan['name']} Subscription")
             st.write(f"**Total Amount:** {plan['price']}")
             pay_method = st.selectbox("Select Payment Method", ["Razorpay (UPI / Google Pay / PhonePe / Paytm)", "Credit / Debit Cards", "Net Banking", "Mobile Wallets"])
@@ -317,13 +317,13 @@ elif nav_choice == "Pricing & Plans":
                     st.rerun()
                 else: 
                     st.warning("Please enter your email.")
-            if st.button("⬅️ Back to Pricing"): 
+            if st.button("Back to Pricing"): 
                 st.session_state.checkout_active = False
                 st.rerun()
             st.markdown('</div>', unsafe_allow_html=True)
 
 elif nav_choice == "AI Package Recommender":
-    st.markdown('<div class="section-title">🤖 AI Package Recommender</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">AI Package Recommender</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-subtitle">Answer 2 quick questions and let our AI suggest the best plan for you!</div>', unsafe_allow_html=True)
     
     col_r1, col_r2 = st.columns(2)
@@ -333,26 +333,26 @@ elif nav_choice == "AI Package Recommender":
     with col_r2:
         st.write("")
         st.write("")
-        if st.button("✨ Get AI Recommendation"):
+        if st.button("Get AI Recommendation"):
             st.success("Analysis complete! Based on your profile:")
             if biz_type == "Solo Creator / Freelancer":
-                st.info("🚀 **Recommended Plan: Starter (₹999)** - Perfect for getting your digital presence off the ground.")
+                st.info("Recommended Plan: Starter (Rs 999) - Perfect for getting your digital presence off the ground.")
             elif biz_type == "Growing Startup / SME":
-                st.info("💼 **Recommended Plan: Pro (₹2,999)** - Ideal for scaling automated customer acquisition.")
+                st.info("Recommended Plan: Pro (Rs 2,999) - Ideal for scaling automated customer acquisition.")
             else:
-                st.info("🔥 **Recommended Plan: Premium / Enterprise (₹7,999+)** - Built for heavy enterprise automation.")
+                st.info("Recommended Plan: Premium / Enterprise (Rs 7,999+) - Built for heavy enterprise automation.")
 
 elif nav_choice == "Portfolio / Projects":
     st.markdown('<div class="section-title">Our Portfolio & Project Cards</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-subtitle">Explore our previous successful client deployments.</div>', unsafe_allow_html=True)
     
     p1, p2, p3 = st.columns(3)
-    with p1: st.markdown('<div class="portfolio-card"><h3>🛒 AI E-Commerce Suite</h3><p>Automated conversational sales bot for retail brand, boosting conversion by 45%.</p><br><b>Tech:</b> Python, Groq AI</div>', unsafe_allow_html=True)
-    with p2: st.markdown('<div class="portfolio-card"><h3>🏥 HealthTech SaaS</h3><p>Secure patient management portal with automated billing and scheduling.</p><br><b>Tech:</b> React, FastAPI</div>', unsafe_allow_html=True)
-    with p3: st.markdown('<div class="portfolio-card"><h3>📊 FinTech Analytics Bot</h3><p>Real-time financial compliance and automated tax report generation.</p><br><b>Tech:</b> Python, Pandas</div>', unsafe_allow_html=True)
+    with p1: st.markdown('<div class="portfolio-card"><h3>AI E-Commerce Suite</h3><p>Automated conversational sales bot for retail brand, boosting conversion by 45%.</p><br><b>Tech:</b> Python, Groq AI</div>', unsafe_allow_html=True)
+    with p2: st.markdown('<div class="portfolio-card"><h3>HealthTech SaaS</h3><p>Secure patient management portal with automated billing and scheduling.</p><br><b>Tech:</b> React, FastAPI</div>', unsafe_allow_html=True)
+    with p3: st.markdown('<div class="portfolio-card"><h3>FinTech Analytics Bot</h3><p>Real-time financial compliance and automated tax report generation.</p><br><b>Tech:</b> Python, Pandas</div>', unsafe_allow_html=True)
 
 elif nav_choice == "Testimonials":
-    st.markdown('<div class="section-title">⭐ Client Testimonials</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Client Testimonials</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-subtitle">Hear what founders and industry leaders say about AgentFlow AI.</div>', unsafe_allow_html=True)
     
     t1, t2, t3 = st.columns(3)
@@ -361,7 +361,7 @@ elif nav_choice == "Testimonials":
     with t3: st.markdown('<div class="testimonial-card">"Incredible platform and seamless Razorpay payment integration. Highly recommended!"<br><br><b>— Amit Verma</b><br><span style="color:#64748b;">Director, LogiTech</span></div>', unsafe_allow_html=True)
 
 elif nav_choice == "Book a Meeting":
-    st.markdown('<div class="section-title">📅 Enterprise Meeting Booking System</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Enterprise Meeting Booking System</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-subtitle">Select your preferred date, time slot, and service to schedule a strategy consultation.</div>', unsafe_allow_html=True)
     
     col_b1, col_b2 = st.columns(2)
@@ -378,7 +378,7 @@ elif nav_choice == "Book a Meeting":
     if st.button("Submit Meeting Booking"):
         if b_name and b_email and b_phone:
             save_booking_to_csv(b_name, b_email, b_phone, b_service, b_date, b_time)
-            st.success(f"🎉 Booking successfully submitted for {b_date} ({b_time})! Your appointment status is currently **Pending**. Our team will confirm shortly.")
+            st.success(f"Booking successfully submitted for {b_date} ({b_time})! Your appointment status is currently Pending. Our team will confirm shortly.")
             st.balloons()
         else:
             st.warning("Please fill in your Name, Email, and Phone Number.")
@@ -395,16 +395,17 @@ elif nav_choice == "Contact Us":
     if st.button("Submit Inquiry"):
         if c_name and c_email and c_msg:
             save_lead_to_csv([c_name, "Inquiry Form", c_service, "Custom", "N/A", c_email])
-            st.success("✅ Inquiry successfully submitted! Our team and CRM dashboard have received your message.")
+            st.success("Inquiry successfully submitted! Our team and CRM dashboard have received your message.")
         else:
             st.warning("Please fill in all required fields.")
 
 elif nav_choice == "Customer Login / Signup":
     if not st.session_state.logged_in:
-        st.markdown("<h2 style='text-align: center;'>🔐 Customer Portal Authentication</h2>", unsafe_allow_html=True)
+        st.markdown("<h2 style='text-align: center;'>Customer Portal Authentication</h2>", unsafe_allow_html=True)
         
-        auth_choice = st.selectbox("Select Portal Mode", ["🔑 Existing User Login", "📝 New User Signup"], key="portal_auth_selectbox")
+        auth_choice = st.selectbox("Select Portal Mode", ["Existing User Login", "New User Signup"], key="portal_auth_selectbox")
         
-        if auth_choice == "🔑 Existing User Login":
+        if auth_choice == "Existing User Login":
             with st.container():
-                st.markdown("### 🔑 Existing
+                st.markdown("### Existing User Login")
+                login_user_input = st.text_input("Username or Email", key="unique_logi
