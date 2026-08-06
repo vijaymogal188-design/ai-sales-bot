@@ -398,8 +398,7 @@ elif nav_choice == "Contact Us":
             st.success("Inquiry successfully submitted! Our team and CRM dashboard have received your message.")
         else:
             st.warning("Please fill in all required fields.")
-
-elif nav_choice == "Customer Login / Signup":
+            elif nav_choice == "Customer Login / Signup":
     if not st.session_state.logged_in:
         st.markdown("<h2 style='text-align: center;'>Customer Portal Authentication</h2>", unsafe_allow_html=True)
         
@@ -408,4 +407,313 @@ elif nav_choice == "Customer Login / Signup":
         if auth_choice == "Existing User Login":
             with st.container():
                 st.markdown("### Existing User Login")
-                login_user_input = st.text_input("Username or Email", key="unique_logi
+                login_user_input = st.text_input("Username or Email", key="unique_login_user_input")
+                login_pass_input = st.text_input("Password", type="password", key="unique_login_pass_input")
+                if st.button("Login", key="unique_login_action_btn"):
+                    if login_user_input and login_pass_input:
+                        st.session_state.logged_in = True
+                        st.session_state.username = login_user_input
+                        st.session_state.user_email = login_user_input if "@" in login_user_input else f"{login_user_input}@agentflow.ai"
+                        st.success("Login successful!")
+                        st.rerun()
+                    else:
+                        st.warning("Fill both fields.")
+                st.markdown("[Forgot Password? Click here to reset](#)")
+        
+        else:
+            with st.container():
+                st.markdown("### New User Signup")
+                signup_username_input = st.text_input("Username", key="unique_signup_user_input")
+                signup_email_input = st.text_input("Email", key="unique_signup_email_input")
+                signup_pass_input = st.text_input("Password", type="password", key="unique_signup_pass_input")
+                signup_conf_pass_input = st.text_input("Confirm Password", type="password", key="unique_signup_conf_pass_input")
+                if st.button("Create Account", key="unique_signup_action_btn"):
+                    if signup_username_input and signup_email_input and signup_pass_input and signup_conf_pass_input:
+                        if signup_pass_input == signup_conf_pass_input:
+                            save_user_to_csv(signup_username_input, signup_email_input, signup_pass_input)
+                            st.session_state.logged_in = True
+                            st.session_state.username = signup_username_input
+                            st.session_state.user_email = signup_email_input
+                            st.success("Account created successfully!")
+                            st.balloons()
+                            st.rerun()
+                        else:
+                            st.error("Passwords do not match!")
+                    else:
+                        st.warning("Please fill all fields.")
+    else:
+        st.markdown(f"## Welcome back, {st.session_state.username}!")
+        cust_tab1, cust_tab2, cust_tab3 = st.tabs(["Profile & Project Status", "Payment History & Invoices", "Support Chat"])
+        with cust_tab1:
+            st.subheader("Customer Profile & Active Project Status")
+            st.write(f"**Username:** {st.session_state.username}")
+            st.write(f"**Email:** {st.session_state.user_email if st.session_state.user_email else 'N/A'}")
+            st.metric(label="Current Project Status", value="AI Sales Agent MVP", delta="Phase 2 In Progress")
+            st.progress(65, text="Project Completion Progress: 65%")
+        with cust_tab2:
+            st.subheader("Your Invoices & Subscriptions")
+            if os.path.exists("paid_customers.csv"):
+                df_cust = pd.read_csv("paid_customers.csv")
+                target_email = st.session_state.user_email if st.session_state.user_email else st.session_state.username
+                user_invoices = df_cust[df_cust["Email"].str.contains(target_email, case=False, na=False)]
+                if not user_invoices.empty:
+                    st.dataframe(user_invoices, use_container_width=True)
+                    for idx, row in user_invoices.iterrows():
+                        inv_text = generate_invoice_pdf(row['Email'], row['Plan'], row['Amount'])
+                        st.download_button(f"Download Invoice ({row['Plan']})", inv_text, file_name=f"invoice_{row['Plan']}.txt", mime="text/plain", key=f"inv_{idx}")
+                else:
+                    st.info("No payment history found matching your account.")
+                    st.dataframe(df_cust, use_container_width=True)
+            else:
+                st.info("No transactions found.")
+        with cust_tab3:
+            st.subheader("Direct Customer Support")
+            if "support_messages" not in st.session_state:
+                st.session_state.support_messages = [{"role": "assistant", "content": "Hello! How can our support team assist you today?"}]
+            for sm in st.session_state.support_messages:
+                with st.chat_message(sm["role"]): st.markdown(sm["content"])
+            if sprompt := st.chat_input("Ask support a question..."):
+                st.session_state.support_messages.append({"role": "user", "content": sprompt})
+                with st.chat_message("user"): st.markdown(sprompt)
+                reply = "Thank you for reaching out. A support engineer will review your query and respond shortly."
+                st.session_state.support_messages.append({"role": "assistant", "content": reply})
+                with st.chat_message("assistant"): st.markdown(reply)
+        if st.button("Logout", key="customer_portal_logout_btn"): 
+            st.session_state.logged_in = False
+            st.session_state.username = ""
+            st.session_state.user_email = ""
+            st.rerun()
+
+elif nav_choice == "Admin CRM Dashboard":
+    if not is_admin_url:
+        st.error("404 - Page Not Found / Access Denied")
+    else:
+        if not st.session_state.admin_logged_in:
+            st.markdown("<h2 style='text-align: center;'>Admin Authentication</h2>", unsafe_allow_html=True)
+            col_ad1, col_ad2, col_ad3 = st.columns([1, 2, 1])
+            with col_ad2:
+                admin_pass = st.text_input("Enter Admin Password", type="password", key="admin_pass_input_field")
+                if st.button("Login as Admin", key="admin_login_action_btn"):
+                    correct_pass = st.secrets.get("ADMIN_PASSWORD", "admin123") if hasattr(st, "secrets") else "admin123"
+                    if admin_pass == correct_pass: 
+                        st.session_state.admin_logged_in = True
+                        st.success("Admin login successful!")
+                        st.rerun()
+                    else: 
+                        st.error("Incorrect password!")
+        else:
+            st.markdown("## Enterprise Admin CRM & Analytics Dashboard")
+            if st.sidebar.button("Admin Logout", key="admin_sidebar_logout_btn"): 
+                st.session_state.admin_logged_in = False
+                st.rerun()
+
+            try:
+                users_df = pd.read_csv("users.csv") if os.path.exists("users.csv") else pd.DataFrame(columns=["Date", "Username", "Email", "Password"])
+            except Exception:
+                users_df = pd.DataFrame(columns=["Date", "Username", "Email", "Password"])
+
+            try:
+                leads_df = pd.read_csv("leads.csv") if os.path.exists("leads.csv") else pd.DataFrame(columns=["Date", "Name", "Business", "Service", "Budget", "Phone", "Email", "Status", "Notes"])
+            except Exception:
+                leads_df = pd.DataFrame(columns=["Date", "Name", "Business", "Service", "Budget", "Phone", "Email", "Status", "Notes"])
+
+            try:
+                bookings_df = pd.read_csv("bookings.csv") if os.path.exists("bookings.csv") else pd.DataFrame(columns=["Submission Date", "Customer Name", "Email", "Phone", "Service", "Meeting Date", "Time Slot", "Status", "Notes"])
+            except Exception:
+                bookings_df = pd.DataFrame(columns=["Submission Date", "Customer Name", "Email", "Phone", "Service", "Meeting Date", "Time Slot", "Status", "Notes"])
+
+            try:
+                customers_df = pd.read_csv("paid_customers.csv") if os.path.exists("paid_customers.csv") else pd.DataFrame(columns=["Date", "Email", "Plan", "Amount", "Project Status", "Notes"])
+            except Exception:
+                customers_df = pd.DataFrame(columns=["Date", "Email", "Plan", "Amount", "Project Status", "Notes"])
+
+            total_users = len(users_df) if not users_df.empty else 0
+            total_leads = len(leads_df) if not leads_df.empty else 0
+            total_bookings = len(bookings_df) if not bookings_df.empty else 0
+            paid_customers = len(customers_df) if not customers_df.empty else 0
+            
+            total_revenue = 0
+            if not customers_df.empty and "Amount" in customers_df.columns:
+                for amt in customers_df["Amount"]:
+                    clean_amt = str(amt).replace("Rs", "").replace(",", "").strip()
+                    if clean_amt.isdigit():
+                        total_revenue += int(clean_amt)
+
+            active_projects = 0
+            if not customers_df.empty and "Project Status" in customers_df.columns:
+                active_projects = len(customers_df[customers_df["Project Status"] == "In Progress"])
+
+            st.markdown("### Overview Metrics")
+            m1, m2, m3, m4, m5, m6 = st.columns(6)
+            with m1: st.metric(label="Total Users", value=total_users)
+            with m2: st.metric(label="Total Leads", value=total_leads)
+            with m3: st.metric(label="Total Bookings", value=total_bookings)
+            with m4: st.metric(label="Paid Customers", value=paid_customers)
+            with m5: st.metric(label="Total Revenue", value=f"Rs {total_revenue:,}")
+            with m6: st.metric(label="Active Projects", value=active_projects)
+
+            st.markdown("---")
+
+            st.markdown("### Global Search Across CRM Data")
+            global_query = st.text_input("Type to search across Users, Leads, Bookings, and Customers...", key="admin_global_search_input")
+            if global_query:
+                st.info(f"Showing global search results matching: '{global_query}'")
+                g_col1, g_col2 = st.columns(2)
+                with g_col1:
+                    st.subheader("Users Match")
+                    if not users_df.empty:
+                        u_match = users_df[users_df.astype(str).apply(lambda x: x.str.contains(global_query, case=False)).any(axis=1)]
+                        if not u_match.empty:
+                            st.dataframe(u_match, use_container_width=True)
+                        else:
+                            st.info("No matching users found.")
+                    else:
+                        st.info("No data available.")
+
+                    st.subheader("Leads Match")
+                    if not leads_df.empty:
+                        l_match = leads_df[leads_df.astype(str).apply(lambda x: x.str.contains(global_query, case=False)).any(axis=1)]
+                        if not l_match.empty:
+                            st.dataframe(l_match, use_container_width=True)
+                        else:
+                            st.info("No matching leads found.")
+                    else:
+                        st.info("No data available.")
+
+                with g_col2:
+                    st.subheader("Bookings Match")
+                    if not bookings_df.empty:
+                        b_match = bookings_df[bookings_df.astype(str).apply(lambda x: x.str.contains(global_query, case=False)).any(axis=1)]
+                        if not b_match.empty:
+                            st.dataframe(b_match, use_container_width=True)
+                        else:
+                            st.info("No matching bookings found.")
+                    else:
+                        st.info("No data available.")
+
+                    st.subheader("Customers Match")
+                    if not customers_df.empty:
+                        c_match = customers_df[customers_df.astype(str).apply(lambda x: x.str.contains(global_query, case=False)).any(axis=1)]
+                        if not c_match.empty:
+                            st.dataframe(c_match, use_container_width=True)
+                        else:
+                            st.info("No matching customers found.")
+                    else:
+                        st.info("No data available.")
+                st.markdown("---")
+
+            crm_tab1, crm_tab2, crm_tab3, crm_tab4, crm_tab5 = st.tabs([
+                "Users Management", 
+                "Leads Management", 
+                "Bookings Management", 
+                "Paid Customers", 
+                "Analytics & Growth"
+            ])
+
+            with crm_tab1:
+                st.subheader("Registered Users Directory")
+                if not users_df.empty:
+                    u_search = st.text_input("Search Users by Username or Email", key="admin_user_search_box")
+                    filtered_users = users_df.copy()
+                    if u_search:
+                        mask = filtered_users.astype(str).apply(lambda x: x.str.contains(u_search, case=False)).any(axis=1)
+                        filtered_users = filtered_users[mask]
+
+                    st.dataframe(filtered_users, use_container_width=True)
+                    st.download_button("Export Users CSV", data=filtered_users.to_csv(index=False).encode('utf-8'), file_name="users_export.csv", mime="text/csv", key="admin_exp_users_btn")
+
+                    st.markdown("#### Edit or Delete User")
+                    u_idx = st.number_input("Select Row Index to Edit/Delete", min_value=0, max_value=max(0, len(users_df)-1), step=1, key="admin_user_idx_input")
+                    if len(users_df) > 0:
+                        selected_user = users_df.iloc[u_idx]
+                        with st.form("edit_user_form_admin"):
+                            new_u_name = st.text_input("Username", value=str(selected_user["Username"]))
+                            new_u_email = st.text_input("Email", value=str(selected_user["Email"]))
+                            new_u_pass = st.text_input("Password", value=str(selected_user["Password"]))
+                            col_u1, col_u2 = st.columns(2)
+                            update_user_btn = col_u1.form_submit_button("Save Changes")
+                            delete_user_btn = col_u2.form_submit_button("Delete User")
+
+                            if update_user_btn:
+                                users_df.at[u_idx, "Username"] = new_u_name
+                                users_df.at[u_idx, "Email"] = new_u_email
+                                users_df.at[u_idx, "Password"] = new_u_pass
+                                users_df.to_csv("users.csv", index=False)
+                                st.success("User updated successfully!")
+                                st.rerun()
+
+                            if delete_user_btn:
+                                users_df = users_df.drop(u_idx).reset_index(drop=True)
+                                users_df.to_csv("users.csv", index=False)
+                                st.success("User deleted successfully!")
+                                st.rerun()
+                else:
+                    st.info("No data available.")
+
+            with crm_tab2:
+                st.subheader("Sales Leads & Inquiries CRM")
+                if not leads_df.empty:
+                    col_l1, col_l2 = st.columns(2)
+                    with col_l1:
+                        l_search = st.text_input("Search Leads by Name/Email/Service", key="admin_lead_search_box")
+                    with col_l2:
+                        lead_statuses = ["All"] + list(leads_df["Status"].unique()) if "Status" in leads_df.columns and not leads_df["Status"].isnull().all() else ["All"]
+                        l_status_filter = st.selectbox("Filter by Status", lead_statuses, key="admin_lead_status_selectbox")
+
+                    filtered_leads = leads_df.copy()
+                    if l_search:
+                        mask = filtered_leads.astype(str).apply(lambda x: x.str.contains(l_search, case=False)).any(axis=1)
+                        filtered_leads = filtered_leads[mask]
+                    if l_status_filter != "All" and "Status" in filtered_leads.columns:
+                        filtered_leads = filtered_leads[filtered_leads["Status"] == l_status_filter]
+
+                    st.dataframe(filtered_leads, use_container_width=True)
+                    st.download_button("Export Filtered Leads CSV", data=filtered_leads.to_csv(index=False).encode('utf-8'), file_name="leads_export.csv", mime="text/csv", key="admin_exp_leads_btn")
+
+                    st.markdown("#### Update Lead Status or Delete")
+                    l_idx = st.number_input("Select Lead Row Index", min_value=0, max_value=max(0, len(leads_df)-1), step=1, key="admin_lead_idx_input")
+                    if len(leads_df) > 0:
+                        selected_lead = leads_df.iloc[l_idx]
+                        with st.form("edit_lead_form_admin"):
+                            current_status = str(selected_lead["Status"]) if "Status" in selected_lead and pd.notna(selected_lead["Status"]) else "New"
+                            status_options = ["New", "Contacted", "Converted", "Closed"]
+                            default_idx = status_options.index(current_status) if current_status in status_options else 0
+                            new_status = st.selectbox("Update Status", status_options, index=default_idx)
+                            col_le1, col_le2 = st.columns(2)
+                            update_lead_btn = col_le1.form_submit_button("Update Status")
+                            delete_lead_btn = col_le2.form_submit_button("Delete Lead")
+
+                            if update_lead_btn:
+                                leads_df.at[l_idx, "Status"] = new_status
+                                leads_df.to_csv("leads.csv", index=False)
+                                st.success("Lead status updated!")
+                                st.rerun()
+
+                            if delete_lead_btn:
+                                leads_df = leads_df.drop(l_idx).reset_index(drop=True)
+                                leads_df.to_csv("leads.csv", index=False)
+                                st.success("Lead deleted successfully!")
+                                st.rerun()
+                else:
+                    st.info("No data available.")
+
+            with crm_tab3:
+                st.subheader("Consultation Bookings Management")
+                if not bookings_df.empty:
+                    b_search = st.text_input("Search Bookings by Client Name or Email", key="admin_booking_search_box")
+                    filtered_bookings = bookings_df.copy()
+                    if b_search:
+                        mask = filtered_bookings.astype(str).apply(lambda x: x.str.contains(b_search, case=False)).any(axis=1)
+                        filtered_bookings = filtered_bookings[mask]
+
+                    st.dataframe(filtered_bookings, use_container_width=True)
+                    st.download_button("Export Bookings CSV", data=filtered_bookings.to_csv(index=False).encode('utf-8'), file_name="bookings_export.csv", mime="text/csv", key="admin_exp_bookings_btn")
+
+                    st.markdown("#### Confirm, Cancel, or Delete Booking")
+                    b_idx = st.number_input("Select Booking Row Index", min_value=0, max_value=max(0, len(bookings_df)-1), step=1, key="admin_booking_idx_input")
+                    if len(bookings_df) > 0:
+                        col_b1, col_b2, col_b3 = st.columns(3)
+                        if col_b1.button("Confirm Booking", key="admin_conf_book_btn"):
+                            bookings_df.at[b_idx, "Status"] = "Confirmed"
+                            bookings_df.to_csv("bookings.csv", index=False)
+                            st.success("Booking Confirmed!")
