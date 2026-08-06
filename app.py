@@ -203,7 +203,6 @@ def generate_invoice_pdf(email, plan, amount):
     Thank you for your business!
     """
 
-# Check if query parameter ?admin=true is passed
 query_params = st.query_params
 is_admin_url = query_params.get("admin") == "true"
 
@@ -223,7 +222,6 @@ nav_options = [
     "Legal & Policies"
 ]
 
-# Add Admin Dashboard option ONLY if ?admin=true is in the URL
 if is_admin_url:
     nav_options.append("Admin CRM Dashboard")
 
@@ -407,4 +405,6 @@ elif nav_choice == "Customer Login / Signup":
         
         auth_choice = st.selectbox("Select Portal Mode", ["🔑 Existing User Login", "📝 New User Signup"], key="portal_auth_selectbox")
         
-        if auth_c
+        if auth_choice == "🔑 Existing User Login":
+            with st.container():
+                st.markdown("### 🔑 Existing
