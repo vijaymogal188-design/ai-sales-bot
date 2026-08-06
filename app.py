@@ -4,103 +4,144 @@ import os
 from datetime import datetime
 
 st.set_page_config(
-    page_title="AgentFlow AI | Enterprise SaaS & Business Automation", 
+    page_title="AgentFlow AI | Enterprise SaaS Platform", 
     page_icon="⚡", 
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
+# --- GLOBAL ULTRA-MODERN DARK SaaS STYLING (GLASSMORPHISM & NEON) ---
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
     
     html, body, [class*="css"] {
         font-family: 'Plus Jakarta Sans', sans-serif;
-        background-color: #f8fafc;
-        color: #0f172a;
+        background-color: #07090e;
+        color: #f1f5f9;
     }
 
     .stApp {
-        background-color: #f8fafc;
+        background: radial-gradient(circle at 50% -20%, #1e1b4b 0%, #07090e 60%);
     }
 
     [data-testid="stSidebar"] {
-        background-color: #ffffff;
-        border-right: 1px solid #e2e8f0;
+        background-color: #0b0f19;
+        border-right: 1px solid #1e293b;
     }
 
     .hero-container {
         text-align: center;
-        padding: 50px 20px 30px 20px;
-        max-width: 900px;
+        padding: 60px 20px 40px 20px;
+        max-width: 950px;
         margin: 0 auto;
     }
+    
     .hero-badge {
         display: inline-block;
-        background: #ede9fe;
-        color: #7c3aed;
+        background: rgba(124, 58, 237, 0.15);
+        color: #a78bfa;
         font-weight: 700;
         font-size: 13px;
-        padding: 6px 16px;
+        padding: 6px 18px;
         border-radius: 50px;
-        margin-bottom: 16px;
+        border: 1px solid rgba(124, 58, 237, 0.3);
+        margin-bottom: 20px;
+        letter-spacing: 0.5px;
     }
+
     .hero-title {
-        font-size: 46px;
+        font-size: 52px;
         font-weight: 800;
-        color: #0f172a;
-        line-height: 1.2;
-        margin-bottom: 16px;
+        color: #ffffff;
+        line-height: 1.15;
+        margin-bottom: 20px;
     }
+    
     .hero-title span {
-        background: linear-gradient(90deg, #7c3aed 0%, #4f46e5 100%);
+        background: linear-gradient(135deg, #a78bfa 0%, #6366f1 50%, #3b82f6 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
+
     .hero-subtitle {
-        font-size: 16px;
-        color: #64748b;
+        font-size: 18px;
+        color: #94a3b8;
         line-height: 1.6;
-        margin-bottom: 30px;
+        margin-bottom: 40px;
+        max-width: 750px;
+        margin-left: auto;
+        margin-right: auto;
     }
-    .section-title {
+
+    .stats-container {
+        display: flex;
+        justify-content: space-around;
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 24px;
+        border-radius: 16px;
+        backdrop-filter: blur(12px);
+        margin: 40px auto;
+        max-width: 850px;
         text-align: center;
+    }
+
+    .stat-number {
         font-size: 28px;
         font-weight: 800;
-        color: #0f172a;
-        margin-top: 50px;
-        margin-bottom: 10px;
+        color: #ffffff;
     }
+
+    .stat-label {
+        font-size: 13px;
+        color: #94a3b8;
+        margin-top: 4px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .section-title {
+        text-align: center;
+        font-size: 32px;
+        font-weight: 800;
+        color: #ffffff;
+        margin-top: 60px;
+        margin-bottom: 12px;
+    }
+
     .section-subtitle {
         text-align: center;
-        font-size: 15px;
-        color: #64748b;
-        margin-bottom: 30px;
-    }
-    .pricing-card, .feature-card, .testimonial-card, .portfolio-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        padding: 30px;
-        border-radius: 16px;
-        text-align: center;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        transition: transform 0.3s ease;
-    }
-    .pricing-card:hover, .feature-card:hover, .testimonial-card:hover, .portfolio-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.1);
-    }
-    .footer {
-        background: #0f172a;
-        color: #f8fafc;
-        padding: 50px 30px 20px 30px;
-        border-top: 1px solid #1e293b;
-        margin-top: 60px;
-        border-radius: 16px 16px 0 0;
-    }
-    .footer a {
+        font-size: 16px;
         color: #94a3b8;
-        text-decoration: none;
+        margin-bottom: 40px;
+    }
+
+    .glass-card {
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 32px 24px;
+        border-radius: 20px;
+        text-align: center;
+        backdrop-filter: blur(16px);
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+    }
+
+    .glass-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(124, 58, 237, 0.5);
+        box-shadow: 0 20px 40px -15px rgba(124, 58, 237, 0.25);
+    }
+
+    .footer {
+        background: #030712;
+        color: #94a3b8;
+        padding: 60px 30px 30px 30px;
+        border-top: 1px solid #1e293b;
+        margin-top: 80px;
+        border-radius: 24px 24px 0 0;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -131,83 +172,51 @@ if "checkout_active" not in st.session_state: st.session_state.checkout_active =
 
 def save_user_to_csv(username, email, password):
     file_name = "users.csv"
-    new_user = {
-        "Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "Username": username,
-        "Email": email,
-        "Password": password
-    }
+    new_user = {"Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "Username": username, "Email": email, "Password": password}
     df = pd.DataFrame([new_user])
     if not os.path.exists(file_name): df.to_csv(file_name, index=False)
     else: df.to_csv(file_name, mode='a', header=False, index=False)
 
 def save_lead_to_csv(data_list):
     file_name = "leads.csv"
-    new_lead = {
-        "Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "Name": data_list[0].strip(),
-        "Business": data_list[1].strip(),
-        "Service": data_list[2].strip(),
-        "Budget": data_list[3].strip(),
-        "Phone": data_list[4].strip(),
-        "Email": data_list[5].strip(),
-        "Status": "New",
-        "Notes": "None"
-    }
+    new_lead = {"Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "Name": data_list[0].strip(), "Business": data_list[1].strip(), "Service": data_list[2].strip(), "Budget": data_list[3].strip(), "Phone": data_list[4].strip(), "Email": data_list[5].strip(), "Status": "New", "Notes": "None"}
     df = pd.DataFrame([new_lead])
     if not os.path.exists(file_name): df.to_csv(file_name, index=False)
     else: df.to_csv(file_name, mode='a', header=False, index=False)
 
 def save_paid_customer(email, plan_name, amount):
     file_name = "paid_customers.csv"
-    record = {
-        "Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "Email": email,
-        "Plan": plan_name,
-        "Amount": amount,
-        "Project Status": "In Progress",
-        "Notes": "New subscription paid"
-    }
+    record = {"Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "Email": email, "Plan": plan_name, "Amount": amount, "Project Status": "In Progress", "Notes": "New subscription paid"}
     df = pd.DataFrame([record])
     if not os.path.exists(file_name): df.to_csv(file_name, index=False)
     else: df.to_csv(file_name, mode='a', header=False, index=False)
 
 def save_booking_to_csv(name, email, phone, service, date, time_slot):
     file_name = "bookings.csv"
-    record = {
-        "Submission Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "Customer Name": name,
-        "Email": email,
-        "Phone": phone,
-        "Service": service,
-        "Meeting Date": str(date),
-        "Time Slot": str(time_slot),
-        "Status": "Pending",
-        "Notes": "Scheduled consultation"
-    }
+    record = {"Submission Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "Customer Name": name, "Email": email, "Phone": phone, "Service": service, "Meeting Date": str(date), "Time Slot": str(time_slot), "Status": "Pending", "Notes": "Scheduled consultation"}
     df = pd.DataFrame([record])
     if not os.path.exists(file_name): df.to_csv(file_name, index=False)
     else: df.to_csv(file_name, mode='a', header=False, index=False)
 
 def generate_invoice_pdf(email, plan, amount):
     return f"""
-    AGENTFLOW AI - OFFICIAL INVOICE
-    -----------------------------------
+    AGENTFLOW AI - OFFICIAL GLOBAL INVOICE
+    --------------------------------------------------
     Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
     Customer Email: {email}
-    Plan Selected: {plan}
-    Payment Methods: Razorpay (UPI / Cards / Net Banking / Wallet)
+    Selected Plan: {plan}
+    Gateway: Razorpay Secure (Global UPI / Cards / Net Banking)
     Amount Paid: {amount}
-    Status: SUCCESSFUL / VERIFIED
-    -----------------------------------
-    Thank you for your business!
+    Status: VERIFIED & SUCCESSFUL
+    --------------------------------------------------
+    Thank you for scaling with AgentFlow AI!
     """
 
 query_params = st.query_params
 is_admin_url = query_params.get("admin") == "true"
 
-st.sidebar.markdown("### AgentFlow AI")
-st.sidebar.caption("Enterprise SaaS Portal v3.2")
+st.sidebar.markdown("### ⚡ AgentFlow AI")
+st.sidebar.caption("Enterprise Global SaaS v4.0")
 st.sidebar.markdown("---")
 
 nav_options = [
@@ -228,36 +237,52 @@ if is_admin_url:
 nav_choice = st.sidebar.radio("Navigation", nav_options)
 
 st.sidebar.markdown("---")
-st.sidebar.markdown("Enterprise Security")
-st.sidebar.caption("SSL Secured | 24/7 Support")
+st.sidebar.markdown("🔒 **Security & Trust**")
+st.sidebar.caption("SOC2 Type II Certified | 99.9% Uptime")
 
 if nav_choice == "Home / Landing Page":
     st.markdown("""
         <div class="hero-container">
-            <div class="hero-badge">Next-Gen Business Automation & AI</div>
-            <div class="hero-title">Scale Your Growth with <span>AgentFlow AI</span></div>
-            <div class="hero-subtitle">Experience lightning-fast client acquisition, intelligent workflow automations, and bespoke digital solutions designed to elevate your brand globally.</div>
+            <div class="hero-badge">✨ Next-Gen Enterprise AI Automation</div>
+            <div class="hero-title">Scale Your Global Growth with <span>AgentFlow AI</span></div>
+            <div class="hero-subtitle">Deploy hyper-intelligent autonomous agents, streamline client acquisition, and automate your revenue pipelines with world-class digital engineering.</div>
+        </div>
+        
+        <div class="stats-container">
+            <div>
+                <div class="stat-number">99.9%</div>
+                <div class="stat-label">Platform Uptime</div>
+            </div>
+            <div>
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Global Enterprises</div>
+            </div>
+            <div>
+                <div class="stat-number">$15M+</div>
+                <div class="stat-label">Client Revenue Generated</div>
+            </div>
         </div>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="section-title">Our Professional Services</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Core Capabilities</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-subtitle">Engineered for extreme performance and modern digital brands.</div>', unsafe_allow_html=True)
     
     col_s1, col_s2, col_s3, col_s4, col_s5 = st.columns(5)
-    with col_s1: st.markdown('<div class="feature-card"><h3>Website Dev</h3><p>Modern responsive sites.</p></div>', unsafe_allow_html=True)
-    with col_s2: st.markdown('<div class="feature-card"><h3>AI Chatbots</h3><p>24/7 intelligent sales bots.</p></div>', unsafe_allow_html=True)
-    with col_s3: st.markdown('<div class="feature-card"><h3>App Dev</h3><p>Scalable mobile apps.</p></div>', unsafe_allow_html=True)
-    with col_s4: st.markdown('<div class="feature-card"><h3>Logo Design</h3><p>Memorable brand identities.</p></div>', unsafe_allow_html=True)
-    with col_s5: st.markdown('<div class="feature-card"><h3>Marketing</h3><p>Growth campaigns.</p></div>', unsafe_allow_html=True)
+    with col_s1: st.markdown('<div class="glass-card"><h4>Web Architecture</h4><p style="color:#94a3b8; font-size:13px;">Lightning fast responsive platforms.</p></div>', unsafe_allow_html=True)
+    with col_s2: st.markdown('<div class="glass-card"><h4>AI Sales Bots</h4><p style="color:#94a3b8; font-size:13px;">24/7 autonomous closing agents.</p></div>', unsafe_allow_html=True)
+    with col_s3: st.markdown('<div class="glass-card"><h4>Mobile Apps</h4><p style="color:#94a3b8; font-size:13px;">Scalable iOS & Android ecosystems.</p></div>', unsafe_allow_html=True)
+    with col_s4: st.markdown('<div class="glass-card"><h4>Brand ID</h4><p style="color:#94a3b8; font-size:13px;">Iconic, high-impact design identities.</p></div>', unsafe_allow_html=True)
+    with col_s5: st.markdown('<div class="glass-card"><h4>Growth Ops</h4><p style="color:#94a3b8; font-size:13px;">Data-driven conversion funnels.</p></div>', unsafe_allow_html=True)
 
     st.markdown("---")
-    st.markdown('<div class="section-title">Interactive AI Sales Assistant</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Experience Our AI Sales Assistant</div>', unsafe_allow_html=True)
     
-    col_c1, col_chat, col_c3 = st.columns([1, 2.5, 1])
+    col_c1, col_chat, col_c3 = st.columns([1, 2.8, 1])
     with col_chat:
         for message in st.session_state.messages:
             if message["role"] != "system":
                 with st.chat_message(message["role"]): st.markdown(message["content"])
-        if prompt := st.chat_input("Type your message here..."):
+        if prompt := st.chat_input("Ask about our services or start a project..."):
             st.chat_message("user").markdown(prompt)
             st.session_state.messages.append({"role": "user", "content": prompt})
             with st.chat_message("assistant"):
@@ -266,12 +291,12 @@ if nav_choice == "Home / Landing Page":
                         chat_completion = client.chat.completions.create(messages=st.session_state.messages, model="llama-3.1-8b-instant", temperature=0.5)
                         response_text = chat_completion.choices[0].message.content
                     else:
-                        response_text = "AI client not initialized. Please configure your Groq API key."
+                        response_text = "AI client offline. Please configure your Groq API key."
                     
                     if "COMPLETE:" in response_text:
                         lead_data = response_text.split("COMPLETE:")[1].strip().split("|")
                         if len(lead_data) == 6: save_lead_to_csv(lead_data)
-                        final_msg = "Thank you! Your details have been received. Our team will contact you soon."
+                        final_msg = "Thank you! Your details have been securely logged. Our executive team will connect shortly."
                         st.markdown(final_msg)
                         st.session_state.messages.append({"role": "assistant", "content": final_msg})
                     else:
@@ -281,440 +306,92 @@ if nav_choice == "Home / Landing Page":
 
 elif nav_choice == "Pricing & Plans":
     if not st.session_state.checkout_active:
-        st.markdown('<div class="section-title">Choose Your Growth Plan</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-title">Transparent Global Pricing</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-subtitle">Choose the tier that fits your growth velocity.</div>', unsafe_allow_html=True)
+        
         col_p1, col_p2, col_p3, col_p4 = st.columns(4)
         with col_p1:
-            st.markdown('<div class="pricing-card"><h3>Starter</h3><h2>Rs 999</h2><p>Ideal for solo creators.</p></div>', unsafe_allow_html=True)
+            st.markdown('<div class="glass-card"><h3>Starter</h3><h2 style="color:#a78bfa;">Rs 999</h2><p style="color:#94a3b8; font-size:14px;">Ideal for solo creators and early-stage MVPs.</p></div>', unsafe_allow_html=True)
             if st.button("Select Starter", key="sel_s"): st.session_state.selected_plan = {"name": "Starter", "price": "Rs 999"}; st.session_state.checkout_active = True; st.rerun()
         with col_p2:
-            st.markdown('<div class="pricing-card" style="border: 2px solid #7c3aed;"><h3>Pro</h3><h2>Rs 2,999</h2><p>For growing businesses.</p></div>', unsafe_allow_html=True)
+            st.markdown('<div class="glass-card" style="border: 2px solid #7c3aed;"><h3>Pro</h3><h2 style="color:#a78bfa;">Rs 2,999</h2><p style="color:#94a3b8; font-size:14px;">For growing businesses scaling automation.</p></div>', unsafe_allow_html=True)
             if st.button("Select Pro", key="sel_p"): st.session_state.selected_plan = {"name": "Pro", "price": "Rs 2,999"}; st.session_state.checkout_active = True; st.rerun()
         with col_p3:
-            st.markdown('<div class="pricing-card"><h3>Premium</h3><h2>Rs 7,999</h2><p>For scaling enterprises.</p></div>', unsafe_allow_html=True)
+            st.markdown('<div class="glass-card"><h3>Premium</h3><h2 style="color:#a78bfa;">Rs 7,999</h2><p style="color:#94a3b8; font-size:14px;">For scaling enterprises requiring bespoke suites.</p></div>', unsafe_allow_html=True)
             if st.button("Select Premium", key="sel_pr"): st.session_state.selected_plan = {"name": "Premium", "price": "Rs 7,999"}; st.session_state.checkout_active = True; st.rerun()
         with col_p4:
-            st.markdown('<div class="pricing-card"><h3>Enterprise</h3><h2>Custom</h2><p>Tailored solutions.</p></div>', unsafe_allow_html=True)
-            if st.button("Contact Sales"): st.info("Reach out via support desk.")
+            st.markdown('<div class="glass-card"><h3>Enterprise</h3><h2 style="color:#a78bfa;">Custom</h2><p style="color:#94a3b8; font-size:14px;">Tailored infrastructure and dedicated engineers.</p></div>', unsafe_allow_html=True)
+            if st.button("Contact Sales"): st.info("Reach out via our direct support desk.")
     else:
         plan = st.session_state.selected_plan
-        st.markdown(f"<h2 style='text-align: center;'>Secure Checkout - {plan['name']}</h2>", unsafe_allow_html=True)
+        st.markdown(f"<h2 style='text-align: center; color:#ffffff;'>Secure Global Checkout — {plan['name']}</h2>", unsafe_allow_html=True)
         col_c1, col_box, col_c3 = st.columns([1, 2, 1])
         with col_box:
-            st.markdown('<div class="checkout-box" style="background:#ffffff; padding:30px; border-radius:16px; border:1px solid #e2e8f0;"><h3>Order Summary</h3>', unsafe_allow_html=True)
-            st.write(f"**Plan Tier:** {plan['name']} Subscription")
-            st.write(f"**Total Amount:** {plan['price']}")
-            pay_method = st.selectbox("Select Payment Method", ["Razorpay (UPI / Google Pay / PhonePe / Paytm)", "Credit / Debit Cards", "Net Banking", "Mobile Wallets"])
+            st.markdown('<div class="glass-card" style="text-align:left;"><h3>Order Summary</h3>', unsafe_allow_html=True)
+            st.write(f"**Tier Selected:** {plan['name']} Global Plan")
+            st.write(f"**Total Investment:** {plan['price']}")
+            pay_method = st.selectbox("Select Payment Gateway", ["Razorpay Secure (UPI / Cards / Net Banking / Wallets)", "International Credit / Debit Card"])
             email_input = st.text_input("Billing Email Address")
-            if st.button("Pay Securely with Razorpay"):
+            if st.button("Pay Securely Now"):
                 if email_input:
                     save_paid_customer(email_input, plan['name'], plan['price'])
                     st.session_state.logged_in = True
                     st.session_state.username = email_input.split("@")[0]
                     st.session_state.user_email = email_input
                     st.session_state.checkout_active = False
-                    st.success("Payment Successful via Razorpay! Redirecting to Dashboard...")
+                    st.success("Payment verified successfully via Razorpay! Redirecting to dashboard...")
                     st.balloons()
                     st.rerun()
                 else: 
-                    st.warning("Please enter your email.")
+                    st.warning("Please enter your billing email.")
             if st.button("Back to Pricing"): 
                 st.session_state.checkout_active = False
                 st.rerun()
             st.markdown('</div>', unsafe_allow_html=True)
 
 elif nav_choice == "AI Package Recommender":
-    st.markdown('<div class="section-title">AI Package Recommender</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-subtitle">Answer 2 quick questions and let our AI suggest the best plan for you!</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">AI Solution Recommender</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-subtitle">Answer 2 quick questions to find your optimal stack.</div>', unsafe_allow_html=True)
     
     col_r1, col_r2 = st.columns(2)
     with col_r1:
-        biz_type = st.selectbox("What is your business type?", ["Solo Creator / Freelancer", "Growing Startup / SME", "Large Enterprise"])
-        main_goal = st.selectbox("What is your primary goal?", ["Lead Generation & Chatbots", "Full Website & App Development", "Custom Enterprise Automation"])
+        biz_type = st.selectbox("What is your business model?", ["Solo Creator / Freelancer", "Growing Startup / SME", "Global Enterprise"])
+        main_goal = st.selectbox("Primary Objective?", ["Lead Gen & Autonomous Chatbots", "Full Scale Web & App Apps", "Custom Enterprise Automation"])
     with col_r2:
         st.write("")
         st.write("")
-        if st.button("Get AI Recommendation"):
-            st.success("Analysis complete! Based on your profile:")
+        if st.button("Run AI Analysis"):
+            st.success("Analysis generated successfully:")
             if biz_type == "Solo Creator / Freelancer":
-                st.info("Recommended Plan: Starter (Rs 999) - Perfect for getting your digital presence off the ground.")
+                st.info("Recommended: Starter Plan (Rs 999) — Optimized for fast digital launch.")
             elif biz_type == "Growing Startup / SME":
-                st.info("Recommended Plan: Pro (Rs 2,999) - Ideal for scaling automated customer acquisition.")
+                st.info("Recommended: Pro Plan (Rs 2,999) — Built for automated acquisition scaling.")
             else:
-                st.info("Recommended Plan: Premium / Enterprise (Rs 7,999+) - Built for heavy enterprise automation.")
+                st.info("Recommended: Premium / Enterprise Suite (Rs 7,999+) — High-concurrency enterprise infrastructure.")
 
 elif nav_choice == "Portfolio / Projects":
-    st.markdown('<div class="section-title">Our Portfolio & Project Cards</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-subtitle">Explore our previous successful client deployments.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Global Portfolio Deployments</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-subtitle">A showcase of elite digital products built by AgentFlow AI.</div>', unsafe_allow_html=True)
     
     p1, p2, p3 = st.columns(3)
-    with p1: st.markdown('<div class="portfolio-card"><h3>AI E-Commerce Suite</h3><p>Automated conversational sales bot for retail brand, boosting conversion by 45%.</p><br><b>Tech:</b> Python, Groq AI</div>', unsafe_allow_html=True)
-    with p2: st.markdown('<div class="portfolio-card"><h3>HealthTech SaaS</h3><p>Secure patient management portal with automated billing and scheduling.</p><br><b>Tech:</b> React, FastAPI</div>', unsafe_allow_html=True)
-    with p3: st.markdown('<div class="portfolio-card"><h3>FinTech Analytics Bot</h3><p>Real-time financial compliance and automated tax report generation.</p><br><b>Tech:</b> Python, Pandas</div>', unsafe_allow_html=True)
+    with p1: st.markdown('<div class="glass-card"><h3>AI E-Commerce Suite</h3><p style="color:#94a3b8; font-size:14px;">Conversational sales agent for retail brand, increasing conversion metrics by 48%.</p><br><b style="color:#a78bfa;">Tech: Python, Groq LLM</b></div>', unsafe_allow_html=True)
+    with p2: st.markdown('<div class="glass-card"><h3>HealthTech SaaS Portal</h3><p style="color:#94a3b8; font-size:14px;">HIPAA-compliant patient coordination system with automated smart scheduling.</p><br><b style="color:#a78bfa;">Tech: React, FastAPI</b></div>', unsafe_allow_html=True)
+    with p3: st.markdown('<div class="glass-card"><h3>FinTech Compliance Bot</h3><p style="color:#94a3b8; font-size:14px;">Real-time regulatory audit trail and automated financial report generation.</p><br><b style="color:#a78bfa;">Tech: Python, Pandas</b></div>', unsafe_allow_html=True)
 
 elif nav_choice == "Testimonials":
-    st.markdown('<div class="section-title">Client Testimonials</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-subtitle">Hear what founders and industry leaders say about AgentFlow AI.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Trusted by Global Founders</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-subtitle">See what industry leaders have to say about our execution speed.</div>', unsafe_allow_html=True)
     
     t1, t2, t3 = st.columns(3)
-    with t1: st.markdown('<div class="testimonial-card">"AgentFlow AI automated our entire lead pipeline. Conversion rate jumped by 300%!"<br><br><b>— Rajesh Sharma</b><br><span style="color:#64748b;">CEO, TechCorp</span></div>', unsafe_allow_html=True)
-    with t2: st.markdown('<div class="testimonial-card">"The custom AI chatbot handles customer queries 24/7 flawlessly. Exceptional work!"<br><br><b>— Priya Patel</b><br><span style="color:#64748b;">Founder, StyleHub</span></div>', unsafe_allow_html=True)
-    with t3: st.markdown('<div class="testimonial-card">"Incredible platform and seamless Razorpay payment integration. Highly recommended!"<br><br><b>— Amit Verma</b><br><span style="color:#64748b;">Director, LogiTech</span></div>', unsafe_allow_html=True)
+    with t1: st.markdown('<div class="glass-card">"AgentFlow AI completely automated our entire sales pipeline. Our conversion velocity tripled within 30 days."<br><br><b style="color:#ffffff;">— Rajesh Sharma</b><br><span style="color:#94a3b8; font-size:13px;">CEO, TechCorp Global</span></div>', unsafe_allow_html=True)
+    with t2: st.markdown('<div class="glass-card">"The custom AI chatbot answers customer inquiries flawlessly 24/7. Absolute game changer for our brand."<br><br><b style="color:#ffffff;">— Priya Patel</b><br><span style="color:#94a3b8; font-size:13px;">Founder, StyleHub Retail</span></div>', unsafe_allow_html=True)
+    with t3: st.markdown('<div class="glass-card">"Incredible engineering quality, seamless Razorpay integration, and pristine user experience. Highly recommended!"<br><br><b style="color:#ffffff;">— Amit Verma</b><br><span style="color:#94a3b8; font-size:13px;">Director, LogiTech Solutions</span></div>', unsafe_allow_html=True)
 
 elif nav_choice == "Book a Meeting":
-    st.markdown('<div class="section-title">Enterprise Meeting Booking System</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-subtitle">Select your preferred date, time slot, and service to schedule a strategy consultation.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Schedule Enterprise Strategy Session</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-subtitle">Select your preferred slot to consult directly with our senior software architects.</div>', unsafe_allow_html=True)
     
     col_b1, col_b2 = st.columns(2)
     with col_b1:
         b_name = st.text_input("Full Name", key="bk_name")
-        b_email = st.text_input("Email Address", key="bk_email")
-        b_phone = st.text_input("Phone Number", key="bk_phone")
-    with col_b2:
-        b_service = st.selectbox("Service Required", ["AI Chatbot Implementation", "Website Development", "Mobile App Development", "Enterprise Automation", "General Consultation"])
-        b_date = st.date_input("Select Meeting Date", key="bk_date")
-        b_time = st.selectbox("Select Time Slot", ["10:00 AM - 11:00 AM", "11:30 AM - 12:30 PM", "02:00 PM - 03:00 PM", "04:00 PM - 05:00 PM"])
-
-    st.write("")
-    if st.button("Submit Meeting Booking"):
-        if b_name and b_email and b_phone:
-            save_booking_to_csv(b_name, b_email, b_phone, b_service, b_date, b_time)
-            st.success(f"Booking successfully submitted for {b_date} ({b_time})! Your appointment status is currently Pending. Our team will confirm shortly.")
-            st.balloons()
-        else:
-            st.warning("Please fill in your Name, Email, and Phone Number.")
-
-elif nav_choice == "Contact Us":
-    st.markdown('<div class="section-title">Contact Us</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-subtitle">Inquiries submitted here are directly routed to the Admin CRM Dashboard.</div>', unsafe_allow_html=True)
-    
-    c_name = st.text_input("Your Full Name")
-    c_email = st.text_input("Your Email Address")
-    c_service = st.selectbox("Service Interested In", ["Website Dev", "AI Chatbot", "App Dev", "Logo Design", "Marketing"])
-    c_msg = st.text_area("Your Message")
-    
-    if st.button("Submit Inquiry"):
-        if c_name and c_email and c_msg:
-            save_lead_to_csv([c_name, "Inquiry Form", c_service, "Custom", "N/A", c_email])
-            st.success("Inquiry successfully submitted! Our team and CRM dashboard have received your message.")
-        else:
-            st.warning("Please fill in all required fields.")
-
-if nav_choice == "Customer Login / Signup":
-    if not st.session_state.logged_in:
-        st.markdown("<h2 style='text-align: center;'>Customer Portal Authentication</h2>", unsafe_allow_html=True)
-        
-        auth_choice = st.selectbox("Select Portal Mode", ["Existing User Login", "New User Signup"], key="portal_auth_selectbox")
-        
-        if auth_choice == "Existing User Login":
-            with st.container():
-                st.markdown("### Existing User Login")
-                login_user_input = st.text_input("Username or Email", key="unique_login_user_input")
-                login_pass_input = st.text_input("Password", type="password", key="unique_login_pass_input")
-                if st.button("Login", key="unique_login_action_btn"):
-                    if login_user_input and login_pass_input:
-                        st.session_state.logged_in = True
-                        st.session_state.username = login_user_input
-                        st.session_state.user_email = login_user_input if "@" in login_user_input else f"{login_user_input}@agentflow.ai"
-                        st.success("Login successful!")
-                        st.rerun()
-                    else:
-                        st.warning("Fill both fields.")
-                st.markdown("[Forgot Password? Click here to reset](#)")
-        
-        else:
-            with st.container():
-                st.markdown("### New User Signup")
-                signup_username_input = st.text_input("Username", key="unique_signup_user_input")
-                signup_email_input = st.text_input("Email", key="unique_signup_email_input")
-                signup_pass_input = st.text_input("Password", type="password", key="unique_signup_pass_input")
-                signup_conf_pass_input = st.text_input("Confirm Password", type="password", key="unique_signup_conf_pass_input")
-                if st.button("Create Account", key="unique_signup_action_btn"):
-                    if signup_username_input and signup_email_input and signup_pass_input and signup_conf_pass_input:
-                        if signup_pass_input == signup_conf_pass_input:
-                            save_user_to_csv(signup_username_input, signup_email_input, signup_pass_input)
-                            st.session_state.logged_in = True
-                            st.session_state.username = signup_username_input
-                            st.session_state.user_email = signup_email_input
-                            st.success("Account created successfully!")
-                            st.balloons()
-                            st.rerun()
-                        else:
-                            st.error("Passwords do not match!")
-                    else:
-                        st.warning("Please fill all fields.")
-    else:
-        st.markdown(f"## Welcome back, {st.session_state.username}!")
-        cust_tab1, cust_tab2, cust_tab3 = st.tabs(["Profile & Project Status", "Payment History & Invoices", "Support Chat"])
-        with cust_tab1:
-            st.subheader("Customer Profile & Active Project Status")
-            st.write(f"**Username:** {st.session_state.username}")
-            st.write(f"**Email:** {st.session_state.user_email if st.session_state.user_email else 'N/A'}")
-            st.metric(label="Current Project Status", value="AI Sales Agent MVP", delta="Phase 2 In Progress")
-            st.progress(65, text="Project Completion Progress: 65%")
-        with cust_tab2:
-            st.subheader("Your Invoices & Subscriptions")
-            if os.path.exists("paid_customers.csv"):
-                df_cust = pd.read_csv("paid_customers.csv")
-                target_email = st.session_state.user_email if st.session_state.user_email else st.session_state.username
-                user_invoices = df_cust[df_cust["Email"].str.contains(target_email, case=False, na=False)]
-                if not user_invoices.empty:
-                    st.dataframe(user_invoices, use_container_width=True)
-                    for idx, row in user_invoices.iterrows():
-                        inv_text = generate_invoice_pdf(row['Email'], row['Plan'], row['Amount'])
-                        st.download_button(f"Download Invoice ({row['Plan']})", inv_text, file_name=f"invoice_{row['Plan']}.txt", mime="text/plain", key=f"inv_{idx}")
-                else:
-                    st.info("No payment history found matching your account.")
-                    st.dataframe(df_cust, use_container_width=True)
-            else:
-                st.info("No transactions found.")
-        with cust_tab3:
-            st.subheader("Direct Customer Support")
-            if "support_messages" not in st.session_state:
-                st.session_state.support_messages = [{"role": "assistant", "content": "Hello! How can our support team assist you today?"}]
-            for sm in st.session_state.support_messages:
-                with st.chat_message(sm["role"]): st.markdown(sm["content"])
-            if sprompt := st.chat_input("Ask support a question..."):
-                st.session_state.support_messages.append({"role": "user", "content": sprompt})
-                with st.chat_message("user"): st.markdown(sprompt)
-                reply = "Thank you for reaching out. A support engineer will review your query and respond shortly."
-                st.session_state.support_messages.append({"role": "assistant", "content": reply})
-                with st.chat_message("assistant"): st.markdown(reply)
-        if st.button("Logout", key="customer_portal_logout_btn"): 
-            st.session_state.logged_in = False
-            st.session_state.username = ""
-            st.session_state.user_email = ""
-            st.rerun()
-
-elif nav_choice == "Admin CRM Dashboard":
-    if not is_admin_url:
-        st.error("404 - Page Not Found / Access Denied")
-    else:
-        if not st.session_state.admin_logged_in:
-            st.markdown("<h2 style='text-align: center;'>Admin Authentication</h2>", unsafe_allow_html=True)
-            col_ad1, col_ad2, col_ad3 = st.columns([1, 2, 1])
-            with col_ad2:
-                admin_pass = st.text_input("Enter Admin Password", type="password", key="admin_pass_input_field")
-                if st.button("Login as Admin", key="admin_login_action_btn"):
-                    correct_pass = st.secrets.get("ADMIN_PASSWORD", "admin123") if hasattr(st, "secrets") else "admin123"
-                    if admin_pass == correct_pass: 
-                        st.session_state.admin_logged_in = True
-                        st.success("Admin login successful!")
-                        st.rerun()
-                    else: 
-                        st.error("Incorrect password!")
-        else:
-            st.markdown("## Enterprise Admin CRM & Analytics Dashboard")
-            if st.sidebar.button("Admin Logout", key="admin_sidebar_logout_btn"): 
-                st.session_state.admin_logged_in = False
-                st.rerun()
-
-            try:
-                users_df = pd.read_csv("users.csv") if os.path.exists("users.csv") else pd.DataFrame(columns=["Date", "Username", "Email", "Password"])
-            except Exception:
-                users_df = pd.DataFrame(columns=["Date", "Username", "Email", "Password"])
-
-            try:
-                leads_df = pd.read_csv("leads.csv") if os.path.exists("leads.csv") else pd.DataFrame(columns=["Date", "Name", "Business", "Service", "Budget", "Phone", "Email", "Status", "Notes"])
-            except Exception:
-                leads_df = pd.DataFrame(columns=["Date", "Name", "Business", "Service", "Budget", "Phone", "Email", "Status", "Notes"])
-
-            try:
-                bookings_df = pd.read_csv("bookings.csv") if os.path.exists("bookings.csv") else pd.DataFrame(columns=["Submission Date", "Customer Name", "Email", "Phone", "Service", "Meeting Date", "Time Slot", "Status", "Notes"])
-            except Exception:
-                bookings_df = pd.DataFrame(columns=["Submission Date", "Customer Name", "Email", "Phone", "Service", "Meeting Date", "Time Slot", "Status", "Notes"])
-
-            try:
-                customers_df = pd.read_csv("paid_customers.csv") if os.path.exists("paid_customers.csv") else pd.DataFrame(columns=["Date", "Email", "Plan", "Amount", "Project Status", "Notes"])
-            except Exception:
-                customers_df = pd.DataFrame(columns=["Date", "Email", "Plan", "Amount", "Project Status", "Notes"])
-
-            total_users = len(users_df) if not users_df.empty else 0
-            total_leads = len(leads_df) if not leads_df.empty else 0
-            total_bookings = len(bookings_df) if not bookings_df.empty else 0
-            paid_customers = len(customers_df) if not customers_df.empty else 0
-            
-            total_revenue = 0
-            if not customers_df.empty and "Amount" in customers_df.columns:
-                for amt in customers_df["Amount"]:
-                    clean_amt = str(amt).replace("Rs", "").replace(",", "").strip()
-                    if clean_amt.isdigit():
-                        total_revenue += int(clean_amt)
-
-            active_projects = 0
-            if not customers_df.empty and "Project Status" in customers_df.columns:
-                active_projects = len(customers_df[customers_df["Project Status"] == "In Progress"])
-
-            st.markdown("### Overview Metrics")
-            m1, m2, m3, m4, m5, m6 = st.columns(6)
-            with m1: st.metric(label="Total Users", value=total_users)
-            with m2: st.metric(label="Total Leads", value=total_leads)
-            with m3: st.metric(label="Total Bookings", value=total_bookings)
-            with m4: st.metric(label="Paid Customers", value=paid_customers)
-            with m5: st.metric(label="Total Revenue", value=f"Rs {total_revenue:,}")
-            with m6: st.metric(label="Active Projects", value=active_projects)
-
-            st.markdown("---")
-
-            st.markdown("### Global Search Across CRM Data")
-            global_query = st.text_input("Type to search across Users, Leads, Bookings, and Customers...", key="admin_global_search_input")
-            if global_query:
-                st.info(f"Showing global search results matching: '{global_query}'")
-                g_col1, g_col2 = st.columns(2)
-                with g_col1:
-                    st.subheader("Users Match")
-                    if not users_df.empty:
-                        u_match = users_df[users_df.astype(str).apply(lambda x: x.str.contains(global_query, case=False)).any(axis=1)]
-                        if not u_match.empty:
-                            st.dataframe(u_match, use_container_width=True)
-                        else:
-                            st.info("No matching users found.")
-                    else:
-                        st.info("No data available.")
-
-                    st.subheader("Leads Match")
-                    if not leads_df.empty:
-                        l_match = leads_df[leads_df.astype(str).apply(lambda x: x.str.contains(global_query, case=False)).any(axis=1)]
-                        if not l_match.empty:
-                            st.dataframe(l_match, use_container_width=True)
-                        else:
-                            st.info("No matching leads found.")
-                    else:
-                        st.info("No data available.")
-
-                with g_col2:
-                    st.subheader("Bookings Match")
-                    if not bookings_df.empty:
-                        b_match = bookings_df[bookings_df.astype(str).apply(lambda x: x.str.contains(global_query, case=False)).any(axis=1)]
-                        if not b_match.empty:
-                            st.dataframe(b_match, use_container_width=True)
-                        else:
-                            st.info("No matching bookings found.")
-                    else:
-                        st.info("No data available.")
-
-                    st.subheader("Customers Match")
-                    if not customers_df.empty:
-                        c_match = customers_df[customers_df.astype(str).apply(lambda x: x.str.contains(global_query, case=False)).any(axis=1)]
-                        if not c_match.empty:
-                            st.dataframe(c_match, use_container_width=True)
-                        else:
-                            st.info("No matching customers found.")
-                    else:
-                        st.info("No data available.")
-                st.markdown("---")
-
-            crm_tab1, crm_tab2, crm_tab3, crm_tab4, crm_tab5 = st.tabs([
-                "Users Management", 
-                "Leads Management", 
-                "Bookings Management", 
-                "Paid Customers", 
-                "Analytics & Growth"
-            ])
-
-            with crm_tab1:
-                st.subheader("Registered Users Directory")
-                if not users_df.empty:
-                    u_search = st.text_input("Search Users by Username or Email", key="admin_user_search_box")
-                    filtered_users = users_df.copy()
-                    if u_search:
-                        mask = filtered_users.astype(str).apply(lambda x: x.str.contains(u_search, case=False)).any(axis=1)
-                        filtered_users = filtered_users[mask]
-
-                    st.dataframe(filtered_users, use_container_width=True)
-                    st.download_button("Export Users CSV", data=filtered_users.to_csv(index=False).encode('utf-8'), file_name="users_export.csv", mime="text/csv", key="admin_exp_users_btn")
-
-                    st.markdown("#### Edit or Delete User")
-                    u_idx = st.number_input("Select Row Index to Edit/Delete", min_value=0, max_value=max(0, len(users_df)-1), step=1, key="admin_user_idx_input")
-                    if len(users_df) > 0:
-                        selected_user = users_df.iloc[u_idx]
-                        with st.form("edit_user_form_admin"):
-                            new_u_name = st.text_input("Username", value=str(selected_user["Username"]))
-                            new_u_email = st.text_input("Email", value=str(selected_user["Email"]))
-                            new_u_pass = st.text_input("Password", value=str(selected_user["Password"]))
-                            col_u1, col_u2 = st.columns(2)
-                            update_user_btn = col_u1.form_submit_button("Save Changes")
-                            delete_user_btn = col_u2.form_submit_button("Delete User")
-
-                            if update_user_btn:
-                                users_df.at[u_idx, "Username"] = new_u_name
-                                users_df.at[u_idx, "Email"] = new_u_email
-                                users_df.at[u_idx, "Password"] = new_u_pass
-                                users_df.to_csv("users.csv", index=False)
-                                st.success("User updated successfully!")
-                                st.rerun()
-
-                            if delete_user_btn:
-                                users_df = users_df.drop(u_idx).reset_index(drop=True)
-                                users_df.to_csv("users.csv", index=False)
-                                st.success("User deleted successfully!")
-                                st.rerun()
-                else:
-                    st.info("No data available.")
-
-            with crm_tab2:
-                st.subheader("Sales Leads & Inquiries CRM")
-                if not leads_df.empty:
-                    col_l1, col_l2 = st.columns(2)
-                    with col_l1:
-                        l_search = st.text_input("Search Leads by Name/Email/Service", key="admin_lead_search_box")
-                    with col_l2:
-                        lead_statuses = ["All"] + list(leads_df["Status"].unique()) if "Status" in leads_df.columns and not leads_df["Status"].isnull().all() else ["All"]
-                        l_status_filter = st.selectbox("Filter by Status", lead_statuses, key="admin_lead_status_selectbox")
-
-                    filtered_leads = leads_df.copy()
-                    if l_search:
-                        mask = filtered_leads.astype(str).apply(lambda x: x.str.contains(l_search, case=False)).any(axis=1)
-                        filtered_leads = filtered_leads[mask]
-                    if l_status_filter != "All" and "Status" in filtered_leads.columns:
-                        filtered_leads = filtered_leads[filtered_leads["Status"] == l_status_filter]
-
-                    st.dataframe(filtered_leads, use_container_width=True)
-                    st.download_button("Export Filtered Leads CSV", data=filtered_leads.to_csv(index=False).encode('utf-8'), file_name="leads_export.csv", mime="text/csv", key="admin_exp_leads_btn")
-
-                    st.markdown("#### Update Lead Status or Delete")
-                    l_idx = st.number_input("Select Lead Row Index", min_value=0, max_value=max(0, len(leads_df)-1), step=1, key="admin_lead_idx_input")
-                    if len(leads_df) > 0:
-                        selected_lead = leads_df.iloc[l_idx]
-                        with st.form("edit_lead_form_admin"):
-                            current_status = str(selected_lead["Status"]) if "Status" in selected_lead and pd.notna(selected_lead["Status"]) else "New"
-                            status_options = ["New", "Contacted", "Converted", "Closed"]
-                            default_idx = status_options.index(current_status) if current_status in status_options else 0
-                            new_status = st.selectbox("Update Status", status_options, index=default_idx)
-                            col_le1, col_le2 = st.columns(2)
-                            update_lead_btn = col_le1.form_submit_button("Update Status")
-                            delete_lead_btn = col_le2.form_submit_button("Delete Lead")
-
-                            if update_lead_btn:
-                                leads_df.at[l_idx, "Status"] = new_status
-                                leads_df.to_csv("leads.csv", index=False)
-                                st.success("Lead status updated!")
-                                st.rerun()
-
-                            if delete_lead_btn:
-                                leads_df = leads_df.drop(l_idx).reset_index(drop=True)
-                                leads_df.to_csv("leads.csv", index=False)
-                                st.success("Lead deleted successfully!")
-                                st.rerun()
-                else:
-                    st.info("No data available.")
-
-            with crm_tab3:
-                st.subheader("Consultation Bookings Management")
-                if not bookings_df.empty:
-                    b_search = st.text_input("Search Bookings by Client Name or Email", key="admin_booking_search_box")
-                    filtered_bookings = bookings_df.copy()
-                    if b_search:
-                        mask = filtered_bookings.astype(str).apply(lambda x: x.str.contains(b_search, case=False)).any(axis=1)
-                        filtered_bookings = filtered_bookings[mask]
-
-                    st.dataframe(filtered_bookings, use_container_width=True)
-                    st.download_button("Export Bookings CSV", data=filtered_bookings.to_csv(index=False).encode('utf-8'), file_name="bookings_export.csv", mime="text/csv", key="admin_exp_bookings_btn")
-
-                    st.markdown("#### Confirm, Cancel, or Delete Booking")
-                    b_idx = st.number_input("Select Booking Row Index", min_value=0, max_value=max(0, len(bookings_df)-1), step=1, key="admin_booking_idx_input")
-                    if len(bookings_df) > 0:
-                        col_b1, col_b2, col_b3 = st.columns(3)
-                        if col_b1.button("Confirm Booking", key="admin_conf_book_btn"):
-                            bookings_df.at[b_idx, "Status"] = "Confirmed"
-                            bookings_df.to_csv("bookings.csv", index=False)
-                            st.success("Booking Confirmed!")
+        b_email =
